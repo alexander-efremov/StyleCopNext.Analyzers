@@ -14,6 +14,7 @@
     <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC; Copyright 2026 Alexander Efremov</copyright>
     <tags>StyleCop StyleCopNext Roslyn Diagnostic Analyzer</tags>
     <developmentDependency>true</developmentDependency>
+    <readme>README.md</readme>
   </metadata>
   <files>
 
