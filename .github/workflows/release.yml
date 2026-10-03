@@ -1,0 +1,69 @@
+name: Release
+
+# Pushing a tag vX.Y.Z publishes StyleCopNext.Analyzers X.Y.Z to nuget.org and attaches the package to the GitHub release.
+# The version comes from StyleCop.Analyzers/version.json, so it has to match the tag.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  # nuget.org trusted publishing exchanges the GitHub OIDC token for a short-lived API key.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Nerdbank.GitVersioning computes the version from the history.
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build Package
+        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release
+
+      - name: Find Package For The Tag
+        id: package
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          package="StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/StyleCopNext.Analyzers.${version}.nupkg"
+          if [ ! -f "$package" ]; then
+            ls StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/*.nupkg
+            echo "The build produced no package for version ${version}; version.json and the tag disagree." >&2
+            exit 1
+          fi
+          echo "path=${package}" >> "$GITHUB_OUTPUT"
+
+      - name: Log In To NuGet
+        id: nuget
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: dampir
+
+      - name: Push To NuGet
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push "${{ steps.package.outputs.path }}" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
+
+      # The release notes are written by hand: an existing release only gets the package, a missing one is created as a draft.
+      - name: Attach Package To The Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "${{ steps.package.outputs.path }}" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "${{ steps.package.outputs.path }}" --draft --title "$GITHUB_REF_NAME" --notes ""
+          fi
