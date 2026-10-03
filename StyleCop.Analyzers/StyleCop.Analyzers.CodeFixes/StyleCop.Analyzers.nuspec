@@ -14,12 +14,14 @@
     <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC; Copyright 2026 Alexander Efremov</copyright>
     <tags>StyleCop StyleCopNext Roslyn Diagnostic Analyzer</tags>
     <developmentDependency>true</developmentDependency>
+    <readme>README.md</readme>
   </metadata>
   <files>
 
     <!-- Additional Files -->
     <file src="..\..\LICENSE" />
     <file src="..\..\THIRD-PARTY-NOTICES.txt" />
+    <file src="PackageReadme.md" target="README.md" />
 
     <!-- Binaries (the PDBs are embedded in the DLLs) -->
     <file src="bin\$Configuration$\netstandard1.1\StyleCop.Analyzers.dll" target="analyzers\dotnet\cs" />
