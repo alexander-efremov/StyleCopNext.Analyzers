@@ -1,30 +1,23 @@
-﻿# StyleCop.Analyzers
+# StyleCopNext.Analyzers
 
-An implementation of the StyleCop rules using Roslyn analyzers and code fixes. The analyzers report style and
-consistency issues in C# code while you build or edit, and many of them include code fixes.
+StyleCop rules as Roslyn analyzers and code fixes. A maintained continuation of
+[StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers): the same SA rules and `stylecop.json`
+settings, with stable releases.
 
-## Getting started
+## Install
 
-Add the package to each project you want to check:
-
-```bash
-dotnet add package StyleCop.Analyzers
+```shell
+dotnet add package StyleCopNext.Analyzers
 ```
 
-The package is a development dependency, so it is not added as a dependency of your own package.
+## Migrate from StyleCop.Analyzers
 
-## Configuration
+Replace the `StyleCop.Analyzers` package reference with `StyleCopNext.Analyzers`. Rule IDs, `.editorconfig` severities
+and `stylecop.json` stay as they are. Rules changed since StyleCop.Analyzers 1.2.0-beta.556 can report new issues; for
+example SA1121 asks for `nint` instead of `IntPtr`.
 
-* Use an **.editorconfig** file or a rule set to change the severity of individual rules, or to turn rules off.
-* Use a **stylecop.json** file to customize the behavior of certain rules, such as the file header or the ordering of
-  `using` directives. See [Configuration.md](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/Configuration.md).
+## Links
 
-## Documentation
-
-* [Rule documentation](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)
-* [Known changes from StyleCop Classic](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/KnownChanges.md)
-* [Release notes](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/releases)
-
-## Feedback
-
-Report bugs and ask questions in the [GitHub repository](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues).
+- [Source and releases](https://github.com/alexander-efremov/StyleCopAnalyzers)
+- [Rule documentation](https://github.com/alexander-efremov/StyleCopAnalyzers/tree/master/documentation)
+- License: MIT

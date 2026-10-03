@@ -7,7 +7,6 @@
     <authors>Sam Harwell et. al., Alexander Efremov</authors>
     <owners>alexander-efremov</owners>
     <license type="expression">MIT</license>
-    <readme>README.md</readme>
     <projectUrl>https://github.com/alexander-efremov/StyleCopAnalyzers</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>StyleCop's rules as Roslyn analyzers and code fixes. A maintained continuation of StyleCop.Analyzers (https://github.com/DotNetAnalyzers/StyleCopAnalyzers) with the same SA rules and stylecop.json settings.</description>
@@ -15,6 +14,7 @@
     <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC; Copyright 2026 Alexander Efremov</copyright>
     <tags>StyleCop StyleCopNext Roslyn Diagnostic Analyzer</tags>
     <developmentDependency>true</developmentDependency>
+    <readme>README.md</readme>
   </metadata>
   <files>
 
