@@ -6,7 +6,8 @@
   },
   "publicReleaseRefSpec": [
     "^refs/heads/master$",
-    "^refs/heads/stabilization$"
+    "^refs/heads/stabilization$",
+    "^refs/tags/v\\d+\\.\\d+\\.\\d+$"
   ],
   "nugetPackageVersion": {
     "semVer": 2
