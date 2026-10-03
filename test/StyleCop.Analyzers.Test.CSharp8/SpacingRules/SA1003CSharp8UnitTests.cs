@@ -242,6 +242,47 @@ namespace TestNamespace
         }
 
         [Fact]
+        public async Task TestNullForgivingOperatorBeforeElementAccessAndInvocationAsync()
+        {
+            var testCode = @"
+namespace TestNamespace
+{
+    using System;
+
+    public class TestClass
+    {
+        public int TestMethod(int[]? values, Func<int>? factory)
+        {
+            return values{|#0:!|} [0] + factory{|#1:!|} ();
+        }
+    }
+}
+";
+
+            var fixedCode = @"
+namespace TestNamespace
+{
+    using System;
+
+    public class TestClass
+    {
+        public int TestMethod(int[]? values, Func<int>? factory)
+        {
+            return values![0] + factory!();
+        }
+    }
+}
+";
+
+            var expected = new[]
+            {
+                    Diagnostic(DescriptorNotFollowedByWhitespace).WithLocation(0).WithArguments("!"),
+                    Diagnostic(DescriptorNotFollowedByWhitespace).WithLocation(1).WithArguments("!"),
+            };
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
         [WorkItem(3008, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3008")]
         public async Task TestIndexAndRangeExpressionsAsync()
         {

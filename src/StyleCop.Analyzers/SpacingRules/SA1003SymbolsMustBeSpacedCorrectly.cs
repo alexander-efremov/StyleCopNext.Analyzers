@@ -392,6 +392,10 @@ namespace StyleCop.Analyzers.SpacingRules
                 mustHaveTrailingWhitespace = !(followingToken.Parent is InterpolationFormatClauseSyntax);
                 break;
 
+            case SyntaxKind.OpenBracketToken:
+                mustHaveTrailingWhitespace = !(followingToken.Parent is BracketedArgumentListSyntax);
+                break;
+
             default:
                 mustHaveTrailingWhitespace = true;
                 break;
