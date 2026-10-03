@@ -1,3 +1,10 @@
+# StyleCopNext
+
+A maintained continuation of [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers), published as
+[StyleCopNext.Analyzers](https://www.nuget.org/packages/StyleCopNext.Analyzers): the same SA rules and `stylecop.json`
+settings, with stable releases. To switch, replace the `StyleCop.Analyzers` package reference with
+`StyleCopNext.Analyzers`. The original README follows.
+
 # StyleCop Analyzers for the .NET Compiler Platform
 
 [![NuGet](https://img.shields.io/nuget/v/StyleCop.Analyzers.svg)](https://www.nuget.org/packages/StyleCop.Analyzers)[![NuGet Beta](https://img.shields.io/nuget/vpre/StyleCop.Analyzers.svg)](https://www.nuget.org/packages/StyleCop.Analyzers)
