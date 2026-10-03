@@ -4,15 +4,15 @@
     <id>$id$</id>
     <version>0.0.0</version>
     <title>$id$</title>
-    <authors>Sam Harwell et. al.</authors>
-    <owners>Sam Harwell</owners>
+    <authors>Sam Harwell et. al., Alexander Efremov</authors>
+    <owners>alexander-efremov</owners>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/DotNetAnalyzers/StyleCopAnalyzers</projectUrl>
+    <projectUrl>https://github.com/alexander-efremov/StyleCopAnalyzers</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>An implementation of StyleCop's rules using Roslyn analyzers and code fixes</description>
-    <releaseNotes>https://github.com/DotNetAnalyzers/StyleCopAnalyzers/releases/$tag$</releaseNotes>
-    <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC</copyright>
-    <tags>StyleCop DotNetAnalyzers Roslyn Diagnostic Analyzer</tags>
+    <description>StyleCop's rules as Roslyn analyzers and code fixes. A maintained continuation of StyleCop.Analyzers (https://github.com/DotNetAnalyzers/StyleCopAnalyzers) with the same SA rules and stylecop.json settings.</description>
+    <releaseNotes>https://github.com/alexander-efremov/StyleCopAnalyzers/releases/$tag$</releaseNotes>
+    <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC; Copyright 2026 Alexander Efremov</copyright>
+    <tags>StyleCop StyleCopNext Roslyn Diagnostic Analyzer</tags>
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
