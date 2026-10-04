@@ -34,6 +34,7 @@
         <Rule Id="SA1026"  Action="Warning" />          <!-- Code should not contain space after new or stackalloc keyword in implicitly typed array allocation -->
         <Rule Id="SA1027"  Action="Warning" />          <!-- Use tabs correctly -->
         <Rule Id="SA1028"  Action="Warning" />          <!-- Code should not contain trailing whitespace -->
+        <Rule Id="SA1029"  Action="Warning" />          <!-- Do not split null-conditional operators -->
     </Rules>
    
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.ReadabilityRules">
