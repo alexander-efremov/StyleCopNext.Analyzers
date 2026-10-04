@@ -9,6 +9,40 @@
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
+  <!--
+    RoslynVersion selects the Microsoft.CodeAnalysis version the analyzers are compiled against. The package ships one
+    build per version (analyzers/dotnet/roslyn4.8 and analyzers/dotnet/roslyn5.0) and the compiler loads the highest
+    folder that is not newer than itself. Every non-default flavor builds into its own obj and bin folders so the
+    flavors can be restored and built side by side.
+  -->
+  <PropertyGroup>
+    <RoslynVersion Condition="'$(RoslynVersion)' == ''">4.8</RoslynVersion>
+    <IsDefaultRoslynVersion Condition="'$(RoslynVersion)' == '4.8'">true</IsDefaultRoslynVersion>
+    <IsDefaultRoslynVersion Condition="'$(IsDefaultRoslynVersion)' == ''">false</IsDefaultRoslynVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RoslynVersion)' == '4.8'">
+    <MicrosoftCodeAnalysisVersion>4.8.0</MicrosoftCodeAnalysisVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RoslynVersion)' == '5.0'">
+    <MicrosoftCodeAnalysisVersion>5.0.0</MicrosoftCodeAnalysisVersion>
+    <DefineConstants>$(DefineConstants);ROSLYN_5_0_OR_GREATER</DefineConstants>
+    <!-- The stable analyzers package flags test helper analyzers that target .NET; the shipped analyzers target netstandard2.0. -->
+    <NoWarn>$(NoWarn),RS1041</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsDefaultRoslynVersion)' != 'true'">
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/roslyn$(RoslynVersion)/</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/bin/roslyn$(RoslynVersion)/</BaseOutputPath>
+    <!-- The default flavor keeps its generated sources in obj/, which must not be globbed into this flavor. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <Target Name="ValidateRoslynVersion" BeforeTargets="CollectPackageReferences;_CheckForInvalidConfigurationAndPlatform" Condition="'$(RoslynVersion)' != '4.8' And '$(RoslynVersion)' != '5.0'">
+    <Error Text="Unsupported RoslynVersion '$(RoslynVersion)'. Supported values are 4.8 and 5.0." />
+  </Target>
+
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -42,6 +76,9 @@
 
   <PropertyGroup>
     <SharedMicrosoftCodeAnalysisAnalyzersVersion>3.11.0-beta1.24052.1</SharedMicrosoftCodeAnalysisAnalyzersVersion>
+    <!-- Microsoft.CodeAnalysis 5.0 requires the stable analyzers package, which is newer than the beta used by the other tooling. -->
+    <MicrosoftCodeAnalysisAnalyzersVersion>$(SharedMicrosoftCodeAnalysisAnalyzersVersion)</MicrosoftCodeAnalysisAnalyzersVersion>
+    <MicrosoftCodeAnalysisAnalyzersVersion Condition="'$(RoslynVersion)' == '5.0'">3.11.0</MicrosoftCodeAnalysisAnalyzersVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -52,7 +89,7 @@
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="all" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.46" PrivateAssets="all" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.0.1" PrivateAssets="all" />
   </ItemGroup>
 
