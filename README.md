@@ -26,6 +26,8 @@ See our [getting started guide](https://dotnetanalyzers.github.io/StyleCopAnalyz
 
 The severity of individual rules may be customized in the standard way for roslyn analyzers.
 Many [configuration options](https://dotnetanalyzers.github.io/StyleCopAnalyzers/Configuration.html) allow you to further tailor StyleCop.Analyzers to your team's tastes.
+See [ConfiguringRules.md](documentation/ConfiguringRules.md) for how to set rule severities in **.editorconfig** and
+**.globalconfig**, run the analyzers only in the IDE, and exclude files from analysis.
 
 ### C# language versions
 

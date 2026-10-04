@@ -8,6 +8,8 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
 
 Rules which enforce spacing requirements around keywords and symbols in the code.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.SpacingRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|-------------
 [SA1000](SA1000.md) | KeywordsMustBeSpacedCorrectly | The spacing around a C# keyword is incorrect. 

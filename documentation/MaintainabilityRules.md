@@ -8,6 +8,8 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.MaintainabilityRules.severit
 
 Rules which improve code maintainability.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.MaintainabilityRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|------------
 [SA1119](SA1119.md) | StatementMustNotUseUnnecessaryParenthesis | A C# statement contains parenthesis which are unnecessary and should be removed. 
