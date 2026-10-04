@@ -17,6 +17,8 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Formatting;
+    using Microsoft.CodeAnalysis.Options;
+    using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
 
     /// <summary>
@@ -111,7 +113,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             string qualifiedName = GetQualifiedName(extractedNamespace);
             if (extractedNamespace.Parent is NamespaceDeclarationSyntax)
             {
-                extractedRoot = HoistNestedNamespace(extractedRoot, extractedNamespace, qualifiedName);
+                extractedRoot = await HoistNestedNamespaceAsync(document, extractedRoot, extractedNamespace, qualifiedName, cancellationToken).ConfigureAwait(false);
             }
 
             DocumentId extractedDocumentId = DocumentId.CreateNewId(document.Project.Id);
@@ -146,7 +148,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             return name;
         }
 
-        private static SyntaxNode HoistNestedNamespace(SyntaxNode extractedRoot, NamespaceDeclarationSyntax nestedNamespace, string qualifiedName)
+        private static async Task<SyntaxNode> HoistNestedNamespaceAsync(Document document, SyntaxNode extractedRoot, NamespaceDeclarationSyntax nestedNamespace, string qualifiedName, CancellationToken cancellationToken)
         {
             var enclosing = nestedNamespace.Ancestors().OfType<NamespaceDeclarationSyntax>().Reverse().ToList();
             NamespaceDeclarationSyntax outermost = enclosing[0];
@@ -167,8 +169,15 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                 .WithExterns(SyntaxFactory.List(externs))
                 .WithUsings(SyntaxFactory.List(usings))
                 .WithLeadingTrivia(outermost.GetLeadingTrivia())
-                .WithTrailingTrivia(outermost.GetTrailingTrivia())
-                .WithAdditionalAnnotations(Formatter.Annotation);
+                .WithTrailingTrivia(outermost.GetTrailingTrivia());
+
+            // Re-indent the hoisted namespace using the line endings of the original file, not those of the platform
+            SourceText text = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            Workspace workspace = document.Project.Solution.Workspace;
+            OptionSet options = workspace.Options;
+            string newLine = FormattingHelper.GetEndOfLineForCodeFix(nestedNamespace.GetFirstToken(), text, options).ToString();
+            options = options.WithChangedOption(FormattingOptions.NewLine, LanguageNames.CSharp, newLine);
+            hoisted = (NamespaceDeclarationSyntax)Formatter.Format(hoisted, workspace, options, cancellationToken);
 
             return extractedRoot.ReplaceNode(outermost, hoisted);
         }
