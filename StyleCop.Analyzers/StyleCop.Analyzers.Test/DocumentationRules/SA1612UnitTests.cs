@@ -10,6 +10,7 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.DocumentationRules;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
     using StyleCop.Analyzers.Test.Verifiers;
     using Xunit;
     using static StyleCop.Analyzers.Test.Verifiers.CustomDiagnosticVerifier<StyleCop.Analyzers.DocumentationRules.SA1612ElementParameterDocumentationMustMatchElementParameters>;
@@ -27,18 +28,18 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
                 yield return new[] { "    public delegate ClassName {|#0:Method|}(string foo, string bar, string @new);" };
                 yield return new[] { "    public ClassName {|#0:this|}[string foo, string bar, string @new] { get { return null; } set { } }" };
 
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new[] { "    public record {|#0:TestType|}(string foo, string bar, string @new) {}" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new[] { "    public record struct {|#0:TestType|}(string foo, string bar, string @new) {}" };
                     yield return new[] { "    public record class {|#0:TestType|}(string foo, string bar, string @new) {}" };
                 }
 
-                if (LightupHelpers.SupportsCSharp12)
+                if (TestLanguageVersion.SupportsCSharp12)
                 {
                     yield return new[] { "    public struct {|#0:TestType|}(string foo, string bar, string @new) {}" };
                     yield return new[] { "    public class {|#0:TestType|}(string foo, string bar, string @new) {}" };
@@ -684,7 +685,7 @@ public class ClassName
         {
             var isPrimaryConstructor = declaration.Contains("record") || declaration.Contains("class") || declaration.Contains("struct");
 
-            if (isPrimaryConstructor && !LightupHelpers.SupportsCSharp11)
+            if (isPrimaryConstructor && !TestLanguageVersion.SupportsCSharp11)
             {
                 // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136 and https://github.com/dotnet/roslyn/issues/70488
                 return normallyExpected.Concat(normallyExpected).ToArray();

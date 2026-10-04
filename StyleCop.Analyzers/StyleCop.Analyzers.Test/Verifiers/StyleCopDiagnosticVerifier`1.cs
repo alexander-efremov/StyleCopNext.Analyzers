@@ -14,6 +14,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
     using Microsoft.CodeAnalysis.Testing;
     using Microsoft.CodeAnalysis.Testing.Verifiers;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
 
     internal static class StyleCopDiagnosticVerifier<TAnalyzer>
         where TAnalyzer : DiagnosticAnalyzer, new()
@@ -84,7 +85,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
             // NOTE: If needed, this method can be temporarily updated to default to a preview version
             private LanguageVersion? GetDefaultLanguageVersion()
             {
-                return null;
+                return TestLanguageVersion.Current;
             }
         }
     }

@@ -443,7 +443,9 @@ namespace StyleCop.Analyzers.Test.Settings
             var additionalFiles = ImmutableArray.Create<AdditionalText>(stylecopJSONFile);
             var analyzerOptions = new AnalyzerOptions(additionalFiles);
 
+#pragma warning disable CS0618 // Type or member is obsolete - there is no other way to create a context for a settings test
             return new SyntaxTreeAnalysisContext(syntaxTree, analyzerOptions, reportDiagnostic: _ => { }, isSupportedDiagnostic: _ => true, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private class AdditionalTextHelper : AdditionalText

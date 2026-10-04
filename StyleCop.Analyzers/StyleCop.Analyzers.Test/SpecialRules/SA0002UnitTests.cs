@@ -373,7 +373,9 @@ namespace NamespaceName { }
                         var additionalFiles = ImmutableArray.Create<AdditionalText>(new InvalidAdditionalText());
                         Assert.Null(additionalFiles[0].Path);
                         Assert.Null(additionalFiles[0].GetText(CancellationToken.None));
+#pragma warning disable CS0618 // Type or member is obsolete - there is no other way to create a context for this test
                         var context = new CompilationAnalysisContext(compilation, options: new AnalyzerOptions(additionalFiles), reportDiagnostic: null, isSupportedDiagnostic: null, cancellationToken: CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
                         Assert.Throws<ArgumentNullException>(() => analysisContext.CompilationAction(context));
 
                         return solution;
