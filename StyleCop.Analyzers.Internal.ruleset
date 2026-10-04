@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for StyleCop.Analyzers internal-only projects" Description="Code analysis rules for StyleCop.Analyzers internal-only projects." ToolsVersion="14.0">
   <Include Path="StyleCop.Analyzers.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
@@ -17,6 +17,7 @@
     <Rule Id="RS1004" Action="None" /> <!-- Recommend adding language support to diagnostic analyzer -->
     <Rule Id="RS1029" Action="None" /> <!-- Do not use reserved diagnostic IDs -->
     <Rule Id="RS1038" Action="None" /> <!-- Compiler extensions should be implemented in assemblies with compiler-provided references -->
+    <Rule Id="RS1041" Action="None" /> <!-- Test helpers intentionally target .NET Framework -->
     <Rule Id="RS2008" Action="None" /> <!-- Enable analyzer release tracking -->
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.PublicApiAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.PublicApiAnalyzers">
