@@ -42,6 +42,10 @@ Rules which offer a non-standard extension to the default StyleCop behavior.
 
 Describes the configuration options for StyleCop.Analyzers
 
+**[Configuring rules](documentation/ConfiguringRules.md)**
+
+Describes how to set rule severities in **.editorconfig** and **.globalconfig**, run the analyzers only in the IDE, and exclude files from analysis.
+
 **[How to enable the configuration](documentation/EnableConfiguration.md)**
 
 Describes how to enable the **stylecop.json** file for usage.
