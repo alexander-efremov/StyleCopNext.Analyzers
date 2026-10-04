@@ -1,6 +1,8 @@
 ### Documentation Rules (SA1600-)
 Rules which verify the content and formatting of code documentation.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.DocumentationRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|------------
 [SA1600](SA1600.md) | ElementsMustBeDocumented | A C# code element is missing a documentation header. 
