@@ -1,6 +1,8 @@
 ### Readability Rules (SA1100-)
 Rules which ensure that the code is well-formatted and readable.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.ReadabilityRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|-------------
 [SA1100](SA1100.md) | DoNotPrefixCallsWithBaseUnlessLocalImplementationExists | A call to a member from an inherited class begins with `base.`, and the local class does not contain an override or implementation of the member. 

@@ -40,3 +40,5 @@ In older versions of Visual Studio 2015:
 ## Next steps
 
 Additional information about the content of **stylecop.json** is available in [Configuration.md](Configuration.md).
+Information about rule severities, running the analyzers only in the IDE, and excluding files is available in
+[ConfiguringRules.md](ConfiguringRules.md).
