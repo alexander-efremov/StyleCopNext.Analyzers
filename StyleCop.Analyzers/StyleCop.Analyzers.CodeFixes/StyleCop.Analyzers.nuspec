@@ -24,12 +24,19 @@
     <file src="PackageReadme.md" target="README.md" />
 
     <!-- Binaries and symbols -->
-    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.pdb" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.dll" target="analyzers\dotnet\roslyn4.8\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.resources.dll" target="analyzers\dotnet\roslyn4.8\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.pdb" target="analyzers\dotnet\roslyn4.8\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.dll" target="analyzers\dotnet\roslyn4.8\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\roslyn4.8\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\roslyn4.8\cs" />
+
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\StyleCop.Analyzers.dll" target="analyzers\dotnet\roslyn5.0\cs" />
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.resources.dll" target="analyzers\dotnet\roslyn5.0\cs" />
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\StyleCop.Analyzers.pdb" target="analyzers\dotnet\roslyn5.0\cs" />
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.dll" target="analyzers\dotnet\roslyn5.0\cs" />
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\roslyn5.0\cs" />
+    <file src="bin\roslyn5.0\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.pdb" target="analyzers\dotnet\roslyn5.0\cs" />
 
 	<!-- Rulesets -->
 	<file src="rulesets\StyleCopAnalyzersDefault.ruleset" target="rulesets\" />

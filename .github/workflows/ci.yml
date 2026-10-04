@@ -52,6 +52,11 @@ jobs:
       - name: Build
         run: dotnet build StyleCopAnalyzers.sln --configuration Release
 
+      # The default build of the code fixes also builds the Roslyn 5.0 flavor for the package. Build it on its own as
+      # well so that a problem in that flavor is reported against this step.
+      - name: Build Roslyn 5.0 flavor
+        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release -p:RoslynVersion=5.0
+
   test:
     runs-on: windows-latest
     timeout-minutes: 30
@@ -70,11 +75,19 @@ jobs:
           - StyleCop.Analyzers.Test.CSharp13
         framework:
           - net10.0
+        # Roslyn flavor of the analyzers under test. It is an axis only so that the include entry below, which repeats the
+        # project and framework of an existing combination, adds a job instead of modifying that combination.
+        roslyn:
+          - '4.8'
         # Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so one
         # project covers .NET Framework, in a job of its own: CSharp13, which inherits the tests of every other project.
         include:
           - project: StyleCop.Analyzers.Test.CSharp13
             framework: net472
+          # The same tests against the Roslyn 5.0 build of the analyzers, the compiler of the .NET 10 SDK.
+          - project: StyleCop.Analyzers.Test.CSharp13
+            framework: net10.0
+            roslyn: '5.0'
     steps:
       - name: Allow Long Paths
         run: git config --system core.longpaths true
@@ -101,12 +114,12 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
 
       - name: Test
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults -p:RoslynVersion=${{ matrix.roslyn || '4.8' }}
 
       - name: Upload Test Results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: test-results-${{ matrix.project }}-${{ matrix.framework }}
+          name: test-results-${{ matrix.project }}-${{ matrix.framework }}-roslyn${{ matrix.roslyn || '4.8' }}
           path: TestResults/*.trx
           if-no-files-found: warn
