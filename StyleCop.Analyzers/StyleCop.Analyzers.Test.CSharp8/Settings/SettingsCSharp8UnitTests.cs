@@ -219,12 +219,12 @@ csharp_indent_labels = flush_left
         }
 
         [Theory]
-        [InlineData("one_less_than_current", LabelPositioning.OneLess)]
-        [InlineData("flush_left", LabelPositioning.LeftMost)]
-        [InlineData("no_change", LabelPositioning.NoIndent)]
-        [InlineData("no_change:none", LabelPositioning.NoIndent)]
-        [InlineData("unsupported", LabelPositioning.OneLess)]
-        public async Task VerifyLabelPositioningFromEditorConfigAsync(string value, LabelPositioning expected)
+        [InlineData("one_less_than_current", "OneLess")]
+        [InlineData("flush_left", "LeftMost")]
+        [InlineData("no_change", "NoIndent")]
+        [InlineData("no_change:none", "NoIndent")]
+        [InlineData("unsupported", "OneLess")]
+        public async Task VerifyLabelPositioningFromEditorConfigAsync(string value, string expected)
         {
             var settings = $@"root = true
 
@@ -235,7 +235,7 @@ csharp_indent_labels = {value}
 
             var styleCopSettings = context.GetStyleCopSettingsInTests(CancellationToken.None);
 
-            Assert.Equal(expected, styleCopSettings.Indentation.LabelPositioning);
+            Assert.Equal(expected, styleCopSettings.Indentation.LabelPositioning.ToString());
         }
 
         [Fact]
