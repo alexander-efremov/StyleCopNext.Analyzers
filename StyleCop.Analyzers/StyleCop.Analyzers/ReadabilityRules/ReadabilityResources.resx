@@ -273,6 +273,9 @@
   <data name="SA1113Title" xml:space="preserve">
     <value>Comma should be on the same line as previous parameter</value>
   </data>
+  <data name="SA1114CodeFix" xml:space="preserve">
+    <value>Remove blank lines before first parameter</value>
+  </data>
   <data name="SA1114Description" xml:space="preserve">
     <value>The start of the parameter list for a method/constructor/indexer/array/operator call or declaration does not begin on the same line as the opening bracket, or on the line after the opening bracket.</value>
   </data>
