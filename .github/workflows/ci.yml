@@ -34,6 +34,13 @@ jobs:
           - StyleCop.Analyzers.Test.CSharp11
           - StyleCop.Analyzers.Test.CSharp12
           - StyleCop.Analyzers.Test.CSharp13
+        framework:
+          - net6.0
+        # Older Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so
+        # one project covers .NET Framework, in a job of its own: CSharp13, which inherits the tests of every other project.
+        include:
+          - project: StyleCop.Analyzers.Test.CSharp13
+            framework: net472
     steps:
       # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
       - name: Allow Long Paths
@@ -54,12 +61,12 @@ jobs:
             10.0.x
 
       - name: Test
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --logger trx --results-directory TestResults
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
 
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: test-results-${{ matrix.project }}
+          name: test-results-${{ matrix.project }}-${{ matrix.framework }}
           path: TestResults/*.trx
           if-no-files-found: ignore
