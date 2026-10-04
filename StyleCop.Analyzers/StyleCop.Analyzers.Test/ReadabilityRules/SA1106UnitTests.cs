@@ -22,7 +22,7 @@ namespace StyleCop.Analyzers.Test.ReadabilityRules
                 var result = new TheoryData<string, string>();
                 foreach (var lineEndingData in CommonData.EndOfLineSequences)
                 {
-                    var lineEnding = (string)lineEndingData.Single();
+                    var lineEnding = lineEndingData.Data;
                     result.Add("if (true)", lineEnding);
                     result.Add("if (true) { } else", lineEnding);
                     result.Add("for (int i = 0; i < 10; i++)", lineEnding);
