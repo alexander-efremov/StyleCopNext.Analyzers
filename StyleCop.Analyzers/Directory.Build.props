@@ -33,6 +33,8 @@
   <PropertyGroup Condition="'$(IsDefaultRoslynVersion)' != 'true'">
     <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/roslyn$(RoslynVersion)/</BaseIntermediateOutputPath>
     <BaseOutputPath>$(MSBuildProjectDirectory)/bin/roslyn$(RoslynVersion)/</BaseOutputPath>
+    <!-- The default flavor keeps its generated sources in obj/, which must not be globbed into this flavor. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <Target Name="ValidateRoslynVersion" BeforeTargets="BeforeBuild;BeforeRestore;_CheckForInvalidConfigurationAndPlatform" Condition="'$(RoslynVersion)' != '4.8' And '$(RoslynVersion)' != '5.0'">
