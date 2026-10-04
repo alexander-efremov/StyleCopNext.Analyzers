@@ -13,7 +13,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using StyleCop.Analyzers.Helpers;
 
-    internal sealed class RemoveRegionFixAllProvider : DocumentBasedFixAllProvider
+    internal sealed class RemoveRegionFixAllProvider : StyleCopDocumentBasedFixAllProvider
     {
         protected override string CodeActionTitle => "Remove region";
 

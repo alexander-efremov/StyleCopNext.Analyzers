@@ -10,7 +10,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
     using System.Globalization;
     using System.Text.RegularExpressions;
     using LightJson;
-    using StyleCop.Analyzers.Lightup;
+    using Microsoft.CodeAnalysis.Diagnostics;
 
     internal class DocumentationSettings
     {
@@ -140,7 +140,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
         /// <param name="documentationSettingsObject">The JSON object containing the settings.</param>
         /// <param name="analyzerConfigOptions">The <strong>.editorconfig</strong> options to use if
         /// <strong>stylecop.json</strong> does not provide values.</param>
-        protected internal DocumentationSettings(JsonObject documentationSettingsObject, AnalyzerConfigOptionsWrapper analyzerConfigOptions)
+        protected internal DocumentationSettings(JsonObject documentationSettingsObject, AnalyzerConfigOptions analyzerConfigOptions)
         {
             bool? documentExposedElements = null;
             bool? documentInternalElements = null;
@@ -369,7 +369,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
             throw new StyleCop.Analyzers.InvalidSettingsException($"{kvp.Key} must contain a boolean or string value");
         }
 
-        private static InterfaceDocumentationMode? TryGetDocumentInterfacesValue(AnalyzerConfigOptionsWrapper analyzerConfigOptions)
+        private static InterfaceDocumentationMode? TryGetDocumentInterfacesValue(AnalyzerConfigOptions analyzerConfigOptions)
         {
             var value = AnalyzerConfigHelper.TryGetStringValue(analyzerConfigOptions, "stylecop.documentation.documentInterfaces");
             if (value is null)

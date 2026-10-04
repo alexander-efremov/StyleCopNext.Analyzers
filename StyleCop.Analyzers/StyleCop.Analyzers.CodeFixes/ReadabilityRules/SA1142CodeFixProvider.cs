@@ -16,7 +16,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.CSharp;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SA1142CodeFixProvider))]
     [Shared]
@@ -59,12 +58,12 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static SyntaxNode GetReplacementNode(SemanticModel semanticModel, SyntaxNode fieldName)
         {
             var fieldSymbol = (IFieldSymbol)semanticModel.GetSymbolInfo(fieldName.Parent).Symbol;
-            var fieldNameSymbol = fieldSymbol.ContainingType.GetMembers().OfType<IFieldSymbol>().Single(fs => !Equals(fs, fieldSymbol) && Equals(fs.CorrespondingTupleField(), fieldSymbol));
+            var fieldNameSymbol = fieldSymbol.ContainingType.GetMembers().OfType<IFieldSymbol>().Single(fs => !SymbolEqualityComparer.Default.Equals(fs, fieldSymbol) && SymbolEqualityComparer.Default.Equals(fs.CorrespondingTupleField, fieldSymbol));
 
             return SyntaxFactory.IdentifierName(fieldNameSymbol.Name).WithTriviaFrom(fieldName);
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } = new FixAll();
 

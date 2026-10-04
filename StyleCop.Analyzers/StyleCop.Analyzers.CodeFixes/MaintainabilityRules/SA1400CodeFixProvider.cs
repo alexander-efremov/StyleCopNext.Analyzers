@@ -15,7 +15,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1400AccessModifierMustBeDeclared"/>.
@@ -85,9 +84,9 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                 updatedDeclarationNode = HandleStructDeclaration((StructDeclarationSyntax)declarationNode);
                 break;
 
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
-                updatedDeclarationNode = HandleRecordDeclaration((RecordDeclarationSyntaxWrapper)declarationNode);
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
+                updatedDeclarationNode = HandleRecordDeclaration((RecordDeclarationSyntax)declarationNode);
                 break;
 
             case SyntaxKind.DelegateDeclaration:
@@ -202,7 +201,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                 .WithoutFormatting();
         }
 
-        private static SyntaxNode HandleRecordDeclaration(RecordDeclarationSyntaxWrapper node)
+        private static SyntaxNode HandleRecordDeclaration(RecordDeclarationSyntax node)
         {
             SyntaxToken triviaToken = node.Keyword;
             if (triviaToken.IsMissing)
@@ -215,7 +214,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             return node
                 .WithKeyword(triviaToken)
                 .WithModifiers(modifiers)
-                .SyntaxNode
                 .WithoutFormatting();
         }
 
@@ -380,8 +378,8 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                 case SyntaxKind.InterfaceDeclaration:
                 case SyntaxKind.EnumDeclaration:
                 case SyntaxKind.StructDeclaration:
-                case SyntaxKindEx.RecordDeclaration:
-                case SyntaxKindEx.RecordStructDeclaration:
+                case SyntaxKind.RecordDeclaration:
+                case SyntaxKind.RecordStructDeclaration:
                 case SyntaxKind.DelegateDeclaration:
                 case SyntaxKind.EventDeclaration:
                 case SyntaxKind.EventFieldDeclaration:

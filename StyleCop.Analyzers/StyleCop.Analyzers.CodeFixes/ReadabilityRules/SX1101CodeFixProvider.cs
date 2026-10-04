@@ -66,7 +66,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             return parent.Name.WithTriviaFrom(parent);
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                    new FixAll();

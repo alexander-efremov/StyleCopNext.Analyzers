@@ -8,11 +8,11 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using StyleCop.Analyzers.Lightup;
+    using Microsoft.CodeAnalysis.Diagnostics;
 
     internal static class AnalyzerConfigHelper
     {
-        internal static bool? TryGetBooleanValue(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key)
+        internal static bool? TryGetBooleanValue(AnalyzerConfigOptions analyzerConfigOptions, string key)
         {
             if (analyzerConfigOptions.TryGetValue(key, out var value)
                 && value != "unset"
@@ -24,7 +24,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
             return null;
         }
 
-        internal static int? TryGetInt32Value(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key)
+        internal static int? TryGetInt32Value(AnalyzerConfigOptions analyzerConfigOptions, string key)
         {
             if (analyzerConfigOptions.TryGetValue(key, out var value)
                 && value != "unset"
@@ -36,7 +36,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
             return null;
         }
 
-        internal static string TryGetStringValue(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key, bool allowExplicitUnset = true)
+        internal static string TryGetStringValue(AnalyzerConfigOptions analyzerConfigOptions, string key, bool allowExplicitUnset = true)
         {
             if (analyzerConfigOptions.TryGetValue(key, out var value))
             {
@@ -51,13 +51,13 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
             return null;
         }
 
-        internal static string TryGetMultiLineStringValue(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key, bool allowExplicitUnset = true)
+        internal static string TryGetMultiLineStringValue(AnalyzerConfigOptions analyzerConfigOptions, string key, bool allowExplicitUnset = true)
         {
             var orgValue = TryGetStringValue(analyzerConfigOptions, key, allowExplicitUnset);
             return orgValue?.Replace("\\r", "\r").Replace("\\n", "\n");
         }
 
-        internal static KeyValuePair<string, string>? TryGetStringValueAndNotification(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key, bool allowExplicitUnset = true)
+        internal static KeyValuePair<string, string>? TryGetStringValueAndNotification(AnalyzerConfigOptions analyzerConfigOptions, string key, bool allowExplicitUnset = true)
         {
             if (analyzerConfigOptions.TryGetValue(key, out var value))
             {
@@ -78,7 +78,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
             return null;
         }
 
-        internal static ImmutableArray<string>? TryGetStringListValue(AnalyzerConfigOptionsWrapper analyzerConfigOptions, string key, bool allowExplicitUnset = true)
+        internal static ImmutableArray<string>? TryGetStringListValue(AnalyzerConfigOptions analyzerConfigOptions, string key, bool allowExplicitUnset = true)
         {
             if (analyzerConfigOptions.TryGetValue(key, out var value))
             {

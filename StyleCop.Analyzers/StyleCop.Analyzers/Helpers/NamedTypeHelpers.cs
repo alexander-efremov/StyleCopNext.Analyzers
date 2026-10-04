@@ -11,8 +11,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    using StyleCop.Analyzers.Lightup;
-
     internal static class NamedTypeHelpers
     {
         internal static bool IsNativeMethodsClass(INamedTypeSymbol type)
@@ -88,8 +86,8 @@ namespace StyleCop.Analyzers.Helpers
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.StructDeclaration:
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
                 return ((TypeDeclarationSyntax)member).Identifier.Text;
 
             case SyntaxKind.EnumDeclaration:
@@ -178,10 +176,10 @@ namespace StyleCop.Analyzers.Helpers
             return typeSymbol != null && typeSymbol.AllInterfaces
                 .SelectMany(m => m.GetMembers(memberSymbol.Name))
                 .Select(typeSymbol.FindImplementationForInterfaceMember)
-                .Any(x => memberSymbol.Equals(x));
+                .Any(x => SymbolEqualityComparer.Default.Equals(memberSymbol, x));
         }
 
         internal static INamedTypeSymbol TupleUnderlyingTypeOrSelf(this INamedTypeSymbol tupleSymbol)
-            => tupleSymbol.TupleUnderlyingType() ?? tupleSymbol;
+            => tupleSymbol.TupleUnderlyingType ?? tupleSymbol;
     }
 }

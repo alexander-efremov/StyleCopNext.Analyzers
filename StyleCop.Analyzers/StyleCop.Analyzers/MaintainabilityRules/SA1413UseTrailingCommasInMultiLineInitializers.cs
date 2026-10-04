@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A multi-line initializer should use a comma on the last item.
@@ -65,7 +64,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         private static readonly Action<SyntaxNodeAnalysisContext> HandlePropertyPatternClauseAction = HandlePropertyPatternClause;
 
         private static readonly ImmutableArray<SyntaxKind> ObjectInitializerKinds =
-            ImmutableArray.Create(SyntaxKind.ObjectInitializerExpression, SyntaxKind.ArrayInitializerExpression, SyntaxKind.CollectionInitializerExpression, SyntaxKindEx.WithInitializerExpression);
+            ImmutableArray.Create(SyntaxKind.ObjectInitializerExpression, SyntaxKind.ArrayInitializerExpression, SyntaxKind.CollectionInitializerExpression, SyntaxKind.WithInitializerExpression);
 
         /// <inheritdoc/>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
@@ -80,8 +79,8 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             context.RegisterSyntaxNodeAction(HandleObjectInitializerAction, ObjectInitializerKinds);
             context.RegisterSyntaxNodeAction(HandleAnonymousObjectInitializerAction, SyntaxKind.AnonymousObjectCreationExpression);
             context.RegisterSyntaxNodeAction(HandleEnumDeclarationAction, SyntaxKind.EnumDeclaration);
-            context.RegisterSyntaxNodeAction(HandleSwitchExpressionAction, SyntaxKindEx.SwitchExpression);
-            context.RegisterSyntaxNodeAction(HandlePropertyPatternClauseAction, SyntaxKindEx.PropertyPatternClause);
+            context.RegisterSyntaxNodeAction(HandleSwitchExpressionAction, SyntaxKind.SwitchExpression);
+            context.RegisterSyntaxNodeAction(HandlePropertyPatternClauseAction, SyntaxKind.PropertyPatternClause);
         }
 
         private static void HandleEnumDeclaration(SyntaxNodeAnalysisContext context)
@@ -129,29 +128,29 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
         private static void HandleSwitchExpression(SyntaxNodeAnalysisContext context)
         {
-            var switchExpression = (SwitchExpressionSyntaxWrapper)context.Node;
-            if (switchExpression.SyntaxNode == null || !switchExpression.SyntaxNode.SpansMultipleLines())
+            var switchExpression = (SwitchExpressionSyntax)context.Node;
+            if (!switchExpression.SpansMultipleLines())
             {
                 return;
             }
 
             if (switchExpression.Arms.SeparatorCount < switchExpression.Arms.Count)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, switchExpression.Arms.Last().SyntaxNode.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, switchExpression.Arms.Last().GetLocation()));
             }
         }
 
         private static void HandlePropertyPatternClause(SyntaxNodeAnalysisContext context)
         {
-            var propertyPatternClause = (PropertyPatternClauseSyntaxWrapper)context.Node;
-            if (propertyPatternClause.SyntaxNode == null || !propertyPatternClause.SyntaxNode.SpansMultipleLines())
+            var propertyPatternClause = (PropertyPatternClauseSyntax)context.Node;
+            if (!propertyPatternClause.SpansMultipleLines())
             {
                 return;
             }
 
             if (propertyPatternClause.Subpatterns.SeparatorCount < propertyPatternClause.Subpatterns.Count)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, propertyPatternClause.Subpatterns.Last().SyntaxNode.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, propertyPatternClause.Subpatterns.Last().GetLocation()));
             }
         }
     }

@@ -17,7 +17,6 @@ namespace StyleCop.Analyzers
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Text;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -214,7 +213,7 @@ namespace StyleCop.Analyzers
                 // TODO: Can this really be null? Review when nullable references has been enabled
                 if (tree != null)
                 {
-                    var analyzerConfigOptions = options.AnalyzerConfigOptionsProvider().GetOptions(tree);
+                    var analyzerConfigOptions = options.AnalyzerConfigOptionsProvider.GetOptions(tree);
                     settings = new StyleCopSettings(new JsonObject(), analyzerConfigOptions);
                 }
                 else
@@ -228,7 +227,7 @@ namespace StyleCop.Analyzers
 
         private static StyleCopSettings CreateSettingsObjectFromFile(AnalyzerOptions options, SyntaxTree tree, SettingsFile settingsFile, DeserializationFailureBehavior failureBehavior)
         {
-            var analyzerConfigOptions = options.AnalyzerConfigOptionsProvider().GetOptions(tree);
+            var analyzerConfigOptions = options.AnalyzerConfigOptionsProvider.GetOptions(tree);
 
             try
             {

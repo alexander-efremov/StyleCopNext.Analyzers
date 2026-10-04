@@ -72,7 +72,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             return Task.FromResult(document.WithSyntaxRoot(newSyntaxRoot));
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                    new FixAll();

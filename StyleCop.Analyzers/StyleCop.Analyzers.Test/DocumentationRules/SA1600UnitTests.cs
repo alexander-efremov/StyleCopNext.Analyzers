@@ -5,6 +5,7 @@
 
 namespace StyleCop.Analyzers.Test.DocumentationRules
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis.CSharp;
@@ -1365,9 +1366,34 @@ public class OuterClass
 
         protected virtual DiagnosticResult[] GetExpectedResultTestRegressionMethodGlobalNamespace(string code)
         {
+            if (code == "public void {|#0:TestMember|}() { }")
+            {
+                var expected = new List<DiagnosticResult>
+                {
+                    // /0/Test0.cs(4,1): error CS0106: The modifier 'public' is not valid for this item
+                    DiagnosticResult.CompilerError("CS0106").WithSpan(4, 1, 4, 7).WithArguments("public"),
+
+                    // /0/Test0.cs(4,1): error CS8805: Program using top-level statements must be an executable.
+                    DiagnosticResult.CompilerError("CS8805").WithSpan(4, 1, 4, 29),
+                };
+
+                if (this.LanguageVersion == LanguageVersion.CSharp6)
+                {
+                    // Top-level statements and local functions are not available before C# 7.
+                    expected.Add(DiagnosticResult.CompilerError("CS8059").WithSpan(4, 1, 4, 29));
+                    expected.Add(DiagnosticResult.CompilerError("CS8059").WithSpan(4, 13, 4, 23));
+                }
+                else if (this.LanguageVersion == LanguageVersion.CSharp7_2)
+                {
+                    expected.Add(DiagnosticResult.CompilerError("CS8320").WithSpan(4, 1, 4, 29));
+                }
+
+                return expected.ToArray();
+            }
+
             return new[]
             {
-                DiagnosticResult.CompilerError("CS0116").WithMessage("A namespace cannot directly contain members such as fields or methods").WithLocation(0),
+                DiagnosticResult.CompilerError("CS0116").WithMessage("A namespace cannot directly contain members such as fields, methods or statements").WithLocation(0),
                 Diagnostic().WithLocation(0),
             };
         }

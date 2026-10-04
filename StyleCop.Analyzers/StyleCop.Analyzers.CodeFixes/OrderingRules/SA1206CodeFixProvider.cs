@@ -17,7 +17,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using static StyleCop.Analyzers.OrderingRules.ModifierOrderHelper;
 
     /// <summary>
@@ -57,7 +56,7 @@ namespace StyleCop.Analyzers.OrderingRules
         {
             var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
-            var memberOrLocalFunction = syntaxRoot.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<CSharpSyntaxNode>(static node => node is MemberDeclarationSyntax || LocalFunctionStatementSyntaxWrapper.IsInstance(node));
+            var memberOrLocalFunction = syntaxRoot.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<CSharpSyntaxNode>(static node => node is MemberDeclarationSyntax || node is LocalFunctionStatementSyntax);
             if (memberOrLocalFunction == null)
             {
                 return document;
@@ -76,7 +75,7 @@ namespace StyleCop.Analyzers.OrderingRules
             }
             else
             {
-                var localFunctionStatement = (LocalFunctionStatementSyntaxWrapper)memberOrLocalFunction;
+                var localFunctionStatement = (LocalFunctionStatementSyntax)memberOrLocalFunction;
                 var newModifierList = PartiallySortModifiers(localFunctionStatement.Modifiers, modifierTokenToFix);
                 syntaxRoot = UpdateSyntaxRoot(localFunctionStatement, newModifierList, syntaxRoot);
             }
@@ -90,7 +89,7 @@ namespace StyleCop.Analyzers.OrderingRules
             return syntaxRoot.ReplaceNode(memberDeclaration, newDeclaration);
         }
 
-        private static SyntaxNode UpdateSyntaxRoot(LocalFunctionStatementSyntaxWrapper localFunctionStatement, SyntaxTokenList newModifiers, SyntaxNode syntaxRoot)
+        private static SyntaxNode UpdateSyntaxRoot(LocalFunctionStatementSyntax localFunctionStatement, SyntaxTokenList newModifiers, SyntaxNode syntaxRoot)
         {
             var newDeclaration = localFunctionStatement.WithModifiers(newModifiers);
             return syntaxRoot.ReplaceNode(localFunctionStatement, newDeclaration);
@@ -174,7 +173,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 newModifiers.Zip(oldModifiers, (m1, m2) => m1.WithTriviaFrom(m2)));
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } = new FixAll();
 
@@ -194,7 +193,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 var trackedDiagnosticMembers = new HashSet<CSharpSyntaxNode>();
                 foreach (var diagnostic in diagnostics)
                 {
-                    var memberOrLocalFunction = syntaxRoot.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<CSharpSyntaxNode>(static node => node is MemberDeclarationSyntax || LocalFunctionStatementSyntaxWrapper.IsInstance(node));
+                    var memberOrLocalFunction = syntaxRoot.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<CSharpSyntaxNode>(static node => node is MemberDeclarationSyntax || node is LocalFunctionStatementSyntax);
                     if (memberOrLocalFunction == null)
                     {
                         continue;
@@ -221,7 +220,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     }
                     else
                     {
-                        var localFunctionStatement = (LocalFunctionStatementSyntaxWrapper)currentMember;
+                        var localFunctionStatement = (LocalFunctionStatementSyntax)currentMember;
                         var newModifierList = FullySortModifiers(localFunctionStatement.Modifiers);
                         syntaxRoot = UpdateSyntaxRoot(localFunctionStatement, newModifierList, syntaxRoot);
                     }

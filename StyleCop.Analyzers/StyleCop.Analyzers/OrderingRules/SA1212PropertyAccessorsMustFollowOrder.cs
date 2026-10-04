@@ -11,7 +11,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A get accessor appears after a set accessor within a property or indexer.
@@ -100,7 +99,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            if ((accessors[0].Kind() is SyntaxKind.SetAccessorDeclaration or SyntaxKindEx.InitAccessorDeclaration) &&
+            if ((accessors[0].Kind() is SyntaxKind.SetAccessorDeclaration or SyntaxKind.InitAccessorDeclaration) &&
                 accessors[1].Kind() == SyntaxKind.GetAccessorDeclaration)
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptor, accessors[0].GetLocation()));

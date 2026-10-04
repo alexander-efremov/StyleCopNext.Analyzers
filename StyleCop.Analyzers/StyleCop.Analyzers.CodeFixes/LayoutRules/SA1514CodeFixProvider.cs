@@ -79,7 +79,7 @@ namespace StyleCop.Analyzers.LayoutRules
                 });
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                 new FixAll();

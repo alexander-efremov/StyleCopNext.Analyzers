@@ -9,7 +9,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A closing generic bracket within a C# element is not spaced correctly.
@@ -83,11 +82,11 @@ namespace StyleCop.Analyzers.SpacingRules
                 return;
             }
 
-            switch (token.Parent.Kind())
+            switch (token.Parent!.Kind())
             {
             case SyntaxKind.TypeArgumentList:
             case SyntaxKind.TypeParameterList:
-            case SyntaxKindEx.FunctionPointerParameterList:
+            case SyntaxKind.FunctionPointerParameterList:
                 break;
 
             default:
@@ -115,7 +114,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 case SyntaxKind.OpenBracketToken:
                 // SemicolonToken isn't listed above, but it's required for reasonable using alias declaration formatting
                 case SyntaxKind.SemicolonToken:
-                case SyntaxKind.ColonToken when nextToken.Parent.IsKind(SyntaxKindEx.CasePatternSwitchLabel):
+                case SyntaxKind.ColonToken when nextToken.Parent.IsKind(SyntaxKind.CasePatternSwitchLabel):
                     allowTrailingNoSpace = true;
                     allowTrailingSpace = false;
                     break;
@@ -127,7 +126,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 case SyntaxKind.CloseParenToken:
                 case SyntaxKind.GreaterThanToken:
                 case SyntaxKind.CloseBraceToken:
-                case SyntaxKind.CloseBracketToken when nextToken.Parent.IsKind(SyntaxKindEx.CollectionExpression):
+                case SyntaxKind.CloseBracketToken when nextToken.Parent.IsKind(SyntaxKind.CollectionExpression):
                     allowTrailingNoSpace = true;
                     allowTrailingSpace = true;
                     break;
@@ -197,11 +196,11 @@ namespace StyleCop.Analyzers.SpacingRules
             out bool allowTrailingNoSpace,
             out bool allowTrailingSpace)
         {
-            switch (nextToken.Parent.Kind())
+            switch (nextToken.Parent!.Kind())
             {
             // List<int> (int x) => new List<int> { x }
             //         ^ ^
-            case SyntaxKind.ParameterList when nextToken.Parent.Parent.IsKind(SyntaxKind.ParenthesizedLambdaExpression):
+            case SyntaxKind.ParameterList when nextToken.Parent!.Parent.IsKind(SyntaxKind.ParenthesizedLambdaExpression):
                 allowTrailingNoSpace = false;
                 allowTrailingSpace = true;
                 break;

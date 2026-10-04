@@ -14,7 +14,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1407ArithmeticExpressionsMustDeclarePrecedence"/> and  <see cref="SA1408ConditionalExpressionsMustDeclarePrecedence"/>.
@@ -60,12 +59,12 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                             nameof(SA1407SA1408CodeFixProvider)),
                         diagnostic);
                 }
-                else if (BinaryPatternSyntaxWrapper.IsInstance(node))
+                else if (node is BinaryPatternSyntax)
                 {
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             MaintainabilityResources.SA1407SA1408CodeFix,
-                            cancellationToken => GetTransformedDocumentAsync(context.Document, root, (BinaryPatternSyntaxWrapper)node),
+                            cancellationToken => GetTransformedDocumentAsync(context.Document, root, (BinaryPatternSyntax)node),
                             nameof(SA1407SA1408CodeFixProvider)),
                         diagnostic);
                 }
@@ -83,10 +82,9 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             return Task.FromResult(document.WithSyntaxRoot(newSyntaxRoot));
         }
 
-        private static Task<Document> GetTransformedDocumentAsync(Document document, SyntaxNode root, BinaryPatternSyntaxWrapper syntax)
+        private static Task<Document> GetTransformedDocumentAsync(Document document, SyntaxNode root, BinaryPatternSyntax syntax)
         {
-            var newNode = (ParenthesizedPatternSyntaxWrapper)SyntaxFactoryEx.ParenthesizedPattern((PatternSyntaxWrapper)syntax.SyntaxNode.WithoutTrivia())
-                .SyntaxNode
+            var newNode = SyntaxFactory.ParenthesizedPattern(syntax.WithoutTrivia())
                 .WithTriviaFrom(syntax)
                 .WithoutFormatting();
 
