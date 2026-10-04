@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\StyleCop.Analyzers.Internal.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\StyleCop.Analyzers.Internal.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,8 +25,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StyleCop.Analyzers.Test\StyleCop.Analyzers.Test.csproj" />
-    <ProjectReference Include="..\..\src\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
-    <ProjectReference Include="..\..\tools\StyleCop.Analyzers.PrivateCodeFixes\StyleCop.Analyzers.PrivateCodeFixes.csproj" PrivateAssets="all" SetTargetFramework="TargetFramework=netstandard2.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
+    <ProjectReference Include="..\StyleCop.Analyzers.PrivateCodeFixes\StyleCop.Analyzers.PrivateCodeFixes.csproj" Condition="'$(RunAnalyzers)' != 'false'" PrivateAssets="all" SetTargetFramework="TargetFramework=netstandard2.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
