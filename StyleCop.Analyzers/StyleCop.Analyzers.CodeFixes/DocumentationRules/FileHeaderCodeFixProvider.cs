@@ -489,7 +489,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             {
                 if (diagnostics.IsEmpty)
                 {
-                    return null;
+                    return Task.FromResult<SyntaxNode>(null);
                 }
 
                 return GetTransformedSyntaxRootAsync(document, fixAllContext.CancellationToken);
