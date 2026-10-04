@@ -28,6 +28,8 @@
   <PropertyGroup Condition="'$(RoslynVersion)' == '5.0'">
     <MicrosoftCodeAnalysisVersion>5.0.0</MicrosoftCodeAnalysisVersion>
     <DefineConstants>$(DefineConstants);ROSLYN_5_0_OR_GREATER</DefineConstants>
+    <!-- The stable analyzers package flags test helper analyzers that target .NET; the shipped analyzers target netstandard2.0. -->
+    <NoWarn>$(NoWarn),RS1041</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsDefaultRoslynVersion)' != 'true'">
