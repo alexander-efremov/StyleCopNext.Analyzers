@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.8.2" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <!-- 2.4.5 requires net462+; net46 stays on 2.4.1 -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net46'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" Condition="'$(TargetFramework)' != 'net46'" />
     <!-- Pin vulnerable transitives (GHSA-5crp-9r3c-p9vr, GHSA-7jgj-8wvc-jh57, GHSA-cmhx-cq75-c4mj) -->

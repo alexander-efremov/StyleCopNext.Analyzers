@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.6.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" />
     <!-- Pin vulnerable transitives (GHSA-68w7-72jg-6qpp, GHSA-7jgj-8wvc-jh57, GHSA-cmhx-cq75-c4mj) -->
     <PackageReference Include="NuGet.Packaging" Version="6.3.4" />
