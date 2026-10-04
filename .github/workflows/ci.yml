@@ -119,7 +119,11 @@ jobs:
             nuget-${{ runner.os }}-
             nuget-
 
+      # Analyzers take half of the build. The net6.0 CSharp13 job builds every project, so it alone runs them; source
+      # generators run either way.
       - name: Test
+        env:
+          RunAnalyzers: ${{ matrix.project == 'StyleCop.Analyzers.Test.CSharp13' && matrix.framework == 'net6.0' }}
         run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
 
       - name: Upload Test Results
