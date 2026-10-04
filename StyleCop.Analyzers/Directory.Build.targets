@@ -5,4 +5,8 @@
     <None Include="$(MSBuildProjectFileDirectory)$(AssemblyOriginatorKeyFile)" Link="%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <RunSettingsFilePath Condition="'$(RunSettingsFilePath)' == ''">$(MSBuildThisFileDirectory)Test.runsettings</RunSettingsFilePath>
+  </PropertyGroup>
+
 </Project>
