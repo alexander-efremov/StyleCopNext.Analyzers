@@ -9,6 +9,36 @@
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
+  <!--
+    RoslynVersion selects the Microsoft.CodeAnalysis version the analyzers are compiled against. The package ships one
+    build per version (analyzers/dotnet/roslyn4.8 and analyzers/dotnet/roslyn5.0) and the compiler loads the highest
+    folder that is not newer than itself. Every non-default flavor builds into its own obj and bin folders so the
+    flavors can be restored and built side by side.
+  -->
+  <PropertyGroup>
+    <RoslynVersion Condition="'$(RoslynVersion)' == ''">4.8</RoslynVersion>
+    <IsDefaultRoslynVersion Condition="'$(RoslynVersion)' == '4.8'">true</IsDefaultRoslynVersion>
+    <IsDefaultRoslynVersion Condition="'$(IsDefaultRoslynVersion)' == ''">false</IsDefaultRoslynVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RoslynVersion)' == '4.8'">
+    <MicrosoftCodeAnalysisVersion>4.8.0</MicrosoftCodeAnalysisVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RoslynVersion)' == '5.0'">
+    <MicrosoftCodeAnalysisVersion>5.0.0</MicrosoftCodeAnalysisVersion>
+    <DefineConstants>$(DefineConstants);ROSLYN_5_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsDefaultRoslynVersion)' != 'true'">
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/roslyn$(RoslynVersion)/</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/bin/roslyn$(RoslynVersion)/</BaseOutputPath>
+  </PropertyGroup>
+
+  <Target Name="ValidateRoslynVersion" BeforeTargets="BeforeBuild;BeforeRestore;_CheckForInvalidConfigurationAndPlatform" Condition="'$(RoslynVersion)' != '4.8' And '$(RoslynVersion)' != '5.0'">
+    <Error Text="Unsupported RoslynVersion '$(RoslynVersion)'. Supported values are 4.8 and 5.0." />
+  </Target>
+
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
