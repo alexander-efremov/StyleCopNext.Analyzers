@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- The tests allocate heavily on every core. COMPlus_ names work on .NET Framework and on .NET. -->
+    <EnvironmentVariables>
+      <COMPlus_gcServer>1</COMPlus_gcServer>
+      <COMPlus_gcConcurrent>0</COMPlus_gcConcurrent>
+      <COMPlus_TieredCompilation>0</COMPlus_TieredCompilation>
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>
