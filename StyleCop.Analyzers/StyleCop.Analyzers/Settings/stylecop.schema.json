@@ -31,6 +31,31 @@
               "description": "Specifies whether indentation should use hard tabs instead of spaces.",
               "type": "boolean",
               "default": false
+            },
+            "indentBlock": {
+              "description": "Specifies whether the contents of blocks are indented relative to the block owner (SA1138).",
+              "type": "boolean",
+              "default": true
+            },
+            "indentSwitchSection": {
+              "description": "Specifies whether case and default labels are indented relative to the switch statement (SA1138).",
+              "type": "boolean",
+              "default": true
+            },
+            "indentSwitchCaseSection": {
+              "description": "Specifies whether the statements of a switch section are indented relative to its labels (SA1138).",
+              "type": "boolean",
+              "default": true
+            },
+            "labelPositioning": {
+              "description": "Specifies the indentation of labels (SA1138).\r\nleftMost: Labels are placed in the first column.\r\noneLess: Labels are indented one level less than the statements of the enclosing block.\r\nnoIndent: Labels are indented like the statements of the enclosing block.",
+              "type": "string",
+              "enum": [
+                "leftMost",
+                "oneLess",
+                "noIndent"
+              ],
+              "default": "oneLess"
             }
           }
         },

@@ -118,6 +118,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
         public static string @SA1113MessageFormat => GetResourceString("SA1113MessageFormat")!;
         /// <summary>Comma should be on the same line as previous parameter</summary>
         public static string @SA1113Title => GetResourceString("SA1113Title")!;
+        /// <summary>Remove blank lines before first parameter</summary>
+        public static string @SA1114CodeFix => GetResourceString("SA1114CodeFix")!;
         /// <summary>The start of the parameter list for a method/constructor/indexer/array/operator call or declaration does not begin on the same line as the opening bracket, or on the line after the opening bracket.</summary>
         public static string @SA1114Description => GetResourceString("SA1114Description")!;
         /// <summary>Parameter list should follow declaration</summary>
@@ -310,6 +312,12 @@ namespace StyleCop.Analyzers.ReadabilityRules
         public static string @SA1142MessageFormat => GetResourceString("SA1142MessageFormat")!;
         /// <summary>Refer to tuple fields by name</summary>
         public static string @SA1142Title => GetResourceString("SA1142Title")!;
+        /// <summary>A line of code is not indented the correct amount, according to the currently applied style settings for the project.</summary>
+        public static string @SA1138Description => GetResourceString("SA1138Description")!;
+        /// <summary>Indent elements correctly</summary>
+        public static string @SA1138MessageFormat => GetResourceString("SA1138MessageFormat")!;
+        /// <summary>Indent elements correctly</summary>
+        public static string @SA1138Title => GetResourceString("SA1138Title")!;
         /// <summary>Remove 'this.' prefix</summary>
         public static string @SX1101CodeFix => GetResourceString("SX1101CodeFix")!;
         /// <summary>A call to an instance member of the local class or a base class is prefixed with `this.`.</summary>
