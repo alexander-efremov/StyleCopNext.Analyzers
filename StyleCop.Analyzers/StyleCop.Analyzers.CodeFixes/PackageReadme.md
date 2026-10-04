@@ -10,6 +10,10 @@ settings, with stable releases.
 dotnet add package StyleCopNext.Analyzers
 ```
 
+## Requirements
+
+Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later. For older toolchains use version 1.0.x.
+
 ## Migrate from StyleCop.Analyzers
 
 Replace the `StyleCop.Analyzers` package reference with `StyleCopNext.Analyzers`. Rule IDs, `.editorconfig` severities
