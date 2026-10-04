@@ -9,7 +9,9 @@ namespace StyleCop.Analyzers.Test.ReadabilityRules
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis.Testing;
     using Xunit;
-    using static StyleCop.Analyzers.Test.Verifiers.StyleCopDiagnosticVerifier<StyleCop.Analyzers.ReadabilityRules.SA1114ParameterListMustFollowDeclaration>;
+    using static StyleCop.Analyzers.Test.Verifiers.StyleCopCodeFixVerifier<
+        StyleCop.Analyzers.ReadabilityRules.SA1114ParameterListMustFollowDeclaration,
+        StyleCop.Analyzers.ReadabilityRules.SA1114CodeFixProvider>;
 
     public class SA1114UnitTests
     {
@@ -1094,6 +1096,184 @@ public class TestClass
 ";
 
             await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData("public Foo(GAP{|#0:string s|}) { }")]
+        [InlineData("public void Bar(GAP{|#0:string s|}) { }")]
+        [InlineData("public string this[GAP{|#0:int i|}] => null;")]
+        [InlineData("public static Foo operator +(GAP{|#0:Foo a|}, Foo b) => a;")]
+        [InlineData("public static explicit operator int(GAP{|#0:Foo a|}) => 0;")]
+        [InlineData("delegate void Del(GAP{|#0:string s|});")]
+        [InlineData("void Method() { var x = 1.Equals(GAP{|#0:1|}); }")]
+        [InlineData("void Method() { var x = new string(GAP{|#0:'a'|}, 1); }")]
+        [InlineData("void Method() { var a = new int[2]; var x = a[GAP{|#0:0|}]; }")]
+        [InlineData("void Method() { var a = new int[GAP{|#0:2|}]; }")]
+        [InlineData("[System.Obsolete(GAP{|#0:\"x\"|})] void Method() { }")]
+        [InlineData("[GAP{|#0:System.Obsolete|}] void Method() { }")]
+        [InlineData("void Method() { System.Action<int> a = delegate(GAP{|#0:int i|}) { }; }")]
+        [InlineData("void Method() { System.Action<int> a = (GAP{|#0:int i|}) => { }; }")]
+        public async Task TestCodeFixRemovesBlankLinesAsync(string member)
+        {
+            const string gap = "\r\n\r\n        ";
+            const string fixedGap = "\r\n        ";
+
+            await VerifyFixAsync(member, gap, fixedGap).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestCodeFixRemovesWhitespaceOnlyLinesAsync()
+        {
+            const string gap = "\r\n    \r\n \r\n   \r\n        ";
+            const string fixedGap = "\r\n        ";
+
+            await VerifyFixAsync("public void Bar(GAP{|#0:string s|}, int i) { }", gap, fixedGap).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestCodeFixPreservesCommentOnOpeningBracketLineAsync()
+        {
+            const string gap = " // comment\r\n\r\n        ";
+            const string fixedGap = " // comment\r\n        ";
+
+            await VerifyFixAsync("public void Bar(GAP{|#0:string s|}) { }", gap, fixedGap).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestCodeFixPreservesCommentOnFirstParameterLineAsync()
+        {
+            const string gap = "\r\n\r\n        /* comment */ ";
+            const string fixedGap = "\r\n        /* comment */ ";
+
+            await VerifyFixAsync("public void Bar(GAP{|#0:string s|}) { }", gap, fixedGap).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// A comment on its own line is never moved or removed: only the blank lines around it are removed, so the
+        /// first parameter can still be reported when the comment keeps it more than one line below the bracket.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestCodeFixKeepsOwnLineCommentAsync()
+        {
+            var testCode = @"
+class Foo
+{
+    public void Bar(
+
+        // comment
+
+        string s)
+    {
+    }
+}";
+
+            var fixedCode = @"
+class Foo
+{
+    public void Bar(
+        // comment
+        string s)
+    {
+    }
+}";
+
+            var test = new CSharpTest
+            {
+                TestCode = testCode,
+                FixedCode = fixedCode,
+                NumberOfIncrementalIterations = 1,
+                NumberOfFixAllIterations = 1,
+            };
+
+            test.ExpectedDiagnostics.Add(Diagnostic().WithLocation(8, 9));
+            test.RemainingDiagnostics.Add(Diagnostic().WithLocation(6, 9));
+            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// When there are no blank lines to remove, the comments alone keep the first parameter away from the bracket,
+        /// so no code fix is offered and the document stays unchanged.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestNoCodeFixWithoutBlankLinesAsync()
+        {
+            var testCode = @"
+class Foo
+{
+    public void Bar(
+        // first comment
+        // second comment
+        {|#0:string s|})
+    {
+    }
+}";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(0), testCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestCodeFixAllAsync()
+        {
+            var testCode = @"
+class Foo
+{
+    public Foo(
+
+        {|#0:int a|})
+    {
+    }
+
+    public void Bar(
+
+
+        {|#1:string s|}, int i)
+    {
+        var x = 1.Equals(
+
+            {|#2:1|});
+        var y = new string(
+
+            {|#3:'a'|}, 1);
+    }
+}";
+
+            var fixedCode = @"
+class Foo
+{
+    public Foo(
+        int a)
+    {
+    }
+
+    public void Bar(
+        string s, int i)
+    {
+        var x = 1.Equals(
+            1);
+        var y = new string(
+            'a', 1);
+    }
+}";
+
+            DiagnosticResult[] expected =
+            {
+                Diagnostic().WithLocation(0),
+                Diagnostic().WithLocation(1),
+                Diagnostic().WithLocation(2),
+                Diagnostic().WithLocation(3),
+            };
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        private static async Task VerifyFixAsync(string member, string gap, string fixedGap)
+        {
+            var testCode = "\r\nclass Foo\r\n{\r\n    " + member.Replace("GAP", gap) + "\r\n}";
+            var fixedCode = "\r\nclass Foo\r\n{\r\n    " + member.Replace("GAP", fixedGap).Replace("{|#0:", string.Empty).Replace("|}", string.Empty) + "\r\n}";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(0), fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
