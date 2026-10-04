@@ -5,9 +5,16 @@ on:
   pull_request:
     branches:
       - release/1.x
+    # Changes to the documentation alone neither build nor test anything.
+    paths-ignore:
+      - "**/*.md"
+      - "documentation/**"
   push:
     branches:
       - release/1.x
+    paths-ignore:
+      - "**/*.md"
+      - "documentation/**"
   workflow_dispatch:
 
 permissions:
