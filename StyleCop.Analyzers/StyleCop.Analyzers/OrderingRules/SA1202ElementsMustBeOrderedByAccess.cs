@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -67,8 +66,8 @@ namespace StyleCop.Analyzers.OrderingRules
             SyntaxKind.MethodDeclaration,
             SyntaxKind.ConversionOperatorDeclaration,
             SyntaxKind.OperatorDeclaration,
-            SyntaxKindEx.RecordDeclaration,
-            SyntaxKindEx.RecordStructDeclaration,
+            SyntaxKind.RecordDeclaration,
+            SyntaxKind.RecordStructDeclaration,
             SyntaxKindEx.UnionDeclaration);
 
         private static readonly Action<SyntaxNodeAnalysisContext, StyleCopSettings> CompilationUnitAction = HandleCompilationUnit;
@@ -117,7 +116,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            var baseNamespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var baseNamespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
 
             HandleMemberList(context, elementOrder, accessibilityIndex, baseNamespaceDeclaration.Members);
         }

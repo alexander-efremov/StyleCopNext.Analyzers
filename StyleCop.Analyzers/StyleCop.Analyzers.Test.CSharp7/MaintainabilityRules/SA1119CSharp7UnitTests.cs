@@ -8,6 +8,7 @@ namespace StyleCop.Analyzers.Test.CSharp7.MaintainabilityRules
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Test.Helpers;
@@ -37,7 +38,7 @@ namespace StyleCop.Analyzers.Test.CSharp7.MaintainabilityRules
                 yield return new object[] { "++" };
                 yield return new object[] { "--" };
 
-                if (LightupHelpers.SupportsCSharp11)
+                if (TestLanguageVersion.SupportsCSharp11)
                 {
                     yield return new object[] { ">>>= 1" };
                 }
@@ -127,7 +128,7 @@ namespace StyleCop.Analyzers.Test.CSharp7.MaintainabilityRules
     }}
 }}";
 
-            await VerifyCSharpDiagnosticAsync(LanguageVersionEx.CSharp7_2.OrLaterDefault(), testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(LanguageVersion.CSharp7_2.OrLaterDefault(), testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

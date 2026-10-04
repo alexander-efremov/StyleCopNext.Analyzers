@@ -8,7 +8,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -46,8 +45,8 @@ namespace StyleCop.Analyzers.Helpers
             var type = member.Kind() switch
             {
                 SyntaxKind.EventFieldDeclaration => SyntaxKind.EventDeclaration,
-                SyntaxKindEx.RecordDeclaration => SyntaxKind.ClassDeclaration,
-                SyntaxKindEx.RecordStructDeclaration => SyntaxKind.StructDeclaration,
+                SyntaxKind.RecordDeclaration => SyntaxKind.ClassDeclaration,
+                SyntaxKind.RecordStructDeclaration => SyntaxKind.StructDeclaration,
                 SyntaxKindEx.UnionDeclaration => SyntaxKind.StructDeclaration,
                 var kind => kind,
             };
@@ -159,7 +158,7 @@ namespace StyleCop.Analyzers.Helpers
                 accessibility = AccessLevelHelper.GetAccessLevel(modifiers);
                 if (accessibility == AccessLevel.NotSpecified)
                 {
-                    if (member.Parent.IsKind(SyntaxKind.CompilationUnit) || member.Parent.IsKind(SyntaxKind.NamespaceDeclaration) || member.Parent.IsKind(SyntaxKindEx.FileScopedNamespaceDeclaration))
+                    if (member.Parent.IsKind(SyntaxKind.CompilationUnit) || member.Parent.IsKind(SyntaxKind.NamespaceDeclaration) || member.Parent.IsKind(SyntaxKind.FileScopedNamespaceDeclaration))
                     {
                         accessibility = AccessLevel.Internal;
                     }

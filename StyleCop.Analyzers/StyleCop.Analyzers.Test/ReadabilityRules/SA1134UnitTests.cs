@@ -462,12 +462,14 @@ namespace TestNamespace
         }
 
         /// <summary>
-        /// Verifies that passing an invalid member syntax into the codefix will not change the code.
+        /// Verifies that an invalid member syntax is analyzed without failing. The compiler parses the invalid syntax
+        /// into an attribute list containing an invalid attribute, so the code fix never converges on this input and
+        /// only the diagnostics are verified.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Fact]
         [WorkItem(2894, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2894")]
-        public virtual async Task VerifyInvalidMemberSyntaxInCodeFixAsync()
+        public async Task VerifyInvalidMemberSyntaxInCodeFixAsync()
         {
             string testCode = @"class Program
 {
@@ -481,14 +483,14 @@ namespace TestNamespace
 
             DiagnosticResult[] expected =
             {
-                DiagnosticResult.CompilerError("CS1513").WithLocation(6, 10),
+                DiagnosticResult.CompilerError("CS7014").WithLocation(6, 10),
                 Diagnostic().WithLocation(6, 10),
                 DiagnosticResult.CompilerError("CS1001").WithLocation(6, 11),
-                DiagnosticResult.CompilerError("CS1001").WithLocation(6, 11),
-                DiagnosticResult.CompilerError("CS1022").WithLocation(8, 1),
+                DiagnosticResult.CompilerError("CS1003").WithLocation(6, 11),
+                DiagnosticResult.CompilerError("CS1513").WithLocation(6, 12),
             };
 
-            await VerifyCSharpFixAsync(testCode, expected, testCode, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

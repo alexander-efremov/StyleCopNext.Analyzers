@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A C# statement contains parenthesis which are unnecessary and should be removed.
@@ -114,14 +113,14 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                     && !node.Expression.IsKind(SyntaxKind.CastExpression)
                     && !node.Expression.IsKind(SyntaxKind.ConditionalExpression)
                     && !node.Expression.IsKind(SyntaxKind.IsExpression)
-                    && !node.Expression.IsKind(SyntaxKindEx.IsPatternExpression)
+                    && !node.Expression.IsKind(SyntaxKind.IsPatternExpression)
                     && !node.Expression.IsKind(SyntaxKind.SimpleLambdaExpression)
                     && !node.Expression.IsKind(SyntaxKind.ParenthesizedLambdaExpression)
                     && !node.Expression.IsKind(SyntaxKind.ArrayCreationExpression)
                     && !node.Expression.IsKind(SyntaxKind.CoalesceExpression)
                     && !node.Expression.IsKind(SyntaxKind.QueryExpression)
                     && !node.Expression.IsKind(SyntaxKind.AwaitExpression)
-                    && !node.Expression.IsKind(SyntaxKindEx.RangeExpression)
+                    && !node.Expression.IsKind(SyntaxKind.RangeExpression)
                     && !node.IsKind(SyntaxKind.ConstructorDeclaration))
                 {
                     if (node.Expression.IsKind(SyntaxKind.ConditionalAccessExpression)
@@ -138,7 +137,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                     }
 
                     if ((node.Expression.IsKind(SyntaxKind.StackAllocArrayCreationExpression)
-                        || node.Expression.IsKind(SyntaxKindEx.ImplicitStackAllocArrayCreationExpression))
+                        || node.Expression.IsKind(SyntaxKind.ImplicitStackAllocArrayCreationExpression))
                         && node.Parent.IsKind(SyntaxKind.EqualsValueClause))
                     {
                         return;
@@ -227,8 +226,8 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
         private static bool IsSwitchOrWithExpressionWithRequiredParentheses(ParenthesizedExpressionSyntax node)
         {
-            if (!node.Expression.IsKind(SyntaxKindEx.SwitchExpression)
-                && !node.Expression.IsKind(SyntaxKindEx.WithExpression))
+            if (!node.Expression.IsKind(SyntaxKind.SwitchExpression)
+                && !node.Expression.IsKind(SyntaxKind.WithExpression))
             {
                 return false;
             }

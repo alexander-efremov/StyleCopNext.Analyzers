@@ -10,6 +10,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
     using Microsoft.CodeAnalysis.CSharp.Testing;
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
 
     internal static class GenericAnalyzerTest
     {
@@ -38,50 +39,59 @@ namespace StyleCop.Analyzers.Test.Verifiers
 
         private static ReferenceAssemblies CreateDefaultReferenceAssemblies()
         {
-            string codeAnalysisTestVersion =
-                typeof(Compilation).Assembly.GetName().Version!.Major switch
-                {
-                    1 => "1.2.1",
-                    2 => "2.8.2",
-                    3 => "3.6.0",
-                    4 => "4.0.1",
-                    5 => "5.0.0",
-                    _ => throw new InvalidOperationException("Unknown version."),
-                };
+            // The Roslyn version referenced by the compiled test code has to be compatible with the default reference
+            // assemblies of the language version being tested.
+            string codeAnalysisTestVersion;
+            if (TestLanguageVersion.SupportsCSharp10)
+            {
+                codeAnalysisTestVersion = "4.0.1";
+            }
+            else if (TestLanguageVersion.SupportsCSharp8)
+            {
+                codeAnalysisTestVersion = "3.6.0";
+            }
+            else if (TestLanguageVersion.SupportsCSharp7)
+            {
+                codeAnalysisTestVersion = "2.8.2";
+            }
+            else
+            {
+                codeAnalysisTestVersion = "1.2.1";
+            }
 
             // Use appropriate default reference assemblies per the support matrix:
             // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version
             // C# 13 ships with .NET 9 and C# 14 with .NET 10.
             ReferenceAssemblies defaultReferenceAssemblies;
-            if (LightupHelpers.SupportsCSharp14)
+            if (TestLanguageVersion.SupportsCSharp14)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net100;
             }
-            else if (LightupHelpers.SupportsCSharp13)
+            else if (TestLanguageVersion.SupportsCSharp13)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net90;
             }
-            else if (LightupHelpers.SupportsCSharp12)
+            else if (TestLanguageVersion.SupportsCSharp12)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net80;
             }
-            else if (LightupHelpers.SupportsCSharp11)
+            else if (TestLanguageVersion.SupportsCSharp11)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net70;
             }
-            else if (LightupHelpers.SupportsCSharp10)
+            else if (TestLanguageVersion.SupportsCSharp10)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net60;
             }
-            else if (LightupHelpers.SupportsCSharp9)
+            else if (TestLanguageVersion.SupportsCSharp9)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.Net.Net50;
             }
-            else if (LightupHelpers.SupportsCSharp8)
+            else if (TestLanguageVersion.SupportsCSharp8)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.NetCore.NetCoreApp30;
             }
-            else if (LightupHelpers.SupportsCSharp7)
+            else if (TestLanguageVersion.SupportsCSharp7)
             {
                 defaultReferenceAssemblies = ReferenceAssemblies.NetFramework.Net46.Default;
             }

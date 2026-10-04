@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.SpacingRules;
 
     /// <summary>
@@ -82,13 +81,13 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             context.RegisterSyntaxNodeAction(TypeDeclarationAction, SyntaxKinds.TypeDeclaration);
             context.RegisterSyntaxNodeAction(TypeDeclarationAction, SyntaxKindEx.ExtensionBlockDeclaration);
-            context.RegisterSyntaxNodeAction(PrimaryConstructorBaseTypeAction, SyntaxKindEx.PrimaryConstructorBaseType);
+            context.RegisterSyntaxNodeAction(PrimaryConstructorBaseTypeAction, SyntaxKind.PrimaryConstructorBaseType);
             context.RegisterSyntaxNodeAction(MethodDeclarationAction, SyntaxKind.MethodDeclaration);
-            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKindEx.LocalFunctionStatement);
+            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKind.LocalFunctionStatement);
             context.RegisterSyntaxNodeAction(ConstructorDeclarationAction, SyntaxKind.ConstructorDeclaration);
             context.RegisterSyntaxNodeAction(InvocationExpressionAction, SyntaxKind.InvocationExpression);
             context.RegisterSyntaxNodeAction(ObjectCreationExpressionAction, SyntaxKind.ObjectCreationExpression);
-            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKindEx.ImplicitObjectCreationExpression);
+            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKind.ImplicitObjectCreationExpression);
             context.RegisterSyntaxNodeAction(IndexerDeclarationAction, SyntaxKind.IndexerDeclaration);
             context.RegisterSyntaxNodeAction(ElementAccessExpressionAction, SyntaxKind.ElementAccessExpression);
             context.RegisterSyntaxNodeAction(AttributeAction, SyntaxKind.Attribute);
@@ -263,7 +262,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleImplicitObjectCreationExpression(SyntaxNodeAnalysisContext context)
         {
-            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntaxWrapper)context.Node;
+            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntax)context.Node;
             if (implicitObjectCreation.NewKeyword.IsMissing)
             {
                 return;
@@ -344,7 +343,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
-            var localFunctionStatement = (LocalFunctionStatementSyntaxWrapper)context.Node;
+            var localFunctionStatement = (LocalFunctionStatementSyntax)context.Node;
             if (localFunctionStatement.ParameterList != null
                 && !localFunctionStatement.ParameterList.OpenParenToken.IsMissing
                 && !localFunctionStatement.Identifier.IsMissing)
@@ -357,7 +356,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static void HandleTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
             var typeDeclaration = (TypeDeclarationSyntax)context.Node;
-            var parameterList = typeDeclaration.ParameterList();
+            var parameterList = typeDeclaration.ParameterList;
 
             if (parameterList != null
                 && !parameterList.OpenParenToken.IsMissing
@@ -370,7 +369,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandlePrimaryConstructorBaseType(SyntaxNodeAnalysisContext context)
         {
-            var primaryConstructorBaseType = (PrimaryConstructorBaseTypeSyntaxWrapper)context.Node;
+            var primaryConstructorBaseType = (PrimaryConstructorBaseTypeSyntax)context.Node;
 
             var identifierName = ((BaseTypeSyntax)primaryConstructorBaseType).ChildNodes()
                 .OfType<IdentifierNameSyntax>()

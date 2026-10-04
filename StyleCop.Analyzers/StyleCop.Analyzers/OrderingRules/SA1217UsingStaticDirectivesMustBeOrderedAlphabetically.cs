@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -68,7 +67,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context, StyleCopSettings settings)
         {
-            var namespaceDirective = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDirective = (BaseNamespaceDeclarationSyntax)context.Node;
             CheckUsingDeclarations(context, settings.OrderingRules, namespaceDirective.Usings);
         }
 
@@ -96,21 +95,21 @@ namespace StyleCop.Analyzers.OrderingRules
                 }
 
                 if (lastStaticUsingDirective is not null
-                    && lastStaticUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && lastStaticUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     lastStaticUsingDirective = null;
                 }
 
                 if (lastSystemStaticUsingDirective is not null
-                    && lastSystemStaticUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && lastSystemStaticUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     lastSystemStaticUsingDirective = null;
                 }
 
                 if (firstNonSystemUsing is not null
-                    && firstNonSystemUsing.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && firstNonSystemUsing.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     firstNonSystemUsing = null;

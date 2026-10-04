@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// An opening brace within a C# element, statement, or expression is followed by a blank line.
@@ -83,8 +82,8 @@ namespace StyleCop.Analyzers.LayoutRules
             context.RegisterSyntaxNodeAction(BaseTypeDeclarationAction, SyntaxKinds.BaseTypeDeclaration);
             context.RegisterSyntaxNodeAction(BaseTypeDeclarationAction, SyntaxKindEx.ExtensionBlockDeclaration);
             context.RegisterSyntaxNodeAction(AccessorListAction, SyntaxKind.AccessorList);
-            context.RegisterSyntaxNodeAction(SwitchExpressionAction, SyntaxKindEx.SwitchExpression);
-            context.RegisterSyntaxNodeAction(PropertyPatternClauseAction, SyntaxKindEx.PropertyPatternClause);
+            context.RegisterSyntaxNodeAction(SwitchExpressionAction, SyntaxKind.SwitchExpression);
+            context.RegisterSyntaxNodeAction(PropertyPatternClauseAction, SyntaxKind.PropertyPatternClause);
         }
 
         private static void HandleBlock(SyntaxNodeAnalysisContext context)
@@ -131,13 +130,13 @@ namespace StyleCop.Analyzers.LayoutRules
 
         private static void HandleSwitchExpression(SyntaxNodeAnalysisContext context)
         {
-            var switchExpression = (SwitchExpressionSyntaxWrapper)context.Node;
+            var switchExpression = (SwitchExpressionSyntax)context.Node;
             AnalyzeOpenBrace(context, switchExpression.OpenBraceToken);
         }
 
         private static void HandlePropertyPatternClause(SyntaxNodeAnalysisContext context)
         {
-            var propertyPatternClause = (PropertyPatternClauseSyntaxWrapper)context.Node;
+            var propertyPatternClause = (PropertyPatternClauseSyntax)context.Node;
             AnalyzeOpenBrace(context, propertyPatternClause.OpenBraceToken);
         }
 

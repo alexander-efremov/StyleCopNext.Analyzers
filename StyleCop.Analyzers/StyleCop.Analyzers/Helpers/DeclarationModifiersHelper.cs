@@ -165,8 +165,8 @@ namespace StyleCop.Analyzers.Helpers
             case SyntaxKind.EnumDeclaration:
                 return ((EnumDeclarationSyntax)node).WithModifiers(modifiers);
 
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
                 return ((RecordDeclarationSyntaxWrapper)node).WithModifiers(modifiers);
 
             case SyntaxKindEx.UnionDeclaration:

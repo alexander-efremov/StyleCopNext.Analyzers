@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.NamingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -55,8 +54,8 @@ namespace StyleCop.Analyzers.NamingRules
 
             context.RegisterCompilationStartAction(context =>
             {
-                context.RegisterSyntaxNodeAction(TupleTypeAction, SyntaxKindEx.TupleType);
-                context.RegisterSyntaxNodeAction(TupleExpressionAction, SyntaxKindEx.TupleExpression);
+                context.RegisterSyntaxNodeAction(TupleTypeAction, SyntaxKind.TupleType);
+                context.RegisterSyntaxNodeAction(TupleExpressionAction, SyntaxKind.TupleExpression);
             });
         }
 
@@ -67,7 +66,7 @@ namespace StyleCop.Analyzers.NamingRules
                 return;
             }
 
-            var tupleType = (TupleTypeSyntaxWrapper)context.Node;
+            var tupleType = (TupleTypeSyntax)context.Node;
 
             foreach (var tupleElement in tupleType.Elements)
             {
@@ -85,7 +84,7 @@ namespace StyleCop.Analyzers.NamingRules
             bool includeInferredNames = settings.NamingRules.IncludeInferredTupleElementNames
                 && context.SupportsInferredTupleElementNames();
 
-            var tupleExpression = (TupleExpressionSyntaxWrapper)context.Node;
+            var tupleExpression = (TupleExpressionSyntax)context.Node;
             foreach (var argument in tupleExpression.Arguments)
             {
                 if (argument.NameColon != null)
@@ -96,7 +95,7 @@ namespace StyleCop.Analyzers.NamingRules
                 }
                 else if (includeInferredNames)
                 {
-                    var inferredMemberName = SyntaxFactsEx.TryGetInferredMemberName(argument.Expression);
+                    var inferredMemberName = SyntaxFacts.TryGetInferredMemberName(argument.Expression);
                     if (inferredMemberName != null)
                     {
                         CheckName(context, settings, tupleElement: null, inferredMemberName, argument.Expression.GetLocation(), false);
@@ -105,14 +104,14 @@ namespace StyleCop.Analyzers.NamingRules
             }
         }
 
-        private static void CheckTupleElement(SyntaxNodeAnalysisContext context, StyleCopSettings settings, TupleElementSyntaxWrapper tupleElement)
+        private static void CheckTupleElement(SyntaxNodeAnalysisContext context, StyleCopSettings settings, TupleElementSyntax tupleElement)
         {
             if (tupleElement.Identifier == default)
             {
                 return;
             }
 
-            CheckName(context, settings, tupleElement.SyntaxNode, tupleElement.Identifier.ValueText, tupleElement.Identifier.GetLocation(), true);
+            CheckName(context, settings, tupleElement, tupleElement.Identifier.ValueText, tupleElement.Identifier.GetLocation(), true);
         }
 
         private static void CheckName(SyntaxNodeAnalysisContext context, StyleCopSettings settings, SyntaxNode tupleElement, string tupleElementName, Location location, bool prepareCodeFix)
@@ -207,7 +206,7 @@ namespace StyleCop.Analyzers.NamingRules
 
                 case SyntaxKind.Parameter:
                 case SyntaxKind.ParameterList:
-                case SyntaxKindEx.TupleElement:
+                case SyntaxKind.TupleElement:
                 case SyntaxKind.TypeArgumentList:
                 case SyntaxKind when node is TypeSyntax:
                     node = node.Parent;

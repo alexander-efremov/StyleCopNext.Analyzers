@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -102,8 +101,8 @@ namespace StyleCop.Analyzers.LayoutRules
                 context.RegisterSyntaxNodeAction(SwitchStatementAction, SyntaxKind.SwitchStatement);
                 context.RegisterSyntaxNodeAction(InitializerExpressionAction, SyntaxKinds.InitializerExpression);
                 context.RegisterSyntaxNodeAction(AnonymousObjectCreationExpressionAction, SyntaxKind.AnonymousObjectCreationExpression);
-                context.RegisterSyntaxNodeAction(SwitchExpressionAction, SyntaxKindEx.SwitchExpression);
-                context.RegisterSyntaxNodeAction(PropertyPatternClauseAction, SyntaxKindEx.PropertyPatternClause);
+                context.RegisterSyntaxNodeAction(SwitchExpressionAction, SyntaxKind.SwitchExpression);
+                context.RegisterSyntaxNodeAction(PropertyPatternClauseAction, SyntaxKind.PropertyPatternClause);
             });
         }
 
@@ -151,13 +150,13 @@ namespace StyleCop.Analyzers.LayoutRules
 
         private static void HandleSwitchExpression(SyntaxNodeAnalysisContext context, StyleCopSettings settings)
         {
-            var syntax = (SwitchExpressionSyntaxWrapper)context.Node;
+            var syntax = (SwitchExpressionSyntax)context.Node;
             CheckBraces(context, settings, syntax.OpenBraceToken, syntax.CloseBraceToken);
         }
 
         private static void HandlePropertyPatternClause(SyntaxNodeAnalysisContext context, StyleCopSettings settings)
         {
-            var syntax = (PropertyPatternClauseSyntaxWrapper)context.Node;
+            var syntax = (PropertyPatternClauseSyntax)context.Node;
             CheckBraces(context, settings, syntax.OpenBraceToken, syntax.CloseBraceToken);
         }
 
@@ -209,8 +208,8 @@ namespace StyleCop.Analyzers.LayoutRules
 
                         break;
 
-                    case SyntaxKindEx.ImplicitStackAllocArrayCreationExpression:
-                        if (((ImplicitStackAllocArrayCreationExpressionSyntaxWrapper)context.Node.Parent).StackAllocKeyword.GetLine() == openBraceTokenLine)
+                    case SyntaxKind.ImplicitStackAllocArrayCreationExpression:
+                        if (((ImplicitStackAllocArrayCreationExpressionSyntax)context.Node.Parent).StackAllocKeyword.GetLine() == openBraceTokenLine)
                         {
                             return;
                         }
@@ -236,7 +235,7 @@ namespace StyleCop.Analyzers.LayoutRules
                     {
                     case SyntaxKind.GetAccessorDeclaration:
                     case SyntaxKind.SetAccessorDeclaration:
-                    case SyntaxKindEx.InitAccessorDeclaration:
+                    case SyntaxKind.InitAccessorDeclaration:
                     case SyntaxKind.AddAccessorDeclaration:
                     case SyntaxKind.RemoveAccessorDeclaration:
                     case SyntaxKind.UnknownAccessorDeclaration:

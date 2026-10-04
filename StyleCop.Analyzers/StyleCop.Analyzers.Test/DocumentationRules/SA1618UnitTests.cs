@@ -11,6 +11,7 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.DocumentationRules;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
     using StyleCop.Analyzers.Test.Verifiers;
     using Xunit;
     using static StyleCop.Analyzers.Test.Verifiers.CustomDiagnosticVerifier<StyleCop.Analyzers.DocumentationRules.SA1618GenericTypeParametersMustBeDocumented>;
@@ -42,13 +43,13 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
                 yield return new object[] { "class Foo<{|#0:Ta|}, {|#1:T\\u0062|}> { }" };
                 yield return new object[] { "struct Foo<{|#0:Ta|}, {|#1:T\\u0062|}> { }" };
                 yield return new object[] { "interface Foo<{|#0:Ta|}, {|#1:T\\u0062|}> { }" };
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new object[] { "record Foo<{|#0:Ta|}, {|#1:Tb|}> { }" };
                     yield return new object[] { "record Foo<{|#0:Ta|}, {|#1:T\\u0062|}> { }" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new object[] { "record class Foo<{|#0:Ta|}, {|#1:Tb|}> { }" };
                     yield return new object[] { "record struct Foo<{|#0:Ta|}, {|#1:T\\u0062|}> { }" };

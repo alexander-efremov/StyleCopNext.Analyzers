@@ -64,7 +64,7 @@ namespace StyleCop.Analyzers.LayoutRules
             return document.WithText(text.WithChanges(new TextChange(diagnostic.Location.SourceSpan, replacement)));
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                 new FixAll();

@@ -138,7 +138,7 @@ namespace StyleCop.Analyzers.DocumentationRules
                 return nameof(DocumentationResources.TypeTextUnion);
             }
 
-            if (typeDeclaration.IsKind(SyntaxKind.StructDeclaration) || typeDeclaration.IsKind(SyntaxKindEx.RecordStructDeclaration))
+            if (typeDeclaration.IsKind(SyntaxKind.StructDeclaration) || typeDeclaration.IsKind(SyntaxKind.RecordStructDeclaration))
             {
                 return nameof(DocumentationResources.TypeTextStruct);
             }

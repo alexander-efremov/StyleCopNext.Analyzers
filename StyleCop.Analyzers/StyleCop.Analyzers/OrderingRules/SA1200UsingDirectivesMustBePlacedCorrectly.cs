@@ -224,8 +224,8 @@ namespace StyleCop.Analyzers.OrderingRules
                 case SyntaxKind.InterfaceDeclaration:
                 case SyntaxKind.EnumDeclaration:
                 case SyntaxKind.StructDeclaration:
-                case SyntaxKindEx.RecordDeclaration:
-                case SyntaxKindEx.RecordStructDeclaration:
+                case SyntaxKind.RecordDeclaration:
+                case SyntaxKind.RecordStructDeclaration:
                 case SyntaxKindEx.UnionDeclaration:
                 case SyntaxKind.DelegateDeclaration:
                     // Suppress SA1200 if file contains a type in the global namespace
@@ -241,7 +241,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
                 case SyntaxKind.UsingDirective:
                     // Global using directives are only allowed at the top level, so ignore those
-                    if (!((UsingDirectiveSyntax)child).GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    if (!((UsingDirectiveSyntax)child).GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                     {
                         usingDirectives.Add(child);
                     }
@@ -249,7 +249,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     continue;
 
                 case SyntaxKind.NamespaceDeclaration:
-                case SyntaxKindEx.FileScopedNamespaceDeclaration:
+                case SyntaxKind.FileScopedNamespaceDeclaration:
                 case SyntaxKind.ExternAliasDirective:
                 default:
                     continue;
@@ -277,7 +277,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            BaseNamespaceDeclarationSyntaxWrapper syntax = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            BaseNamespaceDeclarationSyntax syntax = (BaseNamespaceDeclarationSyntax)context.Node;
             foreach (UsingDirectiveSyntax directive in syntax.Usings)
             {
                 // Using directive should appear outside a namespace declaration

@@ -61,7 +61,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     && !typeDeclarationNode.Modifiers.Any(SyntaxKind.InternalKeyword)
                     && !typeDeclarationNode.Modifiers.Any(SyntaxKind.ProtectedKeyword)
                     && !typeDeclarationNode.Modifiers.Any(SyntaxKind.PrivateKeyword)
-                    && !typeDeclarationNode.Modifiers.Any(SyntaxKindEx.FileKeyword))
+                    && !typeDeclarationNode.Modifiers.Any(SyntaxKind.FileKeyword))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Descriptor, typeDeclarationNode.Identifier.GetLocation()));
                 }

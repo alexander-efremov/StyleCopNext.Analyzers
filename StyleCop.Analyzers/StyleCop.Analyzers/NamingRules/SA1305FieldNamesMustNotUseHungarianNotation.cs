@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.NamingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -101,7 +100,7 @@ namespace StyleCop.Analyzers.NamingRules
                 context.RegisterSyntaxNodeAction(JoinClauseAction, SyntaxKind.JoinClause);
                 context.RegisterSyntaxNodeAction(JoinIntoClauseAction, SyntaxKind.JoinIntoClause);
                 context.RegisterSyntaxNodeAction(ForEachStatementAction, SyntaxKind.ForEachStatement);
-                context.RegisterSyntaxNodeAction(SingleVariableDesignationAction, SyntaxKindEx.SingleVariableDesignation);
+                context.RegisterSyntaxNodeAction(SingleVariableDesignationAction, SyntaxKind.SingleVariableDesignation);
             });
         }
 
@@ -197,7 +196,7 @@ namespace StyleCop.Analyzers.NamingRules
 
             public static void HandleSingleVariableDesignation(SyntaxNodeAnalysisContext context, StyleCopSettings settings)
             {
-                CheckIdentifier(context, ((SingleVariableDesignationSyntaxWrapper)context.Node).Identifier, settings);
+                CheckIdentifier(context, ((SingleVariableDesignationSyntax)context.Node).Identifier, settings);
             }
 
             private static void CheckIdentifier(SyntaxNodeAnalysisContext context, SyntaxToken identifier, StyleCopSettings settings, string declarationType = "variable")

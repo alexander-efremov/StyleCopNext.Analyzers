@@ -28,7 +28,7 @@ namespace StyleCop.Analyzers.Test.SpacingRules
                 yield return new[] { "out" };
                 yield return new[] { "ref" };
 
-                if (LightupHelpers.SupportsCSharp72)
+                if (TestLanguageVersion.SupportsCSharp72)
                 {
                     yield return new[] { "in" };
                 }
@@ -250,10 +250,10 @@ public class TypeName
     }}
 }}";
 
-            var languageVersion = (LightupHelpers.SupportsCSharp8, LightupHelpers.SupportsCSharp72) switch
+            var languageVersion = (TestLanguageVersion.SupportsCSharp8, TestLanguageVersion.SupportsCSharp72) switch
             {
                 // Make sure to use C# 7.2 if supported, unless we are going to default to something greater
-                (false, true) => LanguageVersionEx.CSharp7_2,
+                (false, true) => LanguageVersion.CSharp7_2,
                 _ => (LanguageVersion?)null,
             };
 

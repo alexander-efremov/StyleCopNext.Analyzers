@@ -11,7 +11,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The C# code includes an empty string, written as <c>""</c>.
@@ -70,7 +69,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             // The token kind check is needed: a UTF-8 string literal such as ""u8 is also a string literal expression
             // with an empty value, but it is a ReadOnlySpan<byte> that string.Empty can't replace. A single-line raw
             // string literal can never be empty, so only the multi-line form needs to be checked.
-            if (!token.IsKind(SyntaxKind.StringLiteralToken) && !token.IsKind(SyntaxKindEx.MultiLineRawStringLiteralToken))
+            if (!token.IsKind(SyntaxKind.StringLiteralToken) && !token.IsKind(SyntaxKind.MultiLineRawStringLiteralToken))
             {
                 return;
             }
@@ -142,7 +141,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             if (outermostExpression.Parent.IsKind(SyntaxKind.AttributeArgument)
                 || outermostExpression.Parent.IsKind(SyntaxKind.CaseSwitchLabel)
-                || outermostExpression.Parent.IsKind(SyntaxKindEx.ConstantPattern))
+                || outermostExpression.Parent.IsKind(SyntaxKind.ConstantPattern))
             {
                 return true;
             }

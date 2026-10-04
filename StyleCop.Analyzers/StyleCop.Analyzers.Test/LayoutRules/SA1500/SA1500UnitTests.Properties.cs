@@ -10,6 +10,7 @@ namespace StyleCop.Analyzers.Test.LayoutRules
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.LayoutRules;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
     using Xunit;
     using static StyleCop.Analyzers.Test.Verifiers.StyleCopCodeFixVerifier<
         StyleCop.Analyzers.LayoutRules.SA1500BracesForMultiLineStatementsMustNotShareLine,
@@ -492,7 +493,7 @@ class ClassName
 }";
 
             DiagnosticResult accessorError;
-            if (LightupHelpers.SupportsCSharp7)
+            if (TestLanguageVersion.SupportsCSharp7)
             {
                 accessorError = DiagnosticResult.CompilerError("CS8180").WithMessage("{ or ; or => expected");
             }

@@ -114,9 +114,9 @@ namespace StyleCop.Analyzers.OrderingRules
                 return ((InterfaceDeclarationSyntax)node).WithModifiers(modifiers);
             case SyntaxKind.StructDeclaration:
                 return ((StructDeclarationSyntax)node).WithModifiers(modifiers);
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
-                return ((RecordDeclarationSyntaxWrapper)node).WithModifiers(modifiers);
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
+                return ((RecordDeclarationSyntax)node).WithModifiers(modifiers);
             case SyntaxKindEx.UnionDeclaration:
                 return ((UnionDeclarationSyntaxWrapper)node).WithModifiers(modifiers);
             }
@@ -136,9 +136,9 @@ namespace StyleCop.Analyzers.OrderingRules
                 return ((InterfaceDeclarationSyntax)node).WithKeyword(keyword);
             case SyntaxKind.StructDeclaration:
                 return ((StructDeclarationSyntax)node).WithKeyword(keyword);
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
-                return ((RecordDeclarationSyntaxWrapper)node).WithKeyword(keyword);
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
+                return ((RecordDeclarationSyntax)node).WithKeyword(keyword);
             case SyntaxKindEx.UnionDeclaration:
                 return ((UnionDeclarationSyntaxWrapper)node).WithKeyword(keyword);
             }

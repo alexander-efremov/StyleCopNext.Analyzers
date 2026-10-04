@@ -8,7 +8,6 @@ namespace StyleCop.Analyzers.Test.OrderingRules
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Testing;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.OrderingRules;
     using StyleCop.Analyzers.Test.Helpers;
     using Xunit;
@@ -48,7 +47,7 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                 yield return new object[] { "class" };
                 yield return new object[] { "struct" };
                 yield return new object[] { "interface" };
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new object[] { "public partial record" };
                     yield return new object[] { "internal partial record" };
@@ -57,7 +56,7 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                     yield return new object[] { "record" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new object[] { "public partial record class" };
                     yield return new object[] { "internal partial record class" };
@@ -70,7 +69,7 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                     yield return new object[] { "record struct" };
                 }
 
-                if (LightupHelpers.SupportsCSharp11)
+                if (TestLanguageVersion.SupportsCSharp11)
                 {
                     yield return new object[] { "file partial class" };
                     yield return new object[] { "file partial struct" };
@@ -92,13 +91,13 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                 yield return new object[] { "static partial class" };
                 yield return new object[] { "partial struct" };
                 yield return new object[] { "partial interface" };
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new object[] { "partial record" };
                     yield return new object[] { "sealed partial record" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new object[] { "partial record class" };
                     yield return new object[] { "sealed partial record class" };
@@ -130,14 +129,14 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                 yield return new object[] { "protected internal", "interface" };
                 yield return new object[] { "private", "interface" };
 
-                if (LightupHelpers.SupportsCSharp72)
+                if (TestLanguageVersion.SupportsCSharp72)
                 {
                     yield return new object[] { "private protected", "class" };
                     yield return new object[] { "private protected", "struct" };
                     yield return new object[] { "private protected", "interface" };
                 }
 
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new object[] { "public", "record" };
                     yield return new object[] { "protected", "record" };
@@ -147,7 +146,7 @@ namespace StyleCop.Analyzers.Test.OrderingRules
                     yield return new object[] { "private protected", "record" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new object[] { "public", "record class" };
                     yield return new object[] { "protected", "record class" };
@@ -287,10 +286,10 @@ internal static partial class TestPartial
 }}
 ";
 
-            var languageVersion = (LightupHelpers.SupportsCSharp8, LightupHelpers.SupportsCSharp72) switch
+            var languageVersion = (TestLanguageVersion.SupportsCSharp8, TestLanguageVersion.SupportsCSharp72) switch
             {
                 // Make sure to use C# 7.2 if supported, unless we are going to default to something greater
-                (false, true) => LanguageVersionEx.CSharp7_2,
+                (false, true) => LanguageVersion.CSharp7_2,
                 _ => (LanguageVersion?)null,
             };
 
@@ -363,10 +362,10 @@ public class Foo
 }}
 ";
 
-            var languageVersion = (LightupHelpers.SupportsCSharp8, LightupHelpers.SupportsCSharp72) switch
+            var languageVersion = (TestLanguageVersion.SupportsCSharp8, TestLanguageVersion.SupportsCSharp72) switch
             {
                 // Make sure to use C# 7.2 if supported, unless we are going to default to something greater
-                (false, true) => LanguageVersionEx.CSharp7_2,
+                (false, true) => LanguageVersion.CSharp7_2,
                 _ => (LanguageVersion?)null,
             };
 

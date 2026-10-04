@@ -55,8 +55,8 @@ namespace StyleCop.Analyzers.OrderingRules
                 SyntaxKind.StructDeclaration,
                 SyntaxKind.InterfaceDeclaration,
                 SyntaxKind.EnumDeclaration,
-                SyntaxKindEx.RecordDeclaration,
-                SyntaxKindEx.RecordStructDeclaration,
+                SyntaxKind.RecordDeclaration,
+                SyntaxKind.RecordStructDeclaration,
                 SyntaxKindEx.UnionDeclaration,
                 SyntaxKind.DelegateDeclaration,
                 SyntaxKind.FieldDeclaration,
@@ -83,7 +83,7 @@ namespace StyleCop.Analyzers.OrderingRules
             context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(DeclarationAction, HandledSyntaxKinds);
-            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKindEx.LocalFunctionStatement);
+            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKind.LocalFunctionStatement);
         }
 
         private static void HandleDeclaration(SyntaxNodeAnalysisContext context)
@@ -94,7 +94,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
-            var localFunction = (LocalFunctionStatementSyntaxWrapper)context.Node;
+            var localFunction = (LocalFunctionStatementSyntax)context.Node;
             CheckModifiersOrderAndReportDiagnostics(context, localFunction.Modifiers);
         }
 

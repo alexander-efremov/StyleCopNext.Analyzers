@@ -4,49 +4,68 @@
 namespace StyleCop.Analyzers.Test.Helpers
 {
     using System;
-    using System.Linq;
+    using System.Globalization;
+    using System.Reflection;
     using Microsoft.CodeAnalysis.CSharp;
     using StyleCop.Analyzers.Lightup;
 
+    /// <summary>
+    /// Provides the C# language version targeted by the test project which is currently running. Each test project
+    /// declares its version with an <see cref="AssemblyMetadataAttribute"/> named <c>TestLanguageVersion</c>; when
+    /// a test project references the test projects of earlier language versions, the highest declared version wins.
+    /// </summary>
     internal static class TestLanguageVersion
     {
-        /// <summary>
-        /// Gets a value indicating whether the referenced compiler supports C# 15 language features. Roslyn does not
-        /// define <c>LanguageVersion.CSharp15</c> while C# 15 is in preview, so
-        /// <see cref="LightupHelpers.SupportsCSharp15"/> stays <see langword="false"/> for the C# 15 test project.
-        /// Detect the compiler by one of its C# 15 preview features (unions) instead.
-        /// </summary>
-        /// <value>
-        /// <see langword="true"/> if the referenced compiler supports C# 15 language features; otherwise,
-        /// <see langword="false"/>.
-        /// </value>
-        public static bool SupportsCSharp15 { get; }
-            = LightupHelpers.SupportsCSharp15
-            || Enum.GetNames(typeof(SyntaxKind)).Contains(nameof(SyntaxKindEx.UnionDeclaration));
+        private const string MetadataKey = "TestLanguageVersion";
+
+        public static LanguageVersion Current { get; } = GetCurrent();
 
         /// <summary>
-        /// Gets the language version that tests use when they do not specify one, or <see langword="null"/> to use the
-        /// compiler's default language version.
+        /// Gets the language version that tests use when they do not specify one.
         /// </summary>
-        /// <value>
-        /// <see cref="LanguageVersionEx.Preview"/> for the C# 15 test project; otherwise, <see langword="null"/>.
-        /// </value>
-        /// <remarks>
-        /// <para>If needed, this property can be temporarily updated to default to a preview version.</para>
-        /// </remarks>
-        public static LanguageVersion? Default
+        /// <value>The language version of the test project which is currently running.</value>
+        public static LanguageVersion? Default => Current;
+
+        public static bool SupportsCSharp7 => Current >= LanguageVersion.CSharp7;
+
+        public static bool SupportsCSharp72 => Current >= LanguageVersion.CSharp7_2;
+
+        public static bool SupportsCSharp8 => Current >= LanguageVersion.CSharp8;
+
+        public static bool SupportsCSharp9 => Current >= LanguageVersion.CSharp9;
+
+        public static bool SupportsCSharp10 => Current >= LanguageVersion.CSharp10;
+
+        public static bool SupportsCSharp11 => Current >= LanguageVersion.CSharp11;
+
+        public static bool SupportsCSharp12 => Current >= LanguageVersion.CSharp12;
+
+        public static bool SupportsCSharp13 => Current >= LanguageVersionEx.CSharp13;
+
+        public static bool SupportsCSharp14 => Current >= LanguageVersionEx.CSharp14;
+
+        private static LanguageVersion GetCurrent()
         {
-            get
+            var result = LanguageVersion.Default;
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (SupportsCSharp15)
+                if (assembly.IsDynamic)
                 {
-                    // C# 15 is still in preview, so the C# 15 test project runs every test with the preview language
-                    // version. Remove this once C# 15 is the default language version of the referenced compiler.
-                    return LanguageVersionEx.Preview;
+                    continue;
                 }
 
-                return null;
+                foreach (var metadata in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
+                {
+                    if (metadata.Key == MetadataKey
+                        && int.TryParse(metadata.Value, NumberStyles.None, CultureInfo.InvariantCulture, out var value)
+                        && (LanguageVersion)value > result)
+                    {
+                        result = (LanguageVersion)value;
+                    }
+                }
             }
+
+            return result;
         }
     }
 }

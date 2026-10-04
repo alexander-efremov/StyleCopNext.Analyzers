@@ -7,7 +7,6 @@ namespace StyleCop.Analyzers.OrderingRules
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using StyleCop.Analyzers.Lightup;
 
     internal static class ModifierOrderHelper
     {
@@ -47,7 +46,7 @@ namespace StyleCop.Analyzers.OrderingRules
             case SyntaxKind.ProtectedKeyword:
             case SyntaxKind.InternalKeyword:
             case SyntaxKind.PrivateKeyword:
-            case SyntaxKindEx.FileKeyword:
+            case SyntaxKind.FileKeyword:
                 result = ModifierType.Access;
                 break;
 
@@ -69,7 +68,7 @@ namespace StyleCop.Analyzers.OrderingRules
             case SyntaxKind.AsyncKeyword:
             case SyntaxKind.PartialKeyword:
             case SyntaxKind.RefKeyword:
-            case SyntaxKindEx.RequiredKeyword:
+            case SyntaxKind.RequiredKeyword:
             case SyntaxKindEx.ClosedKeyword:
             case SyntaxKindEx.SafeKeyword:
                 result = ModifierType.Other;

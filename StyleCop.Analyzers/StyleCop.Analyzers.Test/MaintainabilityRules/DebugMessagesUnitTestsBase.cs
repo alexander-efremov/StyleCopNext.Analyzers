@@ -16,6 +16,7 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
     using Microsoft.CodeAnalysis.Testing;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
     using StyleCop.Analyzers.Test.Verifiers;
     using Xunit;
 
@@ -101,7 +102,7 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
             var startLinePosition = new LinePosition(5, 15 + this.MethodName.Length + this.InitialArguments.Sum(i => i.Length + ", ".Length));
             var endLinePosition = new LinePosition(startLinePosition.Line, startLinePosition.Character + 1);
             DiagnosticResult[] expected;
-            if (LightupHelpers.SupportsCSharp11 && this.MethodName == nameof(Debug.Assert))
+            if (TestLanguageVersion.SupportsCSharp11 && this.MethodName == nameof(Debug.Assert))
             {
                 // For some reason this case wants to bind to Debug.Assert(bool, ref Debug.AssertInterpolatedStringHandler)
                 expected = new[]
@@ -111,7 +112,7 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
             }
             else
             {
-                var expectedType = LightupHelpers.SupportsCSharp8 ? "string?" : "string";
+                var expectedType = TestLanguageVersion.SupportsCSharp8 ? "string?" : "string";
                 expected = new[]
                 {
                     DiagnosticResult.CompilerError("CS1503").WithSpan(new FileLinePositionSpan("/0/Test0.cs", startLinePosition, endLinePosition)).WithMessage($"Argument {1 + this.InitialArguments.Count()}: cannot convert from 'int' to '{expectedType}'"),

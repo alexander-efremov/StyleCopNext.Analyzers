@@ -38,8 +38,8 @@ namespace StyleCop.Analyzers.OrderingRules
             ImmutableArray.Create(
                 SyntaxKind.ClassDeclaration,
                 SyntaxKind.StructDeclaration,
-                SyntaxKindEx.RecordDeclaration,
-                SyntaxKindEx.RecordStructDeclaration,
+                SyntaxKind.RecordDeclaration,
+                SyntaxKind.RecordStructDeclaration,
                 SyntaxKindEx.UnionDeclaration);
 
         private static readonly Action<SyntaxNodeAnalysisContext, StyleCopSettings> TypeDeclarationAction = HandleTypeDeclaration;

@@ -16,7 +16,6 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -71,8 +70,8 @@ namespace StyleCop.Analyzers.LayoutRules
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.StructDeclaration:
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
             case SyntaxKindEx.UnionDeclaration:
             case SyntaxKindEx.ExtensionBlockDeclaration:
             case SyntaxKind.EnumDeclaration:
@@ -84,9 +83,9 @@ namespace StyleCop.Analyzers.LayoutRules
                 break;
 
             case SyntaxKind.Block:
-                if (node.Parent.IsKind(SyntaxKindEx.LocalFunctionStatement))
+                if (node.Parent.IsKind(SyntaxKind.LocalFunctionStatement))
                 {
-                    newSyntaxRoot = this.RegisterLocalFunctionStatementCodeFix(syntaxRoot, (LocalFunctionStatementSyntaxWrapper)node.Parent, indentationSettings);
+                    newSyntaxRoot = this.RegisterLocalFunctionStatementCodeFix(syntaxRoot, (LocalFunctionStatementSyntax)node.Parent, indentationSettings);
                 }
                 else
                 {
@@ -118,7 +117,7 @@ namespace StyleCop.Analyzers.LayoutRules
             return this.ReformatElement(syntaxRoot, node, node.Body.OpenBraceToken, node.Body.CloseBraceToken, indentationSettings);
         }
 
-        private SyntaxNode RegisterLocalFunctionStatementCodeFix(SyntaxNode syntaxRoot, LocalFunctionStatementSyntaxWrapper node, IndentationSettings indentationSettings)
+        private SyntaxNode RegisterLocalFunctionStatementCodeFix(SyntaxNode syntaxRoot, LocalFunctionStatementSyntax node, IndentationSettings indentationSettings)
         {
             return this.ReformatElement(syntaxRoot, node, node.Body.OpenBraceToken, node.Body.CloseBraceToken, indentationSettings);
         }

@@ -54,8 +54,8 @@ namespace StyleCop.Analyzers.OrderingRules
                 SyntaxKind.MethodDeclaration,
                 SyntaxKind.PropertyDeclaration,
                 SyntaxKind.StructDeclaration,
-                SyntaxKindEx.RecordDeclaration,
-                SyntaxKindEx.RecordStructDeclaration,
+                SyntaxKind.RecordDeclaration,
+                SyntaxKind.RecordStructDeclaration,
                 SyntaxKindEx.UnionDeclaration);
 
         private static readonly Action<SyntaxNodeAnalysisContext> DeclarationAction = HandleDeclaration;

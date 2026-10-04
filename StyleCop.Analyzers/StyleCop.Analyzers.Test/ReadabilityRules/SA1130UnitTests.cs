@@ -5,13 +5,10 @@
 
 namespace StyleCop.Analyzers.Test.ReadabilityRules
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Testing;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Test.Helpers;
     using Xunit;
     using static StyleCop.Analyzers.Test.Verifiers.StyleCopCodeFixVerifier<
@@ -20,24 +17,6 @@ namespace StyleCop.Analyzers.Test.ReadabilityRules
 
     public class SA1130UnitTests
     {
-#pragma warning disable IDE0079 // Remove unnecessary suppression
-        [SuppressMessage("MicrosoftCodeAnalysisDesign", "RS1032:Define diagnostic message correctly", Justification = "The message here matches the compiler.")]
-#pragma warning restore IDE0079 // Remove unnecessary suppression
-        private static readonly DiagnosticDescriptor CS1065 =
-                   new DiagnosticDescriptor(nameof(CS1065), "Title", "Default values are not valid in this context.", "Category", DiagnosticSeverity.Error, AnalyzerConstants.EnabledByDefault);
-
-#pragma warning disable IDE0079 // Remove unnecessary suppression
-        [SuppressMessage("MicrosoftCodeAnalysisDesign", "RS1032:Define diagnostic message correctly", Justification = "The message here matches the compiler.")]
-#pragma warning restore IDE0079 // Remove unnecessary suppression
-        private static readonly DiagnosticDescriptor CS7014 =
-                   new DiagnosticDescriptor(nameof(CS7014), "Title", "Attributes are not valid in this context.", "Category", DiagnosticSeverity.Error, AnalyzerConstants.EnabledByDefault);
-
-        private static readonly DiagnosticDescriptor CS1670 =
-                          new DiagnosticDescriptor(nameof(CS1670), "Title", "params is not valid in this context", "Category", DiagnosticSeverity.Error, AnalyzerConstants.EnabledByDefault);
-
-        private static readonly DiagnosticDescriptor CS1669 =
-                          new DiagnosticDescriptor(nameof(CS1669), "Title", "__arglist is not valid in this context", "Category", DiagnosticSeverity.Error, AnalyzerConstants.EnabledByDefault);
-
         public static TheoryData<string> ParamsTypes
         {
             get
@@ -47,7 +26,7 @@ namespace StyleCop.Analyzers.Test.ReadabilityRules
                     "Action[]",
                 };
 
-                if (LightupHelpers.SupportsCSharp13)
+                if (TestLanguageVersion.SupportsCSharp13)
                 {
                     // params collections: params is no longer limited to array types as of C# 13.
                     data.Add("IEnumerable<Action>");
@@ -1277,10 +1256,11 @@ public class TestClass
         {
             return new[]
             {
-                Diagnostic(CS1065).WithLocation(12, 53),
-                Diagnostic(CS7014).WithLocation(13, 47),
-                Diagnostic(CS1670).WithLocation(14, 47),
-                Diagnostic(CS1669).WithLocation(15, 42),
+                DiagnosticResult.CompilerError("CS1065").WithLocation(12, 53),
+                DiagnosticResult.CompilerError("CS7014").WithLocation(13, 47),
+                DiagnosticResult.CompilerError("CS1670").WithLocation(14, 47),
+                DiagnosticResult.CompilerError("CS1669").WithLocation(15, 42),
+                DiagnosticResult.CompilerError("CS0225").WithLocation(14, 47),
             };
         }
     }

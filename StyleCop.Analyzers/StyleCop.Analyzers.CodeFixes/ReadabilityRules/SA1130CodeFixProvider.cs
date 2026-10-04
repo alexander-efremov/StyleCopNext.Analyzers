@@ -19,7 +19,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Formatting;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1130UseLambdaSyntax"/>.
@@ -194,7 +193,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 lambdaExpression = SyntaxFactory.ParenthesizedLambdaExpression(anonymousMethod.AsyncKeyword, parameterListSyntax, arrowToken, anonymousMethod.Body);
             }
 
-            var modifiers = anonymousMethod.Modifiers();
+            var modifiers = anonymousMethod.Modifiers;
             if (modifiers.Count > 0)
             {
                 lambdaExpression = lambdaExpression.WithModifiers(modifiers);
@@ -434,7 +433,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             return newDocument;
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                 new FixAll();

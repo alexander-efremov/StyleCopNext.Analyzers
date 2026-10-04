@@ -41,7 +41,7 @@ namespace StyleCop.Analyzers.Test.SpacingRules
                     "\\U00000041",
                 };
 
-                if (LightupHelpers.SupportsCSharp13)
+                if (TestLanguageVersion.SupportsCSharp13)
                 {
                     data.Add("\\e");
                 }

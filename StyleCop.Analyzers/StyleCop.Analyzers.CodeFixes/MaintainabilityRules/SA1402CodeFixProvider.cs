@@ -281,12 +281,12 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.EnumDeclaration:
             case SyntaxKind.DelegateDeclaration:
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
             case SyntaxKindEx.UnionDeclaration:
                 return true;
 
-            case SyntaxKindEx.FileScopedNamespaceDeclaration:
+            case SyntaxKind.FileScopedNamespaceDeclaration:
                 // Only one file-scoped namespace is allowed per syntax tree
                 throw new InvalidOperationException("This location is not reachable");
 

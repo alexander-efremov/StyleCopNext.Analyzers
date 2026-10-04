@@ -485,7 +485,9 @@ public class TestClass
         {
             return new[]
             {
-                DiagnosticResult.CompilerError("CS1003").WithMessage("Syntax error, '>' expected").WithLocation(7, 35),
+                DiagnosticResult.CompilerError("CS1003").WithLocation(7, 35).WithArguments(","),
+                DiagnosticResult.CompilerError("CS1003").WithLocation(7, 36).WithArguments(">"),
+                DiagnosticResult.CompilerError("CS1026").WithLocation(7, 36),
             };
         }
     }

@@ -213,12 +213,8 @@ class C
 
         protected virtual DiagnosticResult[] GetExpectedResultTestUsingAndGlobalStatementSpacingInTopLevelProgram()
         {
-            // NOTE: Seems like a Roslyn bug made diagnostics be reported twice. Fixed in a later version.
             return new[]
             {
-                // /0/Test0.cs(3,1): warning SA1516: Elements should be separated by blank line
-                Diagnostic().WithLocation(0),
-
                 // /0/Test0.cs(3,1): warning SA1516: Elements should be separated by blank line
                 Diagnostic().WithLocation(0),
             };
@@ -226,12 +222,8 @@ class C
 
         protected virtual DiagnosticResult[] GetExpectedResultTestGlobalStatementAndRecordSpacingInTopLevelProgram()
         {
-            // NOTE: Seems like a Roslyn bug made diagnostics be reported twice. Fixed in a later version.
             return new[]
             {
-                // /0/Test0.cs(2,1): warning SA1516: Elements should be separated by blank line
-                Diagnostic().WithLocation(0),
-
                 // /0/Test0.cs(2,1): warning SA1516: Elements should be separated by blank line
                 Diagnostic().WithLocation(0),
             };
@@ -239,12 +231,9 @@ class C
 
         protected virtual DiagnosticResult[] GetExpectedResultTopLevelStatementsFollowedByType()
         {
-            // NOTE: Seems like a Roslyn bug made diagnostics be reported twice. Fixed in a later version.
             return new[]
             {
                 Diagnostic().WithLocation(0),
-                Diagnostic().WithLocation(0),
-                Diagnostic().WithLocation(1),
                 Diagnostic().WithLocation(1),
             };
         }

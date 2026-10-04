@@ -152,9 +152,9 @@ namespace StyleCop.Analyzers.DocumentationRules
                 return structDeclaration.TypeParameterList;
             }
 
-            if (RecordDeclarationSyntaxWrapper.IsInstance(typeDeclaration))
+            if (typeDeclaration is RecordDeclarationSyntax)
             {
-                var recordDeclaration = (RecordDeclarationSyntaxWrapper)typeDeclaration;
+                var recordDeclaration = (RecordDeclarationSyntax)typeDeclaration;
                 return recordDeclaration.TypeParameterList;
             }
 

@@ -9,7 +9,9 @@ namespace StyleCop.Analyzers.Test.Verifiers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+#if NETFRAMEWORK
     using System.Net;
+#endif
     using System.Threading;
     using System.Threading.Tasks;
     using global::LightJson;
@@ -105,6 +107,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
             private bool useTabs = DefaultUseTabs;
             private int tabSize = DefaultTabSize;
 
+#if NETFRAMEWORK
             static CSharpTest()
             {
                 // If we have outdated defaults from the host unit test application targeting an older .NET Framework,
@@ -118,6 +121,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 }
             }
+#endif
 
             public CSharpTest()
                 : this(languageVersion: null)
@@ -343,7 +347,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
 
             private void UpdateGlobalAnalyzerConfig()
             {
-                if (!LightupHelpers.SupportsCSharp11)
+                if (!TestLanguageVersion.SupportsCSharp11)
                 {
                     // Options support workspace options in this version
                     // https://github.com/dotnet/roslyn/issues/66779

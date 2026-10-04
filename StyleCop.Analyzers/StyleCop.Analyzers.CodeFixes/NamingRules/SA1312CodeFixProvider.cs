@@ -17,7 +17,6 @@ namespace StyleCop.Analyzers.NamingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1312VariableNamesMustBeginWithLowerCaseLetter"/> which replaces a local
@@ -49,7 +48,7 @@ namespace StyleCop.Analyzers.NamingRules
         {
             var document = context.Document;
             var root = await document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-            if (!(root.SyntaxTree.Options is CSharpParseOptions parseOptions) || parseOptions.LanguageVersion < LanguageVersionEx.CSharp7)
+            if (!(root.SyntaxTree.Options is CSharpParseOptions parseOptions) || parseOptions.LanguageVersion < LanguageVersion.CSharp7)
             {
                 // Discards were introduced in C# 7.
                 return;
@@ -94,7 +93,7 @@ namespace StyleCop.Analyzers.NamingRules
                 return TryGetLocalDeclarationChange(semanticModel, root, identifier, declarator, cancellationToken, out change);
             }
 
-            if (!parent.IsKind(SyntaxKindEx.SingleVariableDesignation))
+            if (!parent.IsKind(SyntaxKind.SingleVariableDesignation))
             {
                 // For example, catch declarations and query range variables, which cannot be discards.
                 return false;
@@ -107,10 +106,10 @@ namespace StyleCop.Analyzers.NamingRules
             }
 
             var declarationExpression = parent.Parent;
-            if (declarationExpression.IsKind(SyntaxKindEx.DeclarationExpression)
+            if (declarationExpression.IsKind(SyntaxKind.DeclarationExpression)
                 && declarationExpression.Parent is ArgumentSyntax argument
                 && argument.RefOrOutKeyword.IsKind(SyntaxKind.OutKeyword)
-                && ((DeclarationExpressionSyntaxWrapper)declarationExpression).Type.IsVar
+                && ((DeclarationExpressionSyntax)declarationExpression).Type.IsVar
                 && !HasConflictingDiscardName(semanticModel, declarationExpression.SpanStart, local))
             {
                 // out var __ => out _
@@ -132,14 +131,14 @@ namespace StyleCop.Analyzers.NamingRules
                 || declarator.ArgumentList != null
                 || declarator.Initializer?.Value == null
                 || statement.Modifiers.Count != 0
-                || !statement.UsingKeyword().IsKind(SyntaxKind.None)
-                || !statement.AwaitKeyword().IsKind(SyntaxKind.None))
+                || !statement.UsingKeyword.IsKind(SyntaxKind.None)
+                || !statement.AwaitKeyword.IsKind(SyntaxKind.None))
             {
                 return false;
             }
 
             var type = declaration.Type;
-            if (type.DescendantTokens().Any(token => token.IsKind(SyntaxKind.RefKeyword) || token.IsKind(SyntaxKindEx.ScopedKeyword))
+            if (type.DescendantTokens().Any(token => token.IsKind(SyntaxKind.RefKeyword) || token.IsKind(SyntaxKind.ScopedKeyword))
                 || type.GetTrailingTrivia().Any(trivia => !trivia.IsKind(SyntaxKind.WhitespaceTrivia) && !trivia.IsKind(SyntaxKind.EndOfLineTrivia)))
             {
                 return false;
@@ -148,7 +147,7 @@ namespace StyleCop.Analyzers.NamingRules
             var value = declarator.Initializer.Value;
             if (value is AnonymousFunctionExpressionSyntax
                 || value.IsKind(SyntaxKind.StackAllocArrayCreationExpression)
-                || value.IsKind(SyntaxKindEx.ImplicitStackAllocArrayCreationExpression))
+                || value.IsKind(SyntaxKind.ImplicitStackAllocArrayCreationExpression))
             {
                 return false;
             }
@@ -184,7 +183,7 @@ namespace StyleCop.Analyzers.NamingRules
             // After the change, '_' must bind to a discard rather than to another symbol which is in scope.
             foreach (var symbol in semanticModel.LookupSymbols(position, name: Discard))
             {
-                if (!Equals(symbol, local))
+                if (!SymbolEqualityComparer.Default.Equals(symbol, local))
                 {
                     return true;
                 }
@@ -200,7 +199,7 @@ namespace StyleCop.Analyzers.NamingRules
             foreach (var identifierName in scope.DescendantNodes().OfType<IdentifierNameSyntax>())
             {
                 if (identifierName.Identifier.ValueText == name
-                    && Equals(semanticModel.GetSymbolInfo(identifierName, cancellationToken).Symbol, local))
+                    && SymbolEqualityComparer.Default.Equals(semanticModel.GetSymbolInfo(identifierName, cancellationToken).Symbol, local))
                 {
                     return true;
                 }

@@ -24,10 +24,10 @@
     <file src="PackageReadme.md" target="README.md" />
 
     <!-- Binaries (the PDBs are embedded in the DLLs) -->
-    <file src="bin\$Configuration$\netstandard1.1\StyleCop.Analyzers.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard1.1\**\StyleCop.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard1.1\StyleCop.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
-    <file src="bin\$Configuration$\netstandard1.1\**\StyleCop.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.resources.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\StyleCop.Analyzers.CodeFixes.dll" target="analyzers\dotnet\cs" />
+    <file src="bin\$Configuration$\netstandard2.0\**\StyleCop.Analyzers.CodeFixes.resources.dll" target="analyzers\dotnet\cs" />
 
 	<!-- Rulesets -->
 	<file src="rulesets\StyleCopAnalyzersDefault.ruleset" target="rulesets\" />

@@ -6,7 +6,7 @@
 namespace StyleCop.Analyzers.Settings.ObjectModel
 {
     using LightJson;
-    using StyleCop.Analyzers.Lightup;
+    using Microsoft.CodeAnalysis.Diagnostics;
 
     internal class ReadabilitySettings
     {
@@ -29,7 +29,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
         /// <param name="readabilitySettingsObject">The JSON object containing the settings.</param>
         /// <param name="analyzerConfigOptions">The <strong>.editorconfig</strong> options to use if
         /// <strong>stylecop.json</strong> does not provide values.</param>
-        protected internal ReadabilitySettings(JsonObject readabilitySettingsObject, AnalyzerConfigOptionsWrapper analyzerConfigOptions)
+        protected internal ReadabilitySettings(JsonObject readabilitySettingsObject, AnalyzerConfigOptions analyzerConfigOptions)
         {
             bool? allowBuiltInTypeAliases = null;
 
