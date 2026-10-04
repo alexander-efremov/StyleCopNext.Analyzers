@@ -37,7 +37,7 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
   </PropertyGroup>
 
-  <Target Name="ValidateRoslynVersion" BeforeTargets="BeforeBuild;BeforeRestore;_CheckForInvalidConfigurationAndPlatform" Condition="'$(RoslynVersion)' != '4.8' And '$(RoslynVersion)' != '5.0'">
+  <Target Name="ValidateRoslynVersion" BeforeTargets="CollectPackageReferences;_CheckForInvalidConfigurationAndPlatform" Condition="'$(RoslynVersion)' != '4.8' And '$(RoslynVersion)' != '5.0'">
     <Error Text="Unsupported RoslynVersion '$(RoslynVersion)'. Supported values are 4.8 and 5.0." />
   </Target>
 
