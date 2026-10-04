@@ -564,6 +564,15 @@
   <data name="SA1142Title" xml:space="preserve">
     <value>Refer to tuple fields by name</value>
   </data>
+  <data name="SA1138Description" xml:space="preserve">
+    <value>A line of code is not indented the correct amount, according to the currently applied style settings for the project.</value>
+  </data>
+  <data name="SA1138MessageFormat" xml:space="preserve">
+    <value>Indent elements correctly</value>
+  </data>
+  <data name="SA1138Title" xml:space="preserve">
+    <value>Indent elements correctly</value>
+  </data>
   <data name="SX1101CodeFix" xml:space="preserve">
     <value>Remove 'this.' prefix</value>
   </data>

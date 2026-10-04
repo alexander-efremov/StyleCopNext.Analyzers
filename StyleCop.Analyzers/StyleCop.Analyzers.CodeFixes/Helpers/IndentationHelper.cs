@@ -90,6 +90,24 @@ namespace StyleCop.Analyzers.Helpers
         }
 
         /// <summary>
+        /// Generate a new indentation string for the given indentation width.
+        /// </summary>
+        /// <param name="indentationSettings">The indentation settings to use.</param>
+        /// <param name="indentationWidth">The width of the indentation in columns.</param>
+        /// <returns>A string containing the amount of whitespace needed for the given indentation width.</returns>
+        public static string GenerateIndentationStringForWidth(IndentationSettings indentationSettings, int indentationWidth)
+        {
+            if (!indentationSettings.UseTabs || indentationSettings.TabSize <= 0)
+            {
+                return new string(' ', indentationWidth);
+            }
+
+            var tabCount = indentationWidth / indentationSettings.TabSize;
+            var spaceCount = indentationWidth % indentationSettings.TabSize;
+            return new string('\t', tabCount) + new string(' ', spaceCount);
+        }
+
+        /// <summary>
         /// Generates a whitespace trivia with the requested indentation.
         /// </summary>
         /// <param name="indentationSettings">The indentation settings to use.</param>
