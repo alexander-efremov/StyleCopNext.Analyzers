@@ -179,6 +179,15 @@ namespace StyleCop.Analyzers.Helpers
 
         private static bool AppendTupleType(StringBuilder builder, INamedTypeSymbol namedTypeSymbol, TypeSyntax type)
         {
+            if (type is NullableTypeSyntax { ElementType: TupleTypeSyntax tupleElementType })
+            {
+                // Without nullable reference types enabled, a nullable tuple is exposed as the tuple itself
+                // instead of as System.Nullable<T> over the tuple.
+                AppendTupleType(builder, namedTypeSymbol, tupleElementType);
+                builder.Append("?");
+                return true;
+            }
+
             if (type is TupleTypeSyntax)
             {
                 var tupleType = (TupleTypeSyntax)type;
