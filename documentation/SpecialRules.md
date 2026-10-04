@@ -1,6 +1,8 @@
 ### Special Rules (SA0000-)
 Rules which provide special functionality like workarounds, configuration errors, etc.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.SpecialRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|-------------
 [SA0001](SA0001.md) | XmlCommentAnalysisDisabled | All diagnostics of XML documentation comments has been disabled due to the current project configuration.
