@@ -50,6 +50,10 @@ Describes how to set rule severities in **.editorconfig** and **.globalconfig**,
 
 Describes how to enable the **stylecop.json** file for usage.
 
+**[Migrating from StyleCop Classic](documentation/MigratingFromStyleCopClassic.md)**
+
+Describes how to replace StyleCop Classic with StyleCop Analyzers.
+
 **[Known changes](documentation/KnownChanges.md)**
 
 Describes the known differences between StyleCop Analyzers and StyleCop Classic.
