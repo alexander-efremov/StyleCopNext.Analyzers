@@ -4,6 +4,7 @@
 namespace StyleCop.Analyzers.Test.SpacingRules
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis.Testing;
@@ -20,6 +21,9 @@ namespace StyleCop.Analyzers.Test.SpacingRules
     /// </summary>
     public class SA1001UnitTests
     {
+        private const string PrecedingKey = "TokenSpacingCodeFixProvider.SA1001.preceding.remove";
+        private const string FollowingKey = "TokenSpacingCodeFixProvider.SA1001.following.insert";
+
         [Fact]
         public async Task TestSpaceAfterCommaAsync()
         {
@@ -347,7 +351,79 @@ public class TestClass
                 Diagnostic().WithArguments(string.Empty, "followed").WithLocation(1),
             };
 
-            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+            var test = new CSharpTest
+            {
+                TestCode = testCode,
+                FixedCode = fixedCode,
+                NumberOfFixAllIterations = 2,
+            };
+
+            test.ExpectedDiagnostics.AddRange(expected);
+            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData(PrecedingKey, true)]
+        [InlineData(FollowingKey, false)]
+        public async Task TestFixAllFixesOnlyTheInvokedKindAsync(string equivalenceKey, bool fixPreceding)
+        {
+            var testCode = @"public class TestClass
+{
+    public void TestMethod(int a, int b, int c, int d)
+    {
+        TestMethod(a {|#0:,|} b, c, d);
+        TestMethod(a{|#1:,|}b, c, d);
+        TestMethod(a {|#2:,|}b, c, d);
+    }
+}
+";
+
+            var precedingFixedCode = @"public class TestClass
+{
+    public void TestMethod(int a, int b, int c, int d)
+    {
+        TestMethod(a, b, c, d);
+        TestMethod(a,b, c, d);
+        TestMethod(a,b, c, d);
+    }
+}
+";
+
+            var followingFixedCode = @"public class TestClass
+{
+    public void TestMethod(int a, int b, int c, int d)
+    {
+        TestMethod(a , b, c, d);
+        TestMethod(a, b, c, d);
+        TestMethod(a , b, c, d);
+    }
+}
+";
+
+            var test = new CSharpTest
+            {
+                TestCode = testCode,
+                FixedCode = fixPreceding ? precedingFixedCode : followingFixedCode,
+                CodeActionEquivalenceKey = equivalenceKey,
+            };
+
+            test.ExpectedDiagnostics.Add(Diagnostic().WithArguments(" not", "preceded").WithLocation(0));
+            test.ExpectedDiagnostics.Add(Diagnostic().WithArguments(string.Empty, "followed").WithLocation(1));
+            test.ExpectedDiagnostics.Add(Diagnostic().WithArguments(" not", "preceded").WithLocation(2));
+            test.ExpectedDiagnostics.Add(Diagnostic().WithArguments(string.Empty, "followed").WithLocation(2));
+
+            if (fixPreceding)
+            {
+                test.RemainingDiagnostics.Add(Diagnostic().WithArguments(string.Empty, "followed").WithLocation(6, 21));
+                test.RemainingDiagnostics.Add(Diagnostic().WithArguments(string.Empty, "followed").WithLocation(7, 21));
+            }
+            else
+            {
+                test.RemainingDiagnostics.Add(Diagnostic().WithArguments(" not", "preceded").WithLocation(5, 22));
+                test.RemainingDiagnostics.Add(Diagnostic().WithArguments(" not", "preceded").WithLocation(7, 22));
+            }
+
+            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         [Fact]
@@ -468,6 +544,18 @@ partial struct Money : IFormattable,
             await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
 
+        private static int CountFixKinds(DiagnosticResult[] expected)
+        {
+            // Each kind of violation has its own Fix All equivalence key, so Fix All needs one pass per kind.
+            var kinds = new HashSet<string>();
+            foreach (var diagnostic in expected)
+            {
+                kinds.Add(string.Join("|", diagnostic.MessageArguments!));
+            }
+
+            return kinds.Count;
+        }
+
         private Task TestCommaInStatementOrDeclAsync(string originalStatement, DiagnosticResult expected, string fixedStatement)
         {
             return this.TestCommaInStatementOrDeclAsync(originalStatement, new[] { expected }, fixedStatement);
@@ -496,6 +584,7 @@ partial struct Money : IFormattable,
             {
                 TestCode = originalCode,
                 FixedCode = fixedCode,
+                NumberOfFixAllIterations = CountFixKinds(expected),
             };
 
             test.ExpectedDiagnostics.AddRange(expected);
