@@ -51,6 +51,8 @@ jobs:
         with:
           path: ${{ runner.temp }}/nuget-packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
 
       - name: Restore
         if: steps.packages.outputs.cache-hit != 'true'
@@ -59,7 +61,8 @@ jobs:
 
   test:
     name: Test (${{ matrix.project }})
-    runs-on: windows-latest
+    # .NET Framework needs Windows; the net6.0 runs go to Linux, which starts and builds faster.
+    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-latest' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -83,6 +86,7 @@ jobs:
     steps:
       # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
       - name: Allow Long Paths
+        if: runner.os == 'Windows'
         run: git config --system core.longpaths true
 
       - name: Checkout
@@ -101,14 +105,19 @@ jobs:
 
       # Packages go to the work drive; the system drive of the runner is slow.
       - name: Use The Work Drive For Packages
-        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+        shell: pwsh
+        run: echo "NUGET_PACKAGES=$(Join-Path $env:RUNNER_TEMP nuget-packages)" >> $env:GITHUB_ENV
 
-      # Only the job that restores the whole solution saves the cache, so it holds every package the test projects use.
-      - name: Restore Package Cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      # The Linux jobs save their own cache entry on a miss. The bare "nuget-" fallback lets the first Linux
+      # run reuse the Windows entry, since the global packages folder is portable across operating systems.
+      - name: Package Cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ runner.temp }}/nuget-packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+            nuget-
 
       - name: Test
         run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults

@@ -347,7 +347,9 @@ namespace StyleCop.Analyzers.Test.Verifiers
 
             private void UpdateGlobalAnalyzerConfig()
             {
-                if (!LightupHelpers.SupportsCSharp11)
+                // The analyzers target an old Roslyn, so LightupHelpers would always report false here. The test-side
+                // Roslyn version decides: only it reads the workspace options.
+                if (!Enum.GetNames(typeof(LanguageVersion)).Contains("CSharp11"))
                 {
                     // Options support workspace options in this version
                     // https://github.com/dotnet/roslyn/issues/66779
