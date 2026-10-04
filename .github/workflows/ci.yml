@@ -36,6 +36,18 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # Packages go to the work drive; the system drive of the runner is slow.
+      - name: Use The Work Drive For Packages
+        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+
+      # This job restores the whole solution, so it saves the package cache; the test jobs only read it.
+      - name: Package Cache
+        id: packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/nuget-packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+
       # Warnings are errors, so a successful build means there are none.
       - name: Build
         run: dotnet build StyleCopAnalyzers.sln --configuration Release
@@ -76,6 +88,17 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+
+      # Packages go to the work drive; the system drive of the runner is slow.
+      - name: Use The Work Drive For Packages
+        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+
+      # Only the job that restores the whole solution saves the cache, so it holds every package the test projects use.
+      - name: Restore Package Cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/nuget-packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
 
       - name: Test
         run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
