@@ -16,7 +16,11 @@ StyleCop Analyzers can be configured using multiple separate mechanisms:
 
    * Can be used in place of rule set files and **stylecop.json**
 
-Code analysis rule sets have been the standard way to configure most diagnostic analyzers within Visual Studio. Information about creating and customizing these files can be found in the [Using Rule Sets to Group Code Analysis Rules](https://docs.microsoft.com/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules) documentation on docs.microsoft.com.
+Rule severities can also be set in **.editorconfig** and **.globalconfig** files, see [ConfiguringRules.md](ConfiguringRules.md).
+Many of the **stylecop.json** settings can also be provided in **.editorconfig**, see
+[Settings in .editorconfig](#settings-in-editorconfig).
+
+Code analysis rule sets are the standard way to configure most diagnostic analyzers within Visual Studio. Information about creating and customizing these files can be found in the [Using Rule Sets to Group Code Analysis Rules](https://docs.microsoft.com/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules) documentation on docs.microsoft.com.
 
 An example rule set file containing the default StyleCop Analyzers configuration is available at <https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/rulesets/StyleCopAnalyzersDefault.ruleset>.
 
@@ -751,6 +755,64 @@ When using an **.editorconfig** file to configure StyleCop Analyzers, the follow
 ```ini
 stylecop.documentation.excludeFromPunctuationCheck = seealso
 ```
+
+## Settings in .editorconfig
+
+Some of the settings described above can be provided in an [**.editorconfig**](http://editorconfig.org/) file instead of
+(or in addition to) **stylecop.json**. The analyzers read the keys in the following table.
+
+* A value in **stylecop.json** takes precedence over the **.editorconfig** value of the same setting. The
+  **.editorconfig** value is used only when **stylecop.json** does not set the property (or no **stylecop.json** exists).
+* A value of `unset`, or a value which cannot be parsed, is ignored and the default value is used.
+* **.editorconfig** keys are evaluated per source file, so different folders can use different values. **stylecop.json**
+  applies to the whole project.
+* A severity suffix (for example `outside_namespace:error`) is accepted and ignored.
+* Settings which are not listed here, such as `elementOrder`, can only be set in **stylecop.json**.
+
+In the second column, `indentation.tabSize` means the `tabSize` property of the `indentation` object inside `settings`.
+Values in parentheses are the equivalent **stylecop.json** values.
+
+| .editorconfig key | stylecop.json setting | Values |
+| --- | --- | --- |
+| `indent_size` | `indentation.indentationSize` | Integer |
+| `tab_width` | `indentation.tabSize` | Integer |
+| `indent_style` | `indentation.useTabs` | `tab` (true), `space` (false) |
+| `insert_final_newline` | `layoutRules.newlineAtEndOfFile` | `true` (`require`), `false` (`omit`) |
+| `dotnet_sort_system_directives_first` | `orderingRules.systemUsingDirectivesFirst` | `true`, `false` |
+| `csharp_using_directive_placement` | `orderingRules.usingDirectivesPlacement` | `inside_namespace` (`insideNamespace`), `outside_namespace` (`outsideNamespace`) |
+| `dotnet_separate_import_directive_groups` | `orderingRules.blankLinesBetweenUsingGroups` | `true` (`require`), `false` (`allow`) |
+| `file_header_template` | `documentationRules.copyrightText` | Text; used only when `stylecop.documentation.copyrightText` is not set |
+| `stylecop.readability.allowBuiltInTypeAliases` | `readabilityRules.allowBuiltInTypeAliases` | Boolean |
+| `stylecop.layout.allowConsecutiveUsings` | `layoutRules.allowConsecutiveUsings` | Boolean |
+| `stylecop.layout.allowDoWhileOnClosingBrace` | `layoutRules.allowDoWhileOnClosingBrace` | Boolean |
+| `stylecop.naming.allowCommonHungarianPrefixes` | `namingRules.allowCommonHungarianPrefixes` | Boolean |
+| `stylecop.naming.allowedHungarianPrefixes` | `namingRules.allowedHungarianPrefixes` | Comma-separated list |
+| `stylecop.naming.allowedNamespaceComponents` | `namingRules.allowedNamespaceComponents` | Comma-separated list |
+| `stylecop.naming.includeInferredTupleElementNames` | `namingRules.includeInferredTupleElementNames` | Boolean |
+| `stylecop.naming.tupleElementNameCasing` | `namingRules.tupleElementNameCasing` | `camelCase`, `pascalCase` |
+| `stylecop.documentation.documentExposedElements` | `documentationRules.documentExposedElements` | Boolean |
+| `stylecop.documentation.documentInternalElements` | `documentationRules.documentInternalElements` | Boolean |
+| `stylecop.documentation.documentPrivateElements` | `documentationRules.documentPrivateElements` | Boolean |
+| `stylecop.documentation.documentInterfaces` | `documentationRules.documentInterfaces` | `all`, `exposed`, `none`, or boolean |
+| `stylecop.documentation.documentPrivateFields` | `documentationRules.documentPrivateFields` | Boolean |
+| `stylecop.documentation.companyName` | `documentationRules.companyName` | Text |
+| `stylecop.documentation.copyrightText` | `documentationRules.copyrightText` | Text; use `\n` for line breaks |
+| `stylecop.documentation.headerDecoration` | `documentationRules.headerDecoration` | Text |
+| `stylecop.documentation.xmlHeader` | `documentationRules.xmlHeader` | Boolean |
+| `stylecop.documentation.fileNamingConvention` | `documentationRules.fileNamingConvention` | `stylecop`, `metadata` |
+| `stylecop.documentation.documentationCulture` | `documentationRules.documentationCulture` | Culture name |
+| `stylecop.documentation.excludeFromPunctuationCheck` | `documentationRules.excludeFromPunctuationCheck` | Comma-separated list |
+
+```ini
+[*.cs]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+csharp_using_directive_placement = outside_namespace
+stylecop.documentation.companyName = Contoso
+```
+
+Rule severities are not part of **stylecop.json**; see [ConfiguringRules.md](ConfiguringRules.md).
 
 ## Sharing configuration among solutions
 
