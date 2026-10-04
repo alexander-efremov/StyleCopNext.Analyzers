@@ -61,8 +61,8 @@ jobs:
 
   test:
     name: Test (${{ matrix.project }})
-    # .NET Framework needs Windows; the net6.0 runs go to Linux, which starts and builds faster.
-    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-latest' }}
+    # .NET Framework needs Windows; the net6.0 runs go to Linux on Arm, which starts and builds faster.
+    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-24.04-arm' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
