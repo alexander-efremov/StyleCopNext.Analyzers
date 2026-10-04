@@ -3,6 +3,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
+    <!-- netstandard1.1 keeps 1.x loadable by old Visual Studio and Roslyn hosts; the SDK warns about it (NETSDK1215). -->
+    <CheckNotRecommendedTargetFramework>false</CheckNotRecommendedTargetFramework>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
 
