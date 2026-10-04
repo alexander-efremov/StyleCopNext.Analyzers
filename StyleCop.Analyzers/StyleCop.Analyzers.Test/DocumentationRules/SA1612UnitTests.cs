@@ -679,21 +679,9 @@ public class ClassName
             return GetExpectedDiagnostics(new[] { normallyExpected }, declaration);
         }
 
-        // Syntax node actions for type declarations with a primary constructor were called twice
-        // before support for c# 11 was added.
         private static DiagnosticResult[] GetExpectedDiagnostics(DiagnosticResult[] normallyExpected, string declaration)
         {
-            var isPrimaryConstructor = declaration.Contains("record") || declaration.Contains("class") || declaration.Contains("struct");
-
-            if (isPrimaryConstructor && !TestLanguageVersion.SupportsCSharp11)
-            {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136 and https://github.com/dotnet/roslyn/issues/70488
-                return normallyExpected.Concat(normallyExpected).ToArray();
-            }
-            else
-            {
-                return normallyExpected;
-            }
+            return normallyExpected;
         }
     }
 }
