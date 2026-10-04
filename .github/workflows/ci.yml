@@ -65,7 +65,8 @@ jobs:
         run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release -p:RoslynVersion=5.0
 
   test:
-    runs-on: windows-latest
+    # .NET Framework needs Windows; the net10.0 runs go to Linux, which starts and builds faster.
+    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-latest' }}
     timeout-minutes: 30
     strategy:
       # Let every project finish so one failure does not hide the others.
@@ -97,6 +98,7 @@ jobs:
             roslyn: '5.0'
     steps:
       - name: Allow Long Paths
+        if: runner.os == 'Windows'
         run: git config --system core.longpaths true
 
       - name: Checkout
@@ -111,7 +113,8 @@ jobs:
 
       # Packages go to the work drive; the system drive of the runner is slow.
       - name: Use The Work Drive For Packages
-        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+        shell: pwsh
+        run: echo "NUGET_PACKAGES=$(Join-Path $env:RUNNER_TEMP nuget-packages)" >> $env:GITHUB_ENV
 
       # Only the job that restores the whole solution saves the cache, so it holds every package the test projects use.
       - name: Restore Package Cache
