@@ -8,6 +8,8 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.LayoutRules.severity = none
 
 Rules which enforce code layout and line spacing.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.LayoutRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|------------
 [SA1500](SA1500.md) | BracesForMultiLineStatementsMustNotShareLine | The opening or closing brace within a C# statement, element, or expression is not placed on its own line. 

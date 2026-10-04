@@ -8,6 +8,8 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = none
 
 Rules which enforce naming requirements for members, types, and variables.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.NamingRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|------------
 [SA1300](SA1300.md) | ElementMustBeginWithUpperCaseLetter | The name of a C# element does not begin with an upper-case letter. 
