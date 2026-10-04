@@ -25,8 +25,13 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <PropertyGroup>
+    <CSharp13TestRoslynPackageVersion>4.12.0</CSharp13TestRoslynPackageVersion>
+    <CSharp13TestRoslynPackageVersion Condition="'$(RoslynVersion)' == '5.0'">$(MicrosoftCodeAnalysisVersion)</CSharp13TestRoslynPackageVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(CSharp13TestRoslynPackageVersion)" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="all" />
   </ItemGroup>
