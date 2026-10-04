@@ -137,7 +137,9 @@ namespace StyleCop.Analyzers.Test.Verifiers
                     options
                     .WithChangedOption(FormattingOptions.IndentationSize, this.Language, this.IndentationSize)
                     .WithChangedOption(FormattingOptions.TabSize, this.Language, this.TabSize)
-                    .WithChangedOption(FormattingOptions.UseTabs, this.Language, this.UseTabs));
+                    .WithChangedOption(FormattingOptions.UseTabs, this.Language, this.UseTabs)
+                    .WithChangedOption(FormattingOptions.NewLine, this.Language, "\r\n"));
+                this.UpdateGlobalAnalyzerConfig();
 
                 this.TestState.AdditionalFilesFactories.Add(GenerateSettingsFile);
                 this.CodeActionValidationMode = CodeActionValidationMode.SemanticStructure;
@@ -370,6 +372,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
 indent_size = {this.IndentationSize}
 indent_style = {(this.UseTabs ? "tab" : "space")}
 tab_width = {this.TabSize}
+end_of_line = crlf
 "));
             }
         }
