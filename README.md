@@ -33,8 +33,9 @@ See [ConfiguringRules.md](documentation/ConfiguringRules.md) for how to set rule
 
 For documentation and reasoning on the rules themselves, see the [Documentation](https://dotnetanalyzers.github.io/StyleCopAnalyzers/).
 
-For users upgrading from StyleCop Classic, see [Known changes](https://dotnetanalyzers.github.io/StyleCopAnalyzers/KnownChanges.html)
-for information about known differences which you may notice when switching to StyleCop Analyzers.
+For users upgrading from StyleCop Classic, see the [migration guide](documentation/MigratingFromStyleCopClassic.md) and
+[KnownChanges.md](documentation/KnownChanges.md) for information about known differences which you may notice when
+switching to StyleCop Analyzers.
 
 ### C# language versions
 Not all versions of StyleCop.Analyzers support all features of each C# language version. The table below shows the minimum version of StyleCop.Analyzers required for proper support of a C# language version.
