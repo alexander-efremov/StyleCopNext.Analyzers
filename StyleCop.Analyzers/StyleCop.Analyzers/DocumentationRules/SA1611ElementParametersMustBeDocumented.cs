@@ -14,7 +14,6 @@ namespace StyleCop.Analyzers.DocumentationRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -62,7 +61,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             }
 
             var node = context.Node;
-            if (node.IsKind(SyntaxKindEx.RecordDeclaration) || node.IsKind(SyntaxKindEx.RecordStructDeclaration))
+            if (node.IsKind(SyntaxKind.RecordDeclaration) || node.IsKind(SyntaxKind.RecordStructDeclaration))
             {
                 // Record parameters are covered by SA1600 instead.
                 return;
@@ -92,7 +91,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             }
 
             var node = context.Node;
-            if (node.IsKind(SyntaxKindEx.RecordDeclaration) || node.IsKind(SyntaxKindEx.RecordStructDeclaration))
+            if (node.IsKind(SyntaxKind.RecordDeclaration) || node.IsKind(SyntaxKind.RecordStructDeclaration))
             {
                 // Record parameters are covered by SA1600 instead.
                 return;
@@ -121,7 +120,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             return (node as BaseMethodDeclarationSyntax)?.ParameterList?.Parameters
                 ?? (node as IndexerDeclarationSyntax)?.ParameterList?.Parameters
                 ?? (node as DelegateDeclarationSyntax)?.ParameterList?.Parameters
-                ?? (node as TypeDeclarationSyntax)?.ParameterList()?.Parameters;
+                ?? (node as TypeDeclarationSyntax)?.ParameterList?.Parameters;
         }
 
         private static void ReportMissingParameters(SyntaxNodeAnalysisContext context, IEnumerable<ParameterSyntax> parameterList, IEnumerable<string> documentationParameterNames)

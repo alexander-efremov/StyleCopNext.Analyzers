@@ -11,7 +11,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// An opening square bracket within a C# statement is not spaced correctly.
@@ -126,12 +125,12 @@ namespace StyleCop.Analyzers.SpacingRules
 
         private static bool IsPartOfListPattern(SyntaxToken token)
         {
-            return token.Parent.IsKind(SyntaxKindEx.ListPattern);
+            return token.Parent.IsKind(SyntaxKind.ListPattern);
         }
 
         private static bool IsPartOfCollectionExpression(SyntaxToken token)
         {
-            return token.Parent.IsKind(SyntaxKindEx.CollectionExpression);
+            return token.Parent.IsKind(SyntaxKind.CollectionExpression);
         }
     }
 }

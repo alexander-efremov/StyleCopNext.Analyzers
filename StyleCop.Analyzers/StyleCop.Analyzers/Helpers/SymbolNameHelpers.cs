@@ -10,8 +10,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    using StyleCop.Analyzers.Lightup;
-
     /// <summary>
     /// Contains helper methods to work with symbol names consistently over different C# versions.
     /// </summary>
@@ -45,7 +43,7 @@ namespace StyleCop.Analyzers.Helpers
         /// <returns>The generated fully qualified display string.</returns>
         public static string ToFullyQualifiedValueTupleDisplayString(this INamedTypeSymbol tupleSymbol)
         {
-            var tupleElements = tupleSymbol.TupleElements();
+            var tupleElements = tupleSymbol.TupleElements;
             if (tupleElements.IsDefault)
             {
                 // If the tuple elements API is not available, the default formatting will produce System.ValueTuple and not the C# tuple format.
@@ -112,7 +110,7 @@ namespace StyleCop.Analyzers.Helpers
                     AppendNullableSuffixIfNeeded(builder, type);
                     return true;
                 }
-                else if (namedTypeSymbol.IsTupleType())
+                else if (namedTypeSymbol.IsTupleType)
                 {
                     return AppendTupleType(builder, namedTypeSymbol, type);
                 }
@@ -181,12 +179,12 @@ namespace StyleCop.Analyzers.Helpers
 
         private static bool AppendTupleType(StringBuilder builder, INamedTypeSymbol namedTypeSymbol, TypeSyntax type)
         {
-            if (TupleTypeSyntaxWrapper.IsInstance(type))
+            if (type is TupleTypeSyntax)
             {
-                var tupleType = (TupleTypeSyntaxWrapper)type;
+                var tupleType = (TupleTypeSyntax)type;
 
                 builder.Append(TupleTypeOpen);
-                var elements = namedTypeSymbol.TupleElements();
+                var elements = namedTypeSymbol.TupleElements;
                 for (int i = 0; i < elements.Length; i++)
                 {
                     var field = elements[i];
@@ -198,7 +196,7 @@ namespace StyleCop.Analyzers.Helpers
                     }
 
                     AppendQualifiedSymbolName(builder, field.Type, fieldType.Type);
-                    if (!Equals(field, field.CorrespondingTupleField()))
+                    if (!SymbolEqualityComparer.Default.Equals(field, field.CorrespondingTupleField))
                     {
                         builder.Append(" ").Append(field.Name);
                     }

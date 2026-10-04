@@ -14,7 +14,6 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A single-line comment within C# code is not preceded by a blank line.
@@ -266,9 +265,9 @@ namespace StyleCop.Analyzers.LayoutRules
 
             var prevToken = token.GetPreviousToken();
             return prevToken.IsKind(SyntaxKind.OpenBraceToken)
-                || (prevToken.IsKind(SyntaxKind.OpenBracketToken) && prevToken.Parent.IsKind(SyntaxKindEx.CollectionExpression))
+                || (prevToken.IsKind(SyntaxKind.OpenBracketToken) && prevToken.Parent.IsKind(SyntaxKind.CollectionExpression))
                 || prevToken.Parent.IsKind(SyntaxKind.CaseSwitchLabel)
-                || prevToken.Parent.IsKind(SyntaxKindEx.CasePatternSwitchLabel)
+                || prevToken.Parent.IsKind(SyntaxKind.CasePatternSwitchLabel)
                 || prevToken.Parent.IsKind(SyntaxKind.DefaultSwitchLabel);
         }
 

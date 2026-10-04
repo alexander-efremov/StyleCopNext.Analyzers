@@ -17,7 +17,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Simplification;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SA1141CodeFixProvider))]
     [Shared]
@@ -107,23 +106,22 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static SyntaxNode TransformGenericNameToTuple(SemanticModel semanticModel, GenericNameSyntax genericName)
         {
-            var implementationType = typeof(SeparatedSyntaxListWrapper<>.AutoWrapSeparatedSyntaxList<>).MakeGenericType(typeof(TupleElementSyntaxWrapper), SyntaxWrapperHelper.GetWrappedType(typeof(TupleElementSyntaxWrapper)));
-            var tupleElements = (SeparatedSyntaxListWrapper<TupleElementSyntaxWrapper>)Activator.CreateInstance(implementationType);
+            SeparatedSyntaxList<TupleElementSyntax> tupleElements = default;
 
             foreach (var typeArgument in genericName.TypeArgumentList.Arguments)
             {
                 if (IsValueTuple(semanticModel, typeArgument))
                 {
                     var tupleTypeSyntax = (TypeSyntax)GetReplacementNode(semanticModel, typeArgument);
-                    tupleElements = tupleElements.Add(SyntaxFactoryEx.TupleElement(tupleTypeSyntax));
+                    tupleElements = tupleElements.Add(SyntaxFactory.TupleElement(tupleTypeSyntax));
                 }
                 else
                 {
-                    tupleElements = tupleElements.Add(SyntaxFactoryEx.TupleElement(typeArgument));
+                    tupleElements = tupleElements.Add(SyntaxFactory.TupleElement(typeArgument));
                 }
             }
 
-            return SyntaxFactoryEx.TupleType(tupleElements);
+            return SyntaxFactory.TupleType(tupleElements);
         }
 
         private static SyntaxNode TransformArgumentListToTuple(SemanticModel semanticModel, SeparatedSyntaxList<ArgumentSyntax> arguments)
@@ -135,7 +133,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 var argument = arguments[i];
 
                 var argumentTypeInfo = semanticModel.GetTypeInfo(argument.Expression);
-                if (!Equals(argumentTypeInfo.Type, argumentTypeInfo.ConvertedType))
+                if (!SymbolEqualityComparer.Default.Equals(argumentTypeInfo.Type, argumentTypeInfo.ConvertedType))
                 {
                     var expectedType = SyntaxFactory.ParseTypeName(argumentTypeInfo.ConvertedType.ToDisplayString());
                     argument = argument.WithExpression(SyntaxFactory.CastExpression(expectedType, argument.Expression));
@@ -144,18 +142,18 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 processedArguments = processedArguments.Add(argument);
             }
 
-            return SyntaxFactoryEx.TupleExpression(processedArguments);
+            return SyntaxFactory.TupleExpression(processedArguments);
         }
 
         private static bool IsValueTuple(SemanticModel semanticModel, TypeSyntax typeSyntax)
         {
-            if (typeSyntax.IsKind(SyntaxKindEx.TupleType))
+            if (typeSyntax.IsKind(SyntaxKind.TupleType))
             {
                 return false;
             }
 
             var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
-            return (symbolInfo.Symbol is ITypeSymbol typeSymbol) && typeSymbol.IsTupleType();
+            return (symbolInfo.Symbol is ITypeSymbol typeSymbol) && typeSymbol.IsTupleType;
         }
 
         private class SeparatorRewriter : CSharpSyntaxRewriter

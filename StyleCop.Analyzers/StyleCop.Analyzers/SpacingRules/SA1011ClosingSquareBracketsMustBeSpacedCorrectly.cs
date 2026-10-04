@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A closing square bracket within a C# statement is not spaced correctly.
@@ -107,7 +106,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 case SyntaxKind.OpenBracketToken:
                 case SyntaxKind.CloseParenToken:
                 case SyntaxKind.MinusGreaterThanToken:
-                case SyntaxKindEx.DotDotToken:
+                case SyntaxKind.DotDotToken:
                     precedesSpecialCharacter = true;
                     break;
 
@@ -119,7 +118,7 @@ namespace StyleCop.Analyzers.SpacingRules
                     break;
 
                 case SyntaxKind.LessThanToken:
-                    precedesSpecialCharacter = token.Parent.IsKind(SyntaxKindEx.FunctionPointerUnmanagedCallingConventionList);
+                    precedesSpecialCharacter = token.Parent.IsKind(SyntaxKind.FunctionPointerUnmanagedCallingConventionList);
                     suppressFollowingSpaceError = false;
                     break;
 
@@ -138,7 +137,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 case SyntaxKind.ColonToken:
                     precedesSpecialCharacter =
                         nextToken.Parent.IsKind(SyntaxKind.InterpolationFormatClause) ||
-                        nextToken.Parent.IsKind(SyntaxKindEx.CasePatternSwitchLabel);
+                        nextToken.Parent.IsKind(SyntaxKind.CasePatternSwitchLabel);
                     suppressFollowingSpaceError = false;
                     break;
 

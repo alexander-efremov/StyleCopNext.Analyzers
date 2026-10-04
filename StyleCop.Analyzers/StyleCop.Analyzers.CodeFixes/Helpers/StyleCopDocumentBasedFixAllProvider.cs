@@ -16,7 +16,7 @@ namespace StyleCop.Analyzers.Helpers
     /// <summary>
     /// Provides a base class to write a <see cref="FixAllProvider"/> that fixes documents independently.
     /// </summary>
-    internal abstract class DocumentBasedFixAllProvider : FixAllProvider
+    internal abstract class StyleCopDocumentBasedFixAllProvider : FixAllProvider
     {
         protected abstract string CodeActionTitle { get; }
 
@@ -29,21 +29,21 @@ namespace StyleCop.Analyzers.Helpers
                 fixAction = CodeAction.Create(
                     this.CodeActionTitle,
                     cancellationToken => this.GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
+                    nameof(StyleCopDocumentBasedFixAllProvider));
                 break;
 
             case FixAllScope.Project:
                 fixAction = CodeAction.Create(
                     this.CodeActionTitle,
                     cancellationToken => this.GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
-                    nameof(DocumentBasedFixAllProvider));
+                    nameof(StyleCopDocumentBasedFixAllProvider));
                 break;
 
             case FixAllScope.Solution:
                 fixAction = CodeAction.Create(
                     this.CodeActionTitle,
                     cancellationToken => this.GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                    nameof(DocumentBasedFixAllProvider));
+                    nameof(StyleCopDocumentBasedFixAllProvider));
                 break;
 
             case FixAllScope.Custom:

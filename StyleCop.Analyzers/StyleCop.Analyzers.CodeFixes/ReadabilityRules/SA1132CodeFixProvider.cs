@@ -67,7 +67,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             if (newFieldDeclarations != null)
             {
-                var editor = new SyntaxEditor(syntaxRoot, document.Project.Solution.Workspace);
+                var editor = new SyntaxEditor(syntaxRoot, document.Project.Solution.Workspace.Services);
                 editor.InsertAfter(baseFieldDeclaration, newFieldDeclarations);
                 editor.RemoveNode(baseFieldDeclaration, SyntaxRemoveOptions.KeepNoTrivia);
                 return document.WithSyntaxRoot(editor.GetChangedRoot().WithoutFormatting());

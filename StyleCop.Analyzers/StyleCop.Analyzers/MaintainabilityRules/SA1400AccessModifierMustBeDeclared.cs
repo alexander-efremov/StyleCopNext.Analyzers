@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The access modifier for a C# element has not been explicitly defined.
@@ -200,7 +199,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
                 case SyntaxKind.ProtectedKeyword:
                 case SyntaxKind.InternalKeyword:
                 case SyntaxKind.PrivateKeyword:
-                case SyntaxKindEx.FileKeyword:
+                case SyntaxKind.FileKeyword:
                     return;
 
                 case SyntaxKind.StaticKeyword:
