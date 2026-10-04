@@ -71,11 +71,25 @@ namespace StyleCop.Analyzers.SpacingRules
                     CodeAction.Create(
                         SpacingResources.TokenSpacingCodeFix,
                         cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, cancellationToken),
-                        nameof(TokenSpacingCodeFixProvider)),
+                        GetEquivalenceKey(diagnostic)),
                     diagnostic);
             }
 
             return SpecializedTasks.CompletedTask;
+        }
+
+        private static string GetEquivalenceKey(Diagnostic diagnostic)
+        {
+            // SA1001 reports different kinds of problems (for example a space before a comma and a missing space after
+            // a comma). Giving each kind its own key lets Fix All fix only the kind it was invoked on.
+            if (diagnostic.Id == SA1001CommasMustBeSpacedCorrectly.DiagnosticId
+                && diagnostic.Properties.TryGetValue(TokenSpacingProperties.LocationKey, out var location)
+                && diagnostic.Properties.TryGetValue(TokenSpacingProperties.ActionKey, out var action))
+            {
+                return nameof(TokenSpacingCodeFixProvider) + "." + diagnostic.Id + "." + location + "." + action;
+            }
+
+            return nameof(TokenSpacingCodeFixProvider);
         }
 
         private static async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
@@ -288,6 +302,12 @@ namespace StyleCop.Analyzers.SpacingRules
 
                 foreach (var diagnostic in diagnostics)
                 {
+                    if (fixAllContext.CodeActionEquivalenceKey != null
+                        && GetEquivalenceKey(diagnostic) != fixAllContext.CodeActionEquivalenceKey)
+                    {
+                        continue;
+                    }
+
                     var token = syntaxRoot.FindToken(diagnostic.Location.SourceSpan.Start, findInsideTrivia: true);
                     UpdateReplaceMap(replaceMap, token, diagnostic);
                 }
