@@ -1,6 +1,8 @@
 ### Ordering Rules (SA1200-)
 Rules which enforce a standard ordering scheme for code contents.
 
+Category name for `.editorconfig` and `SuppressMessage`: `StyleCop.CSharp.OrderingRules`. See [Configuring rules](ConfiguringRules.md).
+
 Identifier | Name | Description
 -----------|------|-------------
 [SA1200](SA1200.md) | UsingDirectivesMustBePlacedCorrectly | A C# using directive is placed outside of a namespace element. 
