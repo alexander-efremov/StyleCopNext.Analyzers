@@ -162,6 +162,9 @@
   <data name="SA1402Title" xml:space="preserve">
     <value>File may only contain a single type</value>
   </data>
+  <data name="SA1403CodeFix" xml:space="preserve">
+    <value>Move namespace to new file</value>
+  </data>
   <data name="SA1403Description" xml:space="preserve">
     <value>A C# code file contains more than one namespace.</value>
   </data>
