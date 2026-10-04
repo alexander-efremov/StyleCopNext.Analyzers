@@ -5,7 +5,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <RootNamespace>StyleCop.Analyzers</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Only the default flavor packs. It builds the other flavors itself (see BuildRoslynFlavors). -->
+    <GeneratePackageOnBuild Condition="'$(IsDefaultRoslynVersion)' == 'true'">true</GeneratePackageOnBuild>
 
     <NuspecFile>StyleCop.Analyzers.nuspec</NuspecFile>
   </PropertyGroup>
@@ -35,13 +36,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisVersion)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(MicrosoftCodeAnalysisVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
   </ItemGroup>
+
+  <!--
+    The package carries one build per supported Roslyn version. Before the package is generated, build the other
+    flavors of this project (and of the analyzer project it references) with their own restore, obj and bin folders.
+  -->
+  <Target Name="BuildRoslynFlavors" BeforeTargets="GenerateNuspec" Condition="'$(IsDefaultRoslynVersion)' == 'true'">
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="Restore"
+             Properties="RoslynVersion=5.0;MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="Build"
+             Properties="RoslynVersion=5.0;Configuration=$(Configuration)" />
+  </Target>
 
   <Target Name="SetNuspecProperties" AfterTargets="GetBuildVersion">
     <PropertyGroup>
