@@ -18,6 +18,38 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Restores the whole solution into the package cache when the cache misses; on a hit it only looks the cache up.
+  packages:
+    name: Package Cache
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Allow Long Paths
+        run: git config --system core.longpaths true
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Use The Work Drive For Packages
+        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+
+      - name: Package Cache
+        id: packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/nuget-packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
+
+      - name: Restore
+        if: steps.packages.outputs.cache-hit != 'true'
+        run: dotnet restore StyleCopAnalyzers.sln
+
+
   test:
     name: Test (${{ matrix.project }})
     runs-on: windows-latest
@@ -59,6 +91,17 @@ jobs:
           dotnet-version: |
             6.0.x
             10.0.x
+
+      # Packages go to the work drive; the system drive of the runner is slow.
+      - name: Use The Work Drive For Packages
+        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
+
+      # Only the job that restores the whole solution saves the cache, so it holds every package the test projects use.
+      - name: Restore Package Cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/nuget-packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
 
       - name: Test
         run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
