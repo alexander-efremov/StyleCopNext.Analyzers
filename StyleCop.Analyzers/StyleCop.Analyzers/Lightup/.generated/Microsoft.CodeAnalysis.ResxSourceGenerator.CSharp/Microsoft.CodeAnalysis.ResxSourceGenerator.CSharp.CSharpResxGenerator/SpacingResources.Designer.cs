@@ -242,6 +242,14 @@ namespace StyleCop.Analyzers.SpacingRules
         public static string @SA1028MessageFormat => GetResourceString("SA1028MessageFormat")!;
         /// <summary>Code should not contain trailing whitespace</summary>
         public static string @SA1028Title => GetResourceString("SA1028Title")!;
+        /// <summary>Remove whitespace between the null-conditional operator tokens</summary>
+        public static string @SA1029CodeFix => GetResourceString("SA1029CodeFix")!;
+        /// <summary>The ? and the following . or [ of a null-conditional operator should not be separated by whitespace, line breaks, or comments.</summary>
+        public static string @SA1029Description => GetResourceString("SA1029Description")!;
+        /// <summary>Null-conditional operator should not be split</summary>
+        public static string @SA1029MessageFormat => GetResourceString("SA1029MessageFormat")!;
+        /// <summary>Do not split null-conditional operators</summary>
+        public static string @SA1029Title => GetResourceString("SA1029Title")!;
         /// <summary>Fix spacing</summary>
         public static string @TokenSpacingCodeFix => GetResourceString("TokenSpacingCodeFix")!;
 

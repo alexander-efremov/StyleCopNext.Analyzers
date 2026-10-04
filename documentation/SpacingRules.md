@@ -32,3 +32,4 @@ Identifier | Name | Description
 [SA1026](SA1026.md) | CodeMustNotContainSpaceAfterNewKeywordInImplicitlyTypedArrayAllocation | An implicitly typed new array allocation within a C# code file is not spaced correctly. 
 [SA1027](SA1027.md) | UseTabsCorrectly | The code contains a tab or space character which is not consistent with the current project settings. 
 [SA1028](SA1028.md) | CodeMustNotContainTrailingWhitespace | A line of code ends with a space, tab, or other whitespace characters before the end of line character(s). 
+[SA1029](SA1029.md) | DoNotSplitNullConditionalOperators | A null-conditional operator (`?.` or `?[`) is split by whitespace, a line break, or a comment. 
