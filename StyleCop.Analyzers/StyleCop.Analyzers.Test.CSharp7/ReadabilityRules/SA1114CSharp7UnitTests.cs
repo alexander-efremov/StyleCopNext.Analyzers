@@ -10,7 +10,9 @@ namespace StyleCop.Analyzers.Test.CSharp7.ReadabilityRules
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.Test.ReadabilityRules;
     using Xunit;
-    using static StyleCop.Analyzers.Test.Verifiers.StyleCopDiagnosticVerifier<StyleCop.Analyzers.ReadabilityRules.SA1114ParameterListMustFollowDeclaration>;
+    using static StyleCop.Analyzers.Test.Verifiers.StyleCopCodeFixVerifier<
+        StyleCop.Analyzers.ReadabilityRules.SA1114ParameterListMustFollowDeclaration,
+        StyleCop.Analyzers.ReadabilityRules.SA1114CodeFixProvider>;
 
     public partial class SA1114CSharp7UnitTests : SA1114UnitTests
     {
@@ -91,6 +93,37 @@ class Foo
 }";
 
             await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestLocalFunctionDeclarationCodeFixAsync()
+        {
+            var testCode = @"
+class Foo
+{
+    public void Method()
+    {
+        void Bar(
+
+            {|#0:string s|})
+        {
+        }
+    }
+}";
+
+            var fixedCode = @"
+class Foo
+{
+    public void Method()
+    {
+        void Bar(
+            string s)
+        {
+        }
+    }
+}";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(0), fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
