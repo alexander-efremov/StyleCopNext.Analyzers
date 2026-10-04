@@ -28,6 +28,8 @@ to the project where you want to enforce StyleCop rules.
 The severity of individual rules may be configured using [rule set files](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules)
 in Visual Studio 2015 or newer. **Settings.StyleCop** is not supported, but a **stylecop.json** file may be used to
 customize the behavior of certain rules. See [Configuration.md](documentation/Configuration.md) for more information.
+See [ConfiguringRules.md](documentation/ConfiguringRules.md) for how to set rule severities in **.editorconfig** and
+**.globalconfig**, run the analyzers only in the IDE, and exclude files from analysis.
 
 For documentation and reasoning on the rules themselves, see the [Documentation](DOCUMENTATION.md).
 
