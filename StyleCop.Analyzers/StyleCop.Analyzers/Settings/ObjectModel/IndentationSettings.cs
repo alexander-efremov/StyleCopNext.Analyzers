@@ -121,6 +121,17 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
                 _ => null,
             };
 
+            indentBlock ??= TryGetEditorConfigBoolean(analyzerConfigOptions, "csharp_indent_block_contents");
+            indentSwitchSection ??= TryGetEditorConfigBoolean(analyzerConfigOptions, "csharp_indent_switch_labels");
+            indentSwitchCaseSection ??= TryGetEditorConfigBoolean(analyzerConfigOptions, "csharp_indent_case_contents");
+            labelPositioning ??= AnalyzerConfigHelper.TryGetStringValueAndNotification(analyzerConfigOptions, "csharp_indent_labels")?.Key switch
+            {
+                "one_less_than_current" => LabelPositioning.OneLess,
+                "flush_left" => LabelPositioning.LeftMost,
+                "no_change" => LabelPositioning.NoIndent,
+                _ => null,
+            };
+
             this.indentationSize = indentationSize.GetValueOrDefault(4);
             this.tabSize = tabSize.GetValueOrDefault(4);
             this.useTabs = useTabs.GetValueOrDefault(false);
@@ -150,5 +161,16 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
 
         public LabelPositioning LabelPositioning =>
             this.labelPositioning;
+
+        private static bool? TryGetEditorConfigBoolean(AnalyzerConfigOptions analyzerConfigOptions, string key)
+        {
+            // The value may carry a severity suffix, for example 'true:suggestion'.
+            return AnalyzerConfigHelper.TryGetStringValueAndNotification(analyzerConfigOptions, key)?.Key switch
+            {
+                "true" => true,
+                "false" => false,
+                _ => null,
+            };
+        }
     }
 }

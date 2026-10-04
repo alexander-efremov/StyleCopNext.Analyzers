@@ -86,6 +86,17 @@ values match the default C# formatting options of Visual Studio.
 | `indentSwitchCaseSection` | **true** | 2.0.0 | **true** to indent the statements of a switch section relative to its `case` or `default` labels; otherwise, **false** to align them with the labels. |
 | `labelPositioning` | **oneLess** | 2.0.0 | The position of labels targeted by `goto` statements. `leftMost` places labels in the first column, `oneLess` indents labels one level less than the statements of the enclosing block, and `noIndent` indents labels the same as the statements of the enclosing block. |
 
+The same options can be provided in an [**.editorconfig**](http://editorconfig.org/) file using the standard .NET
+formatting keys. Values in **stylecop.json** take precedence over values in **.editorconfig**, and a severity suffix
+(for example `true:suggestion`) is ignored.
+
+| Property | .editorconfig key | .editorconfig values |
+| --- | --- | --- |
+| `indentBlock` | `csharp_indent_block_contents` | `true`, `false` |
+| `indentSwitchSection` | `csharp_indent_switch_labels` | `true`, `false` |
+| `indentSwitchCaseSection` | `csharp_indent_case_contents` | `true`, `false` |
+| `labelPositioning` | `csharp_indent_labels` | `one_less_than_current` (`oneLess`), `flush_left` (`leftMost`), `no_change` (`noIndent`) |
+
 ```json
 {
   "settings": {

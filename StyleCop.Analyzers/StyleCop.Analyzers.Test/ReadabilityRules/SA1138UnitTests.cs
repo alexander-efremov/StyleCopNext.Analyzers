@@ -864,6 +864,94 @@ class TestClass
             }.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
+        [Fact]
+        public async Task TestEditorConfigOptionsAsync()
+        {
+            var editorConfig = @"root = true
+
+[*.cs]
+csharp_indent_block_contents = false
+csharp_indent_switch_labels = false
+csharp_indent_case_contents = false
+csharp_indent_labels = flush_left
+";
+            var testCode = @"class TestClass
+{
+    static int M(int v)
+    {
+    switch (v)
+    {
+    case 1:
+[|        |]v++;
+    break;
+    }
+
+    goto done;
+[|    |]done:
+    return v;
+    }
+}
+";
+            var fixedCode = @"class TestClass
+{
+    static int M(int v)
+    {
+    switch (v)
+    {
+    case 1:
+    v++;
+    break;
+    }
+
+    goto done;
+done:
+    return v;
+    }
+}
+";
+
+            await VerifyAsync(testCode, fixedCode, settings: null, test => test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", editorConfig))).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestStyleCopJsonTakesPrecedenceOverEditorConfigAsync()
+        {
+            var settings = @"{
+  ""settings"": {
+    ""indentation"": {
+      ""indentBlock"": true
+    }
+  }
+}";
+            var editorConfig = @"root = true
+
+[*.cs]
+csharp_indent_block_contents = false
+";
+            var testCode = @"class TestClass
+{
+    static void A() { }
+
+    static void M()
+    {
+[|    |]A();
+    }
+}
+";
+            var fixedCode = @"class TestClass
+{
+    static void A() { }
+
+    static void M()
+    {
+        A();
+    }
+}
+";
+
+            await VerifyAsync(testCode, fixedCode, settings, test => test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", editorConfig))).ConfigureAwait(false);
+        }
+
         private static Task VerifyAsync(string testCode, string fixedCode, string settings = null, Action<CSharpTest> configure = null)
         {
             var test = new CSharpTest
