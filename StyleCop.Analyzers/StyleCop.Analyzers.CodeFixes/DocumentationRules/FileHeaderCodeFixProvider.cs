@@ -414,7 +414,7 @@ namespace StyleCop.Analyzers.DocumentationRules
         {
             string encodedFilename = new XAttribute("t", fileName).ToString().Substring(2).Trim('"');
             string encodedCompanyName = new XAttribute("t", settings.DocumentationRules.CompanyName).ToString().Substring(2).Trim('"');
-            string encodedCopyrightText = new XText(copyrightText).ToString();
+            string encodedCopyrightText = string.Join(newLineText, copyrightText.Split(new[] { newLineText }, StringSplitOptions.None).Select(line => new XText(line).ToString()));
 
             string copyrightString =
                 $"{prefixWithLeadingSpaces} <copyright file=\"{encodedFilename}\" company=\"{encodedCompanyName}\">" + newLineText
