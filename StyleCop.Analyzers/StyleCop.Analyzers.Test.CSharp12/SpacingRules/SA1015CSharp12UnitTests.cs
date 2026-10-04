@@ -36,15 +36,5 @@ public class TestClass
 
             await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
-
-        protected override DiagnosticResult[] GetExpectedResultMissingToken()
-        {
-            return new[]
-            {
-                DiagnosticResult.CompilerError("CS1003").WithLocation(7, 35).WithArguments(","),
-                DiagnosticResult.CompilerError("CS1003").WithLocation(7, 36).WithArguments(">"),
-                DiagnosticResult.CompilerError("CS1026").WithLocation(7, 36),
-            };
-        }
     }
 }
