@@ -1,5 +1,6 @@
 # Source code files
-*.cs text
+# The tests compare code in multi-line string literals with CRLF line endings, so C# files are CRLF everywhere.
+*.cs text eol=crlf
 *.vsixmanifest text
 *.config text
 *.resx text
