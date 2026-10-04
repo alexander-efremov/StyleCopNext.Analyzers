@@ -56,11 +56,13 @@ jobs:
           - StyleCop.Analyzers.Test.CSharp11
           - StyleCop.Analyzers.Test.CSharp12
           - StyleCop.Analyzers.Test.CSharp13
-        # Visual Studio runs the analyzers on .NET Framework. The rule code is the same on both runtimes, so one project
-        # covers net472: CSharp13, which inherits the tests of every other project.
+        framework:
+          - net10.0
+        # Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so one
+        # project covers .NET Framework, in a job of its own: CSharp13, which inherits the tests of every other project.
         include:
           - project: StyleCop.Analyzers.Test.CSharp13
-            net472: true
+            framework: net472
     steps:
       - name: Allow Long Paths
         run: git config --system core.longpaths true
@@ -75,14 +77,13 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # The projects target net10.0 and net472; only the project marked net472 tests both.
       - name: Test
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release ${{ !matrix.net472 && '--framework net10.0' || '' }} --logger trx --results-directory TestResults
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
 
       - name: Upload Test Results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: test-results-${{ matrix.project }}
+          name: test-results-${{ matrix.project }}-${{ matrix.framework }}
           path: TestResults/*.trx
           if-no-files-found: warn
