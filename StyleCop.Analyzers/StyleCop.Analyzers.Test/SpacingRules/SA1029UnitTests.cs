@@ -106,7 +106,7 @@ class TestClass
             .Trim();
     }
 }
-".ReplaceLineEndings(lineEnding);
+".Replace("\r\n", "\n").Replace("\n", lineEnding);
             var fixedCode = @"
 class TestClass
 {
@@ -115,7 +115,7 @@ class TestClass
         foo?.Trim();
     }
 }
-".ReplaceLineEndings(lineEnding);
+".Replace("\r\n", "\n").Replace("\n", lineEnding);
 
             await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(0), fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
