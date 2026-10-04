@@ -159,7 +159,15 @@ public class Foo
                 Diagnostic().WithLocation(8, 47).WithArguments(string.Empty, "followed"),
             };
 
-            await VerifyCSharpFixAsync(LanguageVersion.CSharp7_3.OrLaterDefault(), testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+            var test = new CSharpTest(LanguageVersion.CSharp7_3.OrLaterDefault())
+            {
+                TestCode = testCode,
+                FixedCode = fixedCode,
+                NumberOfFixAllIterations = 2,
+            };
+
+            test.ExpectedDiagnostics.AddRange(expected);
+            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         [Fact]
@@ -198,7 +206,15 @@ public class Foo
                 Diagnostic().WithLocation(8, 43).WithArguments(string.Empty, "followed"),
             };
 
-            await VerifyCSharpFixAsync(LanguageVersion.CSharp7_3.OrLaterDefault(), testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+            var test = new CSharpTest(LanguageVersion.CSharp7_3.OrLaterDefault())
+            {
+                TestCode = testCode,
+                FixedCode = fixedCode,
+                NumberOfFixAllIterations = 2,
+            };
+
+            test.ExpectedDiagnostics.AddRange(expected);
+            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
