@@ -138,6 +138,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
                     .WithChangedOption(FormattingOptions.TabSize, this.Language, this.TabSize)
                     .WithChangedOption(FormattingOptions.UseTabs, this.Language, this.UseTabs)
                     .WithChangedOption(FormattingOptions.NewLine, this.Language, "\r\n"));
+                this.UpdateGlobalAnalyzerConfig();
 
                 this.TestState.AdditionalFilesFactories.Add(GenerateSettingsFile);
                 this.CodeActionValidationMode = CodeActionValidationMode.SemanticStructure;
