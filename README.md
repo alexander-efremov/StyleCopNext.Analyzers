@@ -69,4 +69,14 @@ See [Contributing](CONTRIBUTING.md)
 
 ## Current status
 
-An up-to-date list of which StyleCop rules are implemented and which have code fixes can be found [here](https://dotnetanalyzers.github.io/StyleCopAnalyzers/).
+The rules are listed by category, with a description and a documentation page for each rule.
+
+* [Special Rules (SA0000-)](documentation/SpecialRules.md)
+* [Spacing Rules (SA1000-)](documentation/SpacingRules.md)
+* [Readability Rules (SA1100-)](documentation/ReadabilityRules.md)
+* [Ordering Rules (SA1200-)](documentation/OrderingRules.md)
+* [Naming Rules (SA1300-)](documentation/NamingRules.md)
+* [Maintainability Rules (SA1400-)](documentation/MaintainabilityRules.md)
+* [Layout Rules (SA1500-)](documentation/LayoutRules.md)
+* [Documentation Rules (SA1600-)](documentation/DocumentationRules.md)
+* [Alternative Rules (SX0000-)](documentation/AlternativeRules.md)
