@@ -14,10 +14,10 @@ namespace StyleCop.Analyzers.Test.Helpers
             // Use the default version instead, if that would be a later version than the one specified
             switch (input)
             {
-            case LanguageVersionEx.CSharp7_1:
-            case LanguageVersionEx.CSharp7_2:
-            case LanguageVersionEx.CSharp7_3:
-                return LightupHelpers.SupportsCSharp8 ? null : input;
+            case LanguageVersion.CSharp7_1:
+            case LanguageVersion.CSharp7_2:
+            case LanguageVersion.CSharp7_3:
+                return TestLanguageVersion.SupportsCSharp8 ? null : input;
 
             default:
                 throw new ArgumentException($"Unexpected value {input}", nameof(input));

@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// An opening parenthesis within a C# statement is not spaced correctly.
@@ -193,16 +192,16 @@ namespace StyleCop.Analyzers.SpacingRules
                 haveLeadingSpace = true;
                 break;
 
-            case SyntaxKindEx.PositionalPatternClause:
+            case SyntaxKind.PositionalPatternClause:
                 haveLeadingSpace = prevToken.IsKind(SyntaxKind.IsKeyword)
-                    || prevToken.IsKind(SyntaxKindEx.OrKeyword)
-                    || prevToken.IsKind(SyntaxKindEx.AndKeyword)
-                    || prevToken.IsKind(SyntaxKindEx.NotKeyword)
+                    || prevToken.IsKind(SyntaxKind.OrKeyword)
+                    || prevToken.IsKind(SyntaxKind.AndKeyword)
+                    || prevToken.IsKind(SyntaxKind.NotKeyword)
                     || prevToken.IsKind(SyntaxKind.CommaToken)
                     || prevToken.IsKind(SyntaxKind.ColonToken);
                 break;
 
-            case SyntaxKindEx.ParenthesizedPattern:
+            case SyntaxKind.ParenthesizedPattern:
                 var partOfCastExpression = prevToken.IsKind(SyntaxKind.CloseParenToken) && prevToken.Parent.IsKind(SyntaxKind.CastExpression);
                 haveLeadingSpace = !partOfCastExpression;
                 break;
@@ -219,14 +218,14 @@ namespace StyleCop.Analyzers.SpacingRules
                 haveLeadingSpace = false;
                 break;
 
-            case SyntaxKindEx.ParenthesizedVariableDesignation:
+            case SyntaxKind.ParenthesizedVariableDesignation:
                 haveLeadingSpace = true;
                 break;
 
             case SyntaxKind.ParenthesizedExpression:
-            case SyntaxKindEx.TupleExpression:
+            case SyntaxKind.TupleExpression:
                 if (prevToken.Parent.IsKind(SyntaxKind.Interpolation)
-                    || (token.Parent.Parent.IsKind(SyntaxKindEx.RangeExpression) && ((RangeExpressionSyntaxWrapper)token.Parent.Parent).RightOperand == token.Parent))
+                    || (token.Parent.Parent.IsKind(SyntaxKind.RangeExpression) && ((RangeExpressionSyntax)token.Parent.Parent).RightOperand == token.Parent))
                 {
                     haveLeadingSpace = false;
                     break;
@@ -244,18 +243,18 @@ namespace StyleCop.Analyzers.SpacingRules
                 startOfIndexer = prevToken.IsKind(SyntaxKind.OpenBracketToken);
                 var consecutiveCast = prevToken.IsKind(SyntaxKind.CloseParenToken) && prevToken.Parent.IsKind(SyntaxKind.CastExpression);
                 var partOfInterpolation = prevToken.IsKind(SyntaxKind.OpenBraceToken) && prevToken.Parent.IsKind(SyntaxKind.Interpolation);
-                var partOfRange = prevToken.IsKind(SyntaxKindEx.DotDotToken);
+                var partOfRange = prevToken.IsKind(SyntaxKind.DotDotToken);
 
                 haveLeadingSpace = !partOfUnaryExpression && !startOfIndexer && !consecutiveCast && !partOfInterpolation && !partOfRange;
                 break;
 
             case SyntaxKind.ParameterList:
                 var partOfLambdaExpression = token.Parent.Parent.IsKind(SyntaxKind.ParenthesizedLambdaExpression);
-                var startOfCollectionExpression = prevToken.IsKind(SyntaxKind.OpenBracketToken) && prevToken.Parent.IsKind(SyntaxKindEx.CollectionExpression);
+                var startOfCollectionExpression = prevToken.IsKind(SyntaxKind.OpenBracketToken) && prevToken.Parent.IsKind(SyntaxKind.CollectionExpression);
                 haveLeadingSpace = partOfLambdaExpression && !startOfCollectionExpression;
                 break;
 
-            case SyntaxKindEx.TupleType:
+            case SyntaxKind.TupleType:
                 // Comma covers tuple types in parameters and nested within other tuple types.
                 // Equals covers definition of a tuple type alias.
                 // 'out', 'ref', 'in', 'params' parameters are covered by IsKeywordKind.

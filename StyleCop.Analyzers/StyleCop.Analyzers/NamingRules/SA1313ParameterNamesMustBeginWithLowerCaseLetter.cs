@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.NamingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The name of a parameter in C# does not begin with a lower-case letter.
@@ -67,8 +66,8 @@ namespace StyleCop.Analyzers.NamingRules
                 return;
             }
 
-            if (syntax.Parent.Parent.IsKind(SyntaxKindEx.RecordDeclaration)
-                || syntax.Parent.Parent.IsKind(SyntaxKindEx.RecordStructDeclaration))
+            if (syntax.Parent.Parent.IsKind(SyntaxKind.RecordDeclaration)
+                || syntax.Parent.Parent.IsKind(SyntaxKind.RecordStructDeclaration))
             {
                 // Positional parameters of a record are treated as properties for naming conventions
                 return;
@@ -167,7 +166,7 @@ namespace StyleCop.Analyzers.NamingRules
                 {
                     foreach (var member in implementedInterface.GetMembers(methodSymbol.Name).OfType<IMethodSymbol>())
                     {
-                        if (methodSymbol.Equals(containingType.FindImplementationForInterfaceMember(member)))
+                        if (SymbolEqualityComparer.Default.Equals(methodSymbol, containingType.FindImplementationForInterfaceMember(member)))
                         {
                             return member.Parameters[index].Name == syntax.Identifier.ValueText;
                         }

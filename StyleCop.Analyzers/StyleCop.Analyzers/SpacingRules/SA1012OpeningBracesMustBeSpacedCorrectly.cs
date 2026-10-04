@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// An opening brace within a C# element is not spaced correctly.
@@ -91,7 +90,7 @@ namespace StyleCop.Analyzers.SpacingRules
             }
 
             bool expectPrecedingSpace = true;
-            if (token.Parent.IsKind(SyntaxKindEx.PropertyPatternClause))
+            if (token.Parent.IsKind(SyntaxKind.PropertyPatternClause))
             {
                 var prevToken = token.GetPreviousToken();
                 if (prevToken.IsKind(SyntaxKind.OpenParenToken))
@@ -102,7 +101,7 @@ namespace StyleCop.Analyzers.SpacingRules
                     // value is ({ P: 0 })
                     expectPrecedingSpace = false;
                 }
-                else if (prevToken is { RawKind: (int)SyntaxKind.OpenBracketToken, Parent: { RawKind: (int)SyntaxKindEx.ListPattern } })
+                else if (prevToken is { RawKind: (int)SyntaxKind.OpenBracketToken, Parent: { RawKind: (int)SyntaxKind.ListPattern } })
                 {
                     // value is [{ P: 0 }, { P: 0 }]
                     expectPrecedingSpace = false;

@@ -8,7 +8,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
     using System.Collections.Immutable;
     using System.Linq;
     using LightJson;
-    using StyleCop.Analyzers.Lightup;
+    using Microsoft.CodeAnalysis.Diagnostics;
 
     internal class NamingSettings
     {
@@ -31,7 +31,7 @@ namespace StyleCop.Analyzers.Settings.ObjectModel
         /// <param name="namingSettingsObject">The JSON object containing the settings.</param>
         /// <param name="analyzerConfigOptions">The <strong>.editorconfig</strong> options to use if
         /// <strong>stylecop.json</strong> does not provide values.</param>
-        protected internal NamingSettings(JsonObject namingSettingsObject, AnalyzerConfigOptionsWrapper analyzerConfigOptions)
+        protected internal NamingSettings(JsonObject namingSettingsObject, AnalyzerConfigOptions analyzerConfigOptions)
         {
             bool? allowCommonHungarianPrefixes = null;
             ImmutableArray<string>.Builder allowedHungarianPrefixes = null;

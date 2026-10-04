@@ -9,7 +9,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using StyleCop.Analyzers.Lightup;
 
     internal sealed class UsingAliasCache
     {
@@ -63,15 +62,15 @@ namespace StyleCop.Analyzers.Helpers
         private static bool ContainsLocalUsingAliasNoCache(SyntaxTree tree)
         {
             // Check for "local" using aliases
-            var nodes = tree.GetRoot().DescendantNodes(node => node.IsKind(SyntaxKind.CompilationUnit) || node.IsKind(SyntaxKind.NamespaceDeclaration) || node.IsKind(SyntaxKindEx.FileScopedNamespaceDeclaration));
-            return nodes.OfType<UsingDirectiveSyntax>().Any(x => x.GlobalKeyword().IsKind(SyntaxKind.None) && x.Alias != null);
+            var nodes = tree.GetRoot().DescendantNodes(node => node.IsKind(SyntaxKind.CompilationUnit) || node.IsKind(SyntaxKind.NamespaceDeclaration) || node.IsKind(SyntaxKind.FileScopedNamespaceDeclaration));
+            return nodes.OfType<UsingDirectiveSyntax>().Any(x => x.GlobalKeyword.IsKind(SyntaxKind.None) && x.Alias != null);
         }
 
         private static bool ContainsGlobalUsingAliasInCurrentFileNoCache(SyntaxTree tree)
         {
             // Check for "global" using aliases in one specific syntax tree
             var nodes = ((CompilationUnitSyntax)tree.GetRoot()).Usings;
-            return nodes.Any(x => x.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) && x.Alias != null);
+            return nodes.Any(x => x.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) && x.Alias != null);
         }
 
         private bool ContainsGlobalUsingAlias(SemanticModel semanticModel, CancellationToken cancellationToken)

@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class SA1141UseTupleSyntax : DiagnosticAnalyzer
@@ -111,7 +110,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             var lambdaExpression = (LambdaExpressionSyntax)context.Node;
             if (lambdaExpression is ParenthesizedLambdaExpressionSyntax parenthesizedLambdaExpression)
             {
-                var returnType = parenthesizedLambdaExpression.ReturnType();
+                var returnType = parenthesizedLambdaExpression.ReturnType;
                 CheckType(context, expressionType: null, returnType);
                 CheckParameterList(context, parenthesizedLambdaExpression.ParameterList);
             }
@@ -186,8 +185,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             switch (typeSyntax.Kind())
             {
-            case SyntaxKindEx.TupleType:
-                CheckTupleType(context, expressionType, (TupleTypeSyntaxWrapper)typeSyntax, reportLocation);
+            case SyntaxKind.TupleType:
+                CheckTupleType(context, expressionType, (TupleTypeSyntax)typeSyntax, reportLocation);
                 break;
 
             case SyntaxKind.QualifiedName:
@@ -200,7 +199,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             }
         }
 
-        private static void CheckTupleType(SyntaxNodeAnalysisContext context, INamedTypeSymbol expressionType, TupleTypeSyntaxWrapper tupleTypeSyntax, Location reportLocation)
+        private static void CheckTupleType(SyntaxNodeAnalysisContext context, INamedTypeSymbol expressionType, TupleTypeSyntax tupleTypeSyntax, Location reportLocation)
         {
             foreach (var tupleElementSyntax in tupleTypeSyntax.Elements)
             {
@@ -230,8 +229,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
         {
             var symbolInfo = context.SemanticModel.GetSymbolInfo(syntax, context.CancellationToken);
             return symbolInfo.Symbol is INamedTypeSymbol typeSymbol
-                && typeSymbol.IsTupleType()
-                && typeSymbol.TupleElements().Length > 1
+                && typeSymbol.IsTupleType
+                && typeSymbol.TupleElements.Length > 1
                 && !syntax.IsInExpressionTree(context.SemanticModel, expressionType, context.CancellationToken);
         }
     }

@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
     using StyleCop.Analyzers.Helpers;
     using StyleCop.Analyzers.Helpers.ObjectPools;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A using directive is not qualified.
@@ -68,7 +67,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static void CheckUsingDeclaration(SyntaxNodeAnalysisContext context, UsingDirectiveSyntax usingDirective)
         {
             if (!usingDirective.Parent.IsKind(SyntaxKind.NamespaceDeclaration)
-                && !usingDirective.Parent.IsKind(SyntaxKindEx.FileScopedNamespaceDeclaration))
+                && !usingDirective.Parent.IsKind(SyntaxKind.FileScopedNamespaceDeclaration))
             {
                 // Usings outside of a namespace are always qualified.
                 return;
@@ -94,7 +93,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
             }
 
             if (symbol is INamedTypeSymbol typeSymbol
-                && typeSymbol.IsTupleType())
+                && typeSymbol.IsTupleType)
             {
                 symbol = typeSymbol.TupleUnderlyingTypeOrSelf();
             }
@@ -111,7 +110,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                     break;
 
                 case SymbolKind.NamedType:
-                    var containingNamespace = ((BaseNamespaceDeclarationSyntaxWrapper)usingDirective.Parent).Name.ToString();
+                    var containingNamespace = ((BaseNamespaceDeclarationSyntax)usingDirective.Parent).Name.ToString();
                     if (containingNamespace != symbol.ContainingNamespace.ToString())
                     {
                         context.ReportDiagnostic(Diagnostic.Create(DescriptorType, usingDirective.GetLocation(), symbolString));
@@ -191,9 +190,9 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return false;
 
             default:
-                if (TupleTypeSyntaxWrapper.IsInstance(type))
+                if (type is TupleTypeSyntax)
                 {
-                    var tupleType = (TupleTypeSyntaxWrapper)type;
+                    var tupleType = (TupleTypeSyntax)type;
 
                     builder.Append("(");
 

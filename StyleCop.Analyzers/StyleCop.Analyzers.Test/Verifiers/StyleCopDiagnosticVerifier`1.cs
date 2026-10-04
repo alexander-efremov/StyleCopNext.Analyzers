@@ -14,6 +14,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
     using Microsoft.CodeAnalysis.Testing;
     using Microsoft.CodeAnalysis.Testing.Verifiers;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
 
     internal static class StyleCopDiagnosticVerifier<TAnalyzer>
         where TAnalyzer : DiagnosticAnalyzer, new()
@@ -84,14 +85,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
             // NOTE: If needed, this method can be temporarily updated to default to a preview version
             private LanguageVersion? GetDefaultLanguageVersion()
             {
-                if (LightupHelpers.SupportsCSharp15)
-                {
-                    // C# 15 is still in preview, so the C# 15 test project runs every test with the preview language
-                    // version. Remove this once C# 15 is the default language version of the referenced compiler.
-                    return LanguageVersionEx.Preview;
-                }
-
-                return null;
+                return TestLanguageVersion.Current;
             }
         }
     }

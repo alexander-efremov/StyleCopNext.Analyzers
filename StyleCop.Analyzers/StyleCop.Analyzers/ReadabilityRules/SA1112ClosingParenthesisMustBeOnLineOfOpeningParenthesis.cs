@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.SpacingRules;
 
     /// <summary>
@@ -64,11 +63,11 @@ namespace StyleCop.Analyzers.ReadabilityRules
             context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(MethodDeclarationAction, SyntaxKind.MethodDeclaration);
-            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKindEx.LocalFunctionStatement);
+            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKind.LocalFunctionStatement);
             context.RegisterSyntaxNodeAction(ConstructorDeclarationAction, SyntaxKind.ConstructorDeclaration);
             context.RegisterSyntaxNodeAction(InvocationExpressionAction, SyntaxKind.InvocationExpression);
             context.RegisterSyntaxNodeAction(ObjectCreationExpressionAction, SyntaxKind.ObjectCreationExpression);
-            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKindEx.ImplicitObjectCreationExpression);
+            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKind.ImplicitObjectCreationExpression);
         }
 
         private static void HandleObjectCreationExpression(SyntaxNodeAnalysisContext context)
@@ -93,7 +92,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleImplicitObjectCreationExpression(SyntaxNodeAnalysisContext context)
         {
-            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntaxWrapper)context.Node;
+            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntax)context.Node;
             var argumentList = implicitObjectCreation.ArgumentList;
 
             if (argumentList == null ||
@@ -147,7 +146,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
-            var localFunctionStatement = (LocalFunctionStatementSyntaxWrapper)context.Node;
+            var localFunctionStatement = (LocalFunctionStatementSyntax)context.Node;
             HandleParameterList(context, localFunctionStatement.ParameterList);
         }
 

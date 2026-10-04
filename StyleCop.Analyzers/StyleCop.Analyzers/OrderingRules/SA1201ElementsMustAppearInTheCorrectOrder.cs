@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -126,7 +125,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         // extern alias and usings are missing here because the compiler itself is enforcing the right order.
         private static readonly ImmutableArray<SyntaxKind> OuterOrder = ImmutableArray.Create(
-            SyntaxKindEx.FileScopedNamespaceDeclaration,
+            SyntaxKind.FileScopedNamespaceDeclaration,
             SyntaxKind.NamespaceDeclaration,
             SyntaxKind.DelegateDeclaration,
             SyntaxKind.EnumDeclaration,
@@ -154,14 +153,14 @@ namespace StyleCop.Analyzers.OrderingRules
         private static readonly Dictionary<SyntaxKind, string> MemberNames = new Dictionary<SyntaxKind, string>
         {
             [SyntaxKind.NamespaceDeclaration] = "a namespace",
-            [SyntaxKindEx.FileScopedNamespaceDeclaration] = "a namespace",
+            [SyntaxKind.FileScopedNamespaceDeclaration] = "a namespace",
             [SyntaxKind.DelegateDeclaration] = "a delegate",
             [SyntaxKind.EnumDeclaration] = "an enum",
             [SyntaxKind.InterfaceDeclaration] = "an interface",
             [SyntaxKind.StructDeclaration] = "a struct",
             [SyntaxKind.ClassDeclaration] = "a class",
-            [SyntaxKindEx.RecordDeclaration] = "a record",
-            [SyntaxKindEx.RecordStructDeclaration] = "a record struct",
+            [SyntaxKind.RecordDeclaration] = "a record",
+            [SyntaxKind.RecordStructDeclaration] = "a record struct",
             [SyntaxKindEx.ExtensionBlockDeclaration] = "an extension",
             [SyntaxKind.FieldDeclaration] = "a field",
             [SyntaxKind.ConstructorDeclaration] = "a constructor",
@@ -234,7 +233,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            var baseNamespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var baseNamespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
 
             HandleMemberList(context, elementOrder, kindIndex, baseNamespaceDeclaration.Members, OuterOrder);
         }
@@ -321,8 +320,8 @@ namespace StyleCop.Analyzers.OrderingRules
             return syntaxKind switch
             {
                 SyntaxKind.EventFieldDeclaration => SyntaxKind.EventDeclaration,
-                SyntaxKindEx.RecordDeclaration => SyntaxKind.ClassDeclaration,
-                SyntaxKindEx.RecordStructDeclaration => SyntaxKind.StructDeclaration,
+                SyntaxKind.RecordDeclaration => SyntaxKind.ClassDeclaration,
+                SyntaxKind.RecordStructDeclaration => SyntaxKind.StructDeclaration,
                 _ => syntaxKind,
             };
         }

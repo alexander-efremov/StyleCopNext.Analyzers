@@ -78,7 +78,7 @@ namespace StyleCop.Analyzers.SpacingRules
             return new TextChange(new TextSpan(sourceSpan.Start + 2, i - 2), " ");
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                 new FixAll();

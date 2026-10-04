@@ -54,7 +54,7 @@ public sealed record R<T>(int X, int Y) : System.Object where T : class
 };
 ");
 
-            Assert.True(syntaxNode.IsKind(SyntaxKindEx.RecordDeclaration));
+            Assert.True(syntaxNode.IsKind(SyntaxKind.RecordDeclaration));
             VerifyWrapperProperties(syntaxNode);
 
             var wrapper = (RecordDeclarationSyntaxWrapper)syntaxNode;
@@ -79,7 +79,7 @@ public sealed record R<T>(int X, int Y) : System.Object where T : class
         {
             var syntaxNode = ParseRecordDeclaration("internal record P(string Name);");
 
-            Assert.True(syntaxNode.IsKind(SyntaxKindEx.RecordDeclaration));
+            Assert.True(syntaxNode.IsKind(SyntaxKind.RecordDeclaration));
             VerifyWrapperProperties(syntaxNode);
 
             var wrapper = (RecordDeclarationSyntaxWrapper)syntaxNode;

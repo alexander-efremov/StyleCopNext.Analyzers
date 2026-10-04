@@ -220,7 +220,9 @@ csharp_using_directive_placement = {placement}
             var optionsProvider = this.CreateAnalyzerConfigOptionsProvider(analyzerConfigSet);
             var analyzerOptions = new AnalyzerOptions(additionalFiles, optionsProvider);
 
+#pragma warning disable CS0618 // Type or member is obsolete - there is no other way to create a context for a settings test
             return new SyntaxTreeAnalysisContext(syntaxTree, analyzerOptions, reportDiagnostic: _ => { }, isSupportedDiagnostic: _ => true, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         protected class TestAnalyzerConfigOptions : AnalyzerConfigOptions
@@ -245,6 +247,14 @@ csharp_using_directive_placement = {placement}
             public TestAnalyzerConfigOptionsProvider(AnalyzerConfigSet analyzerConfigSet)
             {
                 this.analyzerConfigSet = analyzerConfigSet;
+            }
+
+            public override AnalyzerConfigOptions GlobalOptions
+            {
+                get
+                {
+                    return new TestAnalyzerConfigOptions(this.analyzerConfigSet.GlobalConfigOptions);
+                }
             }
 
             public override AnalyzerConfigOptions GetOptions(SyntaxTree tree)

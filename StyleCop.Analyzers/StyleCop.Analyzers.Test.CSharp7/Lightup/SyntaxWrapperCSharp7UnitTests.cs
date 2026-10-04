@@ -21,15 +21,5 @@ namespace StyleCop.Analyzers.Test.CSharp7.Lightup
             Assert.Same(syntaxNode, SyntaxWrapper<LiteralExpressionSyntax>.Default.Wrap(syntaxNode));
             Assert.Same(syntaxNode, SyntaxWrapper<LiteralExpressionSyntax>.Default.Unwrap((LiteralExpressionSyntax)syntaxNode));
         }
-
-        [Fact]
-        public void TestWrapSyntaxWrapperNode()
-        {
-            var syntaxNode = SyntaxFactory.DiscardDesignation();
-            var syntaxWrapper = SyntaxWrapper<DiscardDesignationSyntaxWrapper>.Default;
-
-            Assert.Same(syntaxNode, syntaxWrapper.Wrap(syntaxNode).SyntaxNode);
-            Assert.Same(syntaxNode, syntaxWrapper.Unwrap((DiscardDesignationSyntaxWrapper)syntaxNode));
-        }
     }
 }

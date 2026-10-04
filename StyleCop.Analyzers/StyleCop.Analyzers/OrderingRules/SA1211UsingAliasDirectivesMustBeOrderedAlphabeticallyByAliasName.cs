@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The using-alias directives within a C# code file are not sorted alphabetically by alias name.
@@ -64,7 +63,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var namespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
             HandleUsingDirectives(context, namespaceDeclaration.Usings);
         }
 
@@ -87,7 +86,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 }
 
                 if (prevAliasUsingDirective is not null
-                    && prevAliasUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && prevAliasUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     usingAliasNames.Clear();

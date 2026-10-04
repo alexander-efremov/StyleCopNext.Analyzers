@@ -16,7 +16,7 @@ namespace StyleCop.Analyzers.Test.CSharp10.Lightup
         {
             var syntaxNode = ParseRecordDeclaration("public readonly record struct S<T>(T Value) : System.IEquatable<S<T>> where T : struct { }");
 
-            Assert.True(syntaxNode.IsKind(SyntaxKindEx.RecordStructDeclaration));
+            Assert.True(syntaxNode.IsKind(SyntaxKind.RecordStructDeclaration));
             VerifyWrapperProperties(syntaxNode);
 
             var wrapper = (RecordDeclarationSyntaxWrapper)syntaxNode;

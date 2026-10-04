@@ -20,7 +20,6 @@ namespace StyleCop.Analyzers.DocumentationRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Formatting;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1642ConstructorSummaryDocumentationMustBeginWithStandardText"/>
@@ -84,7 +83,7 @@ namespace StyleCop.Analyzers.DocumentationRules
 
         internal static ImmutableArray<string> GenerateStandardText(Document document, BaseMethodDeclarationSyntax methodDeclaration, BaseTypeDeclarationSyntax typeDeclaration, CancellationToken cancellationToken)
         {
-            bool isStruct = typeDeclaration.IsKind(SyntaxKind.StructDeclaration) || typeDeclaration.IsKind(SyntaxKindEx.RecordStructDeclaration);
+            bool isStruct = typeDeclaration.IsKind(SyntaxKind.StructDeclaration) || typeDeclaration.IsKind(SyntaxKind.RecordStructDeclaration);
             var settings = document.Project.AnalyzerOptions.GetStyleCopSettingsInCodeFix(methodDeclaration.SyntaxTree, cancellationToken);
             var culture = settings.DocumentationRules.DocumentationCultureInfo;
             var resourceManager = DocumentationResources.ResourceManager;
@@ -153,9 +152,9 @@ namespace StyleCop.Analyzers.DocumentationRules
                 return structDeclaration.TypeParameterList;
             }
 
-            if (RecordDeclarationSyntaxWrapper.IsInstance(typeDeclaration))
+            if (typeDeclaration is RecordDeclarationSyntax)
             {
-                var recordDeclaration = (RecordDeclarationSyntaxWrapper)typeDeclaration;
+                var recordDeclaration = (RecordDeclarationSyntax)typeDeclaration;
                 return recordDeclaration.TypeParameterList;
             }
 
