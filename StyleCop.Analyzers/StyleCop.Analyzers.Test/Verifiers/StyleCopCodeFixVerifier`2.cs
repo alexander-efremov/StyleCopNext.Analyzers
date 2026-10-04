@@ -23,7 +23,6 @@ namespace StyleCop.Analyzers.Test.Verifiers
     using Microsoft.CodeAnalysis.Testing;
     using Microsoft.CodeAnalysis.Testing.Verifiers;
     using Microsoft.CodeAnalysis.Text;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
     using StyleCop.Analyzers.Test.Helpers;
     using Xunit;
@@ -134,6 +133,7 @@ namespace StyleCop.Analyzers.Test.Verifiers
                     .WithChangedOption(FormattingOptions.TabSize, this.Language, this.TabSize)
                     .WithChangedOption(FormattingOptions.UseTabs, this.Language, this.UseTabs)
                     .WithChangedOption(FormattingOptions.NewLine, this.Language, "\r\n"));
+                this.UpdateGlobalAnalyzerConfig();
 
                 this.TestState.AdditionalFilesFactories.Add(GenerateSettingsFile);
                 this.CodeActionValidationMode = CodeActionValidationMode.SemanticStructure;
@@ -343,7 +343,9 @@ namespace StyleCop.Analyzers.Test.Verifiers
 
             private void UpdateGlobalAnalyzerConfig()
             {
-                if (!LightupHelpers.SupportsCSharp11)
+                // The analyzers target an old Roslyn, so LightupHelpers would always report false here. The test-side
+                // Roslyn version decides: only it reads the workspace options.
+                if (!Enum.GetNames(typeof(LanguageVersion)).Contains("CSharp11"))
                 {
                     // Options support workspace options in this version
                     // https://github.com/dotnet/roslyn/issues/66779
