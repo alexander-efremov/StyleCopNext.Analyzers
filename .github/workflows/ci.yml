@@ -56,6 +56,11 @@ jobs:
           - StyleCop.Analyzers.Test.CSharp11
           - StyleCop.Analyzers.Test.CSharp12
           - StyleCop.Analyzers.Test.CSharp13
+        # Visual Studio runs the analyzers on .NET Framework. The rule code is the same on both runtimes, so one project
+        # covers net472: CSharp13, which inherits the tests of every other project.
+        include:
+          - project: StyleCop.Analyzers.Test.CSharp13
+            net472: true
     steps:
       - name: Allow Long Paths
         run: git config --system core.longpaths true
@@ -70,9 +75,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # The project targets net10.0 and net472, and both are tested.
+      # The projects target net10.0 and net472; only the project marked net472 tests both.
       - name: Test
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --logger trx --results-directory TestResults
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release ${{ !matrix.net472 && '--framework net10.0' || '' }} --logger trx --results-directory TestResults
 
       - name: Upload Test Results
         if: ${{ !cancelled() }}
