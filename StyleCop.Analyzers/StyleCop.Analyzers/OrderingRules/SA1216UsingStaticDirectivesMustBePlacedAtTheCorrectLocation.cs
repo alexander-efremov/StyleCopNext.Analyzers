@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A static using directive is positioned at the wrong location.
@@ -64,7 +63,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var namespaceDirective = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDirective = (BaseNamespaceDeclarationSyntax)context.Node;
             CheckUsingDeclarations(context, namespaceDirective.Usings);
         }
 
@@ -82,14 +81,14 @@ namespace StyleCop.Analyzers.OrderingRules
                 }
 
                 if (lastStaticUsingDirective is not null
-                    && lastStaticUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && lastStaticUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     lastStaticUsingDirective = null;
                 }
 
                 if (lastAliasUsingDirective is not null
-                    && lastAliasUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && lastAliasUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Only compare usings with the same 'global' modifier
                     lastAliasUsingDirective = null;

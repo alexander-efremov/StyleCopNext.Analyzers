@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A call to an instance member of the local class or a base class is not prefixed with ‘this.’, within a C# code
@@ -108,7 +107,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                         return;
                     }
 
-                    if (context.Node.Parent.Parent.IsKind(SyntaxKindEx.WithInitializerExpression))
+                    if (context.Node.Parent.Parent.IsKind(SyntaxKind.WithInitializerExpression))
                     {
                         /* Handle 'X' in:
                          *   value with { X = 3 }
@@ -199,7 +198,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                     switch (methodSymbol.MethodKind)
                     {
                     case MethodKind.Constructor:
-                    case MethodKindEx.LocalFunction:
+                    case MethodKind.LocalFunction:
                         return;
 
                     default:
@@ -251,7 +250,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 case SyntaxKind.DelegateDeclaration:
                 case SyntaxKind.EnumDeclaration:
                 case SyntaxKind.NamespaceDeclaration:
-                case SyntaxKindEx.FileScopedNamespaceDeclaration:
+                case SyntaxKind.FileScopedNamespaceDeclaration:
                     return false;
 
                 case SyntaxKind.FieldDeclaration:
@@ -281,7 +280,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 case SyntaxKind.Attribute:
                     return false;
 
-                case SyntaxKindEx.RecursivePattern:
+                case SyntaxKind.RecursivePattern:
                     return false;
 
                 default:

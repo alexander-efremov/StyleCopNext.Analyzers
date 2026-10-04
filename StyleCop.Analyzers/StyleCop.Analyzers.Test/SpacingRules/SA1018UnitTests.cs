@@ -3,6 +3,7 @@
 
 namespace StyleCop.Analyzers.Test.SpacingRules
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis.Testing;
@@ -138,10 +139,29 @@ namespace StyleCop.Analyzers.Test.SpacingRules
 
         protected virtual DiagnosticResult[] GetExpectedResultSyntaxErrorAtEndOfFile()
         {
-            return new[]
+            var expected = new List<DiagnosticResult>
             {
-                DiagnosticResult.CompilerError("CS1031").WithMessage("Type expected").WithLocation(10, 2),
+                DiagnosticResult.CompilerError("CS1031").WithLocation(10, 2),
+                DiagnosticResult.CompilerError("CS8803").WithLocation(11, 1),
+                DiagnosticResult.CompilerError("CS8805").WithLocation(11, 1),
+                DiagnosticResult.CompilerError("CS1001").WithLocation(11, 2),
+                DiagnosticResult.CompilerError("CS1002").WithLocation(11, 2),
             };
+
+            if (!TestLanguageVersion.SupportsCSharp7)
+            {
+                expected.Add(DiagnosticResult.CompilerError("CS8059").WithLocation(11, 1));
+            }
+            else if (!TestLanguageVersion.SupportsCSharp8)
+            {
+                expected.Add(DiagnosticResult.CompilerError("CS8107").WithLocation(11, 1));
+            }
+            else if (!TestLanguageVersion.SupportsCSharp9)
+            {
+                expected.Add(DiagnosticResult.CompilerError("CS8400").WithLocation(11, 1));
+            }
+
+            return expected.ToArray();
         }
     }
 }

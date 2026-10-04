@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A closing parenthesis within a C# statement is not spaced correctly.
@@ -116,7 +115,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 precedesStickyCharacter =
                         !(token.Parent.IsKind(SyntaxKind.IfStatement)
                         && (token.GetLine() == nextToken.GetLine())
-                        && (nextToken.Parent.IsKind(SyntaxKind.ParenthesizedExpression) || nextToken.Parent.IsKind(SyntaxKindEx.TupleExpression)));
+                        && (nextToken.Parent.IsKind(SyntaxKind.ParenthesizedExpression) || nextToken.Parent.IsKind(SyntaxKind.TupleExpression)));
                 break;
 
             case SyntaxKind.CloseParenToken:
@@ -126,7 +125,7 @@ namespace StyleCop.Analyzers.SpacingRules
             case SyntaxKind.CommaToken:
             case SyntaxKind.DoubleQuoteToken:
             case SyntaxKind.SingleQuoteToken:
-            case SyntaxKindEx.DotDotToken:
+            case SyntaxKind.DotDotToken:
                 precedesStickyCharacter = true;
                 break;
 
@@ -198,7 +197,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 precedesStickyCharacter = nextToken.Parent is InterpolationSyntax;
                 break;
 
-            case SyntaxKind.ExclamationToken when nextToken.Parent.IsKind(SyntaxKindEx.SuppressNullableWarningExpression):
+            case SyntaxKind.ExclamationToken when nextToken.Parent.IsKind(SyntaxKind.SuppressNullableWarningExpression):
                 precedesStickyCharacter = true;
                 break;
 

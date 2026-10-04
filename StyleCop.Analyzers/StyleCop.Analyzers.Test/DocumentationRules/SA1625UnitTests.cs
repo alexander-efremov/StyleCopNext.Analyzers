@@ -11,6 +11,7 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
     using Microsoft.CodeAnalysis.Testing;
     using StyleCop.Analyzers.DocumentationRules;
     using StyleCop.Analyzers.Lightup;
+    using StyleCop.Analyzers.Test.Helpers;
     using StyleCop.Analyzers.Test.Verifiers;
     using Xunit;
     using static StyleCop.Analyzers.Test.Verifiers.CustomDiagnosticVerifier<StyleCop.Analyzers.DocumentationRules.SA1625ElementDocumentationMustNotBeCopiedAndPasted>;
@@ -31,12 +32,12 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
                 yield return new[] { "public struct Test { }" };
                 yield return new[] { "public enum Test { }" };
                 yield return new[] { "public delegate void Test();" };
-                if (LightupHelpers.SupportsCSharp9)
+                if (TestLanguageVersion.SupportsCSharp9)
                 {
                     yield return new[] { "public record Test { }" };
                 }
 
-                if (LightupHelpers.SupportsCSharp10)
+                if (TestLanguageVersion.SupportsCSharp10)
                 {
                     yield return new[] { "public record class Test { }" };
                     yield return new[] { "public record struct Test { }" };

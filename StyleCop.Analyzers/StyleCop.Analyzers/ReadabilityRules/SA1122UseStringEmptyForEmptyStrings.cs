@@ -11,7 +11,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The C# code includes an empty string, written as <c>""</c>.
@@ -85,7 +84,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             if (outermostExpression.Parent.IsKind(SyntaxKind.AttributeArgument)
                 || outermostExpression.Parent.IsKind(SyntaxKind.CaseSwitchLabel)
-                || outermostExpression.Parent.IsKind(SyntaxKindEx.ConstantPattern))
+                || outermostExpression.Parent.IsKind(SyntaxKind.ConstantPattern))
             {
                 return true;
             }

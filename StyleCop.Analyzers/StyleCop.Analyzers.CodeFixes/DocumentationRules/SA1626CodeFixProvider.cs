@@ -61,7 +61,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             return document.WithText(text.WithChanges(textChange));
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } =
                 new FixAll();

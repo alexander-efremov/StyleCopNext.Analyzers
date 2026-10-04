@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
+      - name: Allow Long Paths
+        run: git config --system core.longpaths true
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Nerdbank.GitVersioning computes the version from the history.
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # Warnings are errors, so a successful build means there are none.
+      - name: Build
+        run: dotnet build StyleCopAnalyzers.sln --configuration Release
+
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      # Let every project finish so one failure does not hide the others.
+      fail-fast: false
+      matrix:
+        project:
+          - StyleCop.Analyzers.Test
+          - StyleCop.Analyzers.Test.CSharp7
+          - StyleCop.Analyzers.Test.CSharp8
+          - StyleCop.Analyzers.Test.CSharp9
+          - StyleCop.Analyzers.Test.CSharp10
+          - StyleCop.Analyzers.Test.CSharp11
+          - StyleCop.Analyzers.Test.CSharp12
+          - StyleCop.Analyzers.Test.CSharp13
+    steps:
+      - name: Allow Long Paths
+        run: git config --system core.longpaths true
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # The project targets net10.0 and net472, and both are tested.
+      - name: Test
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --logger trx --results-directory TestResults
+
+      - name: Upload Test Results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-results-${{ matrix.project }}
+          path: TestResults/*.trx
+          if-no-files-found: warn

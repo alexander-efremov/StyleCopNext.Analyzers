@@ -8,10 +8,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using System;
     using System.Collections.Immutable;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
+    using Microsoft.CodeAnalysis.Operations;
 
     /// <summary>
     /// A value type was constructed using the syntax <c>new T()</c>.
@@ -33,7 +31,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static readonly Action<OperationAnalysisContext> ObjectCreationOperationAction = HandleObjectCreationOperation;
         private static readonly Action<OperationAnalysisContext> TypeParameterObjectCreationOperationAction = HandleTypeParameterObjectCreationOperation;
-        private static readonly Action<SyntaxNodeAnalysisContext> ObjectCreationExpressionAction = HandleObjectCreationExpression;
 
         /// <inheritdoc/>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
@@ -45,20 +42,13 @@ namespace StyleCop.Analyzers.ReadabilityRules
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
 
-            if (LightupHelpers.SupportsIOperation)
-            {
-                context.RegisterOperationAction(ObjectCreationOperationAction, OperationKindEx.ObjectCreation);
-                context.RegisterOperationAction(TypeParameterObjectCreationOperationAction, OperationKindEx.TypeParameterObjectCreation);
-            }
-            else
-            {
-                context.RegisterSyntaxNodeAction(ObjectCreationExpressionAction, SyntaxKind.ObjectCreationExpression);
-            }
+            context.RegisterOperationAction(ObjectCreationOperationAction, OperationKind.ObjectCreation);
+            context.RegisterOperationAction(TypeParameterObjectCreationOperationAction, OperationKind.TypeParameterObjectCreation);
         }
 
         private static void HandleObjectCreationOperation(OperationAnalysisContext context)
         {
-            var objectCreation = IObjectCreationOperationWrapper.FromOperation(context.Operation);
+            var objectCreation = (IObjectCreationOperation)context.Operation;
 
             var typeToCreate = objectCreation.Constructor.ContainingType;
             if ((typeToCreate == null) || typeToCreate.IsReferenceType || IsReferenceTypeParameter(typeToCreate))
@@ -78,17 +68,17 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return;
             }
 
-            if (objectCreation.Initializer.WrappedOperation != null)
+            if (objectCreation.Initializer != null)
             {
                 return;
             }
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, objectCreation.WrappedOperation.Syntax.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, objectCreation.Syntax.GetLocation()));
         }
 
         private static void HandleTypeParameterObjectCreationOperation(OperationAnalysisContext context)
         {
-            var objectCreation = ITypeParameterObjectCreationOperationWrapper.FromOperation(context.Operation);
+            var objectCreation = (ITypeParameterObjectCreationOperation)context.Operation;
 
             var typeToCreate = objectCreation.Type;
             if ((typeToCreate == null) || typeToCreate.IsReferenceType || IsReferenceTypeParameter(typeToCreate))
@@ -96,35 +86,12 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return;
             }
 
-            if (objectCreation.Initializer.WrappedOperation != null)
+            if (objectCreation.Initializer != null)
             {
                 return;
             }
 
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, objectCreation.WrappedOperation.Syntax.GetLocation()));
-        }
-
-        private static void HandleObjectCreationExpression(SyntaxNodeAnalysisContext context)
-        {
-            ObjectCreationExpressionSyntax newExpression = (ObjectCreationExpressionSyntax)context.Node;
-
-            var typeToCreate = context.SemanticModel.GetTypeInfo(newExpression, context.CancellationToken);
-            if ((typeToCreate.Type == null) || typeToCreate.Type.IsReferenceType || IsReferenceTypeParameter(typeToCreate.Type))
-            {
-                return;
-            }
-
-            if ((newExpression.ArgumentList == null) || (newExpression.ArgumentList.Arguments.Count > 0))
-            {
-                return;
-            }
-
-            if (newExpression.Initializer != null)
-            {
-                return;
-            }
-
-            context.ReportDiagnostic(Diagnostic.Create(Descriptor, newExpression.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(Descriptor, objectCreation.Syntax.GetLocation()));
         }
 
         private static bool IsReferenceTypeParameter(ITypeSymbol type)

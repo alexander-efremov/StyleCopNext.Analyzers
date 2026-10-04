@@ -14,7 +14,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class SA1137ElementsShouldHaveTheSameIndentation : DiagnosticAnalyzer
@@ -78,8 +77,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
             context.RegisterSyntaxNodeAction(SwitchStatementAction, SyntaxKind.SwitchStatement);
             context.RegisterSyntaxNodeAction(InitializerExpressionAction, SyntaxKinds.InitializerExpression);
             context.RegisterSyntaxNodeAction(AnonymousObjectCreationExpressionAction, SyntaxKind.AnonymousObjectCreationExpression);
-            context.RegisterSyntaxNodeAction(TupleTypeAction, SyntaxKindEx.TupleType);
-            context.RegisterSyntaxNodeAction(TupleExpressionAction, SyntaxKindEx.TupleExpression);
+            context.RegisterSyntaxNodeAction(TupleTypeAction, SyntaxKind.TupleType);
+            context.RegisterSyntaxNodeAction(TupleExpressionAction, SyntaxKind.TupleExpression);
         }
 
         private static void HandleCompilationUnit(SyntaxNodeAnalysisContext context)
@@ -98,7 +97,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var namespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
 
             var elements = ImmutableList.CreateBuilder<SyntaxNode>();
 
@@ -272,14 +271,14 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleTupleType(SyntaxNodeAnalysisContext context)
         {
-            var tupleType = (TupleTypeSyntaxWrapper)context.Node;
+            var tupleType = (TupleTypeSyntax)context.Node;
 
             CheckElements(context, tupleType.Elements);
         }
 
         private static void HandleTupleExpression(SyntaxNodeAnalysisContext context)
         {
-            var tupleExpression = (TupleExpressionSyntaxWrapper)context.Node;
+            var tupleExpression = (TupleExpressionSyntax)context.Node;
 
             CheckElements(context, tupleExpression.Arguments);
         }
@@ -310,8 +309,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
             case SyntaxKind.StructDeclaration:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.EnumDeclaration:
-            case SyntaxKindEx.RecordDeclaration:
-            case SyntaxKindEx.RecordStructDeclaration:
+            case SyntaxKind.RecordDeclaration:
+            case SyntaxKind.RecordStructDeclaration:
                 elements.AddRange(((BaseTypeDeclarationSyntax)member).AttributeLists);
                 break;
 
@@ -336,7 +335,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             case SyntaxKind.GetAccessorDeclaration:
             case SyntaxKind.SetAccessorDeclaration:
-            case SyntaxKindEx.InitAccessorDeclaration:
+            case SyntaxKind.InitAccessorDeclaration:
             case SyntaxKind.AddAccessorDeclaration:
             case SyntaxKind.RemoveAccessorDeclaration:
             case SyntaxKind.UnknownAccessorDeclaration:
@@ -378,16 +377,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
             }
 
             CheckElements(context, elements.ToImmutableList());
-        }
-
-        private static void CheckElements<T>(SyntaxNodeAnalysisContext context, SeparatedSyntaxListWrapper<T> elements)
-        {
-            if (elements.Count < 2)
-            {
-                return;
-            }
-
-            CheckElements(context, ((IEnumerable<SyntaxNode>)elements.UnderlyingList).ToImmutableList());
         }
 
         // BlockSyntax is analyzed separately because it needs to check both braces.

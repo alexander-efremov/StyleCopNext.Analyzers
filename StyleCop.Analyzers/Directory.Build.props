@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <PropertyGroup>
@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>10</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <WarningLevel>99</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
@@ -58,11 +58,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="$(SharedMicrosoftCodeAnalysisAnalyzersVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
-  <!-- C# Compiler -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.0.1" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Public API -->

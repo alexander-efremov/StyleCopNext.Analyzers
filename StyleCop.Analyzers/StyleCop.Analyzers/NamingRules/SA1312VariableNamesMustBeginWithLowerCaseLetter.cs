@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.NamingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The name of a variable in C# does not begin with a lower-case letter.
@@ -69,7 +68,7 @@ namespace StyleCop.Analyzers.NamingRules
             context.RegisterSyntaxNodeAction(JoinClauseAction, SyntaxKind.JoinClause);
             context.RegisterSyntaxNodeAction(JoinIntoClauseAction, SyntaxKind.JoinIntoClause);
             context.RegisterSyntaxNodeAction(ForEachStatementAction, SyntaxKind.ForEachStatement);
-            context.RegisterSyntaxNodeAction(SingleVariableDesignationAction, SyntaxKindEx.SingleVariableDesignation);
+            context.RegisterSyntaxNodeAction(SingleVariableDesignationAction, SyntaxKind.SingleVariableDesignation);
         }
 
         private static void HandleVariableDeclaration(SyntaxNodeAnalysisContext context)
@@ -138,7 +137,7 @@ namespace StyleCop.Analyzers.NamingRules
 
         private static void HandleSingleVariableDesignation(SyntaxNodeAnalysisContext context)
         {
-            CheckIdentifier(context, ((SingleVariableDesignationSyntaxWrapper)context.Node).Identifier);
+            CheckIdentifier(context, ((SingleVariableDesignationSyntax)context.Node).Identifier);
         }
 
         private static void CheckIdentifier(SyntaxNodeAnalysisContext context, SyntaxToken identifier)

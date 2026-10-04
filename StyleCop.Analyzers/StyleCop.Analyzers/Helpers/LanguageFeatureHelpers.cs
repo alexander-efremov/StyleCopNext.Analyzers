@@ -9,7 +9,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Helper methods for checking specific language versions.
@@ -24,7 +23,7 @@ namespace StyleCop.Analyzers.Helpers
         [SuppressMessage("MicrosoftCodeAnalysisPerformance", "RS1012:Start action has no registered actions", Justification = "This is not a start action method.")]
         internal static bool SupportsTuples(this CompilationStartAnalysisContext context)
         {
-            return context.Compilation is CSharpCompilation { LanguageVersion: >= LanguageVersionEx.CSharp7 };
+            return context.Compilation is CSharpCompilation { LanguageVersion: >= LanguageVersion.CSharp7 };
         }
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace StyleCop.Analyzers.Helpers
         internal static bool SupportsTuples(this SyntaxNodeAnalysisContext context)
         {
             var csharpParseOptions = context.Node.SyntaxTree.Options as CSharpParseOptions;
-            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersionEx.CSharp7);
+            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersion.CSharp7);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace StyleCop.Analyzers.Helpers
         internal static bool SupportsTuples(this OperationAnalysisContext context)
         {
             var csharpParseOptions = context.Operation.Syntax.SyntaxTree.Options as CSharpParseOptions;
-            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersionEx.CSharp7);
+            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersion.CSharp7);
         }
 
         /// <summary>
@@ -57,12 +56,12 @@ namespace StyleCop.Analyzers.Helpers
         internal static bool SupportsInferredTupleElementNames(this SyntaxNodeAnalysisContext context)
         {
             var csharpParseOptions = context.Node.SyntaxTree.Options as CSharpParseOptions;
-            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersionEx.CSharp7_1);
+            return (csharpParseOptions != null) && (csharpParseOptions.LanguageVersion >= LanguageVersion.CSharp7_1);
         }
 
         internal static bool SupportsNativeSizedIntegers(this Compilation compilation)
         {
-            if (compilation is not CSharpCompilation { LanguageVersion: >= LanguageVersionEx.CSharp11 } csharpCompilation)
+            if (compilation is not CSharpCompilation { LanguageVersion: >= LanguageVersion.CSharp11 } csharpCompilation)
             {
                 return false;
             }

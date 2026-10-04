@@ -15,7 +15,6 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A closing brace within a C# element, statement, or expression is not followed by a blank line.
@@ -165,10 +164,10 @@ namespace StyleCop.Analyzers.LayoutRules
                 return false;
             }
 
-            private static RecursivePatternSyntaxWrapper FindRecursivePattern(SyntaxToken token)
+            private static RecursivePatternSyntax FindRecursivePattern(SyntaxToken token)
             {
-                var recursivePatternSyntax = token.Parent.FirstAncestorOrSelf<SyntaxNode>(static node => RecursivePatternSyntaxWrapper.IsInstance(node));
-                return (RecursivePatternSyntaxWrapper)recursivePatternSyntax;
+                var recursivePatternSyntax = token.Parent.FirstAncestorOrSelf<SyntaxNode>(static node => node is RecursivePatternSyntax);
+                return (RecursivePatternSyntax)recursivePatternSyntax;
             }
 
             private static bool IsPartOf<T>(SyntaxToken token)
@@ -294,8 +293,8 @@ namespace StyleCop.Analyzers.LayoutRules
 
                     var recursivePattern = FindRecursivePattern(token);
                     var nextRecursivePattern = FindRecursivePattern(nextToken);
-                    if (recursivePattern.SyntaxNode != null
-                        && nextRecursivePattern.SyntaxNode == recursivePattern.SyntaxNode
+                    if (recursivePattern != null
+                        && nextRecursivePattern == recursivePattern
                         && nextToken.IsKind(SyntaxKind.IdentifierToken))
                     {
                         // the close brace is part of a recursive pattern that continues with a designation
@@ -312,7 +311,7 @@ namespace StyleCop.Analyzers.LayoutRules
                         || nextToken.IsKind(SyntaxKind.RemoveKeyword)
                         || nextToken.IsKind(SyntaxKind.GetKeyword)
                         || nextToken.IsKind(SyntaxKind.SetKeyword)
-                        || nextToken.IsKind(SyntaxKindEx.InitKeyword))
+                        || nextToken.IsKind(SyntaxKind.InitKeyword))
                     {
                         // the close brace is followed by an accessor (SA1516 will handle that)
                         return;

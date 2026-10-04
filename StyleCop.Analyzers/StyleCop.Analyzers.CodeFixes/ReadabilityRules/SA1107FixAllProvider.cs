@@ -12,7 +12,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CodeFixes;
     using StyleCop.Analyzers.Helpers;
 
-    internal class SA1107FixAllProvider : DocumentBasedFixAllProvider
+    internal class SA1107FixAllProvider : StyleCopDocumentBasedFixAllProvider
     {
         protected override string CodeActionTitle => ReadabilityResources.SA1107CodeFix;
 

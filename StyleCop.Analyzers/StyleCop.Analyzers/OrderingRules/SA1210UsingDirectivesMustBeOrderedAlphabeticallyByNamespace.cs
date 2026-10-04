@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -71,7 +70,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context, StyleCopSettings settings)
         {
-            var namespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
 
             ProcessUsings(context, settings.OrderingRules, namespaceDeclaration.Usings);
         }
@@ -120,7 +119,7 @@ namespace StyleCop.Analyzers.OrderingRules
             {
                 if (previousUsingDirective != null)
                 {
-                    if (previousUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != directive.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    if (previousUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != directive.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                     {
                         // Only compare usings with the same 'global' modifier
                         continue;

@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A using-alias directive is positioned before a regular using directive.
@@ -65,7 +64,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleBaseNamespaceDeclaration(SyntaxNodeAnalysisContext context)
         {
-            var namespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
 
             ProcessUsingsAndReportDiagnostic(namespaceDeclaration.Usings, context);
         }
@@ -79,7 +78,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 if (usingDirective.Alias != null && notLastUsingDirective)
                 {
                     var nextUsingDirective = usings[i + 1];
-                    if (nextUsingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    if (nextUsingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                     {
                         // Only compare usings with the same 'global' modifier
                         continue;

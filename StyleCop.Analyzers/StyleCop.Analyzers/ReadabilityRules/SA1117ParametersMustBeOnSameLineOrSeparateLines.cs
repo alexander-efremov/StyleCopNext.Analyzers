@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The parameters to a C# method or indexer call or declaration are not all on the same line or each on a separate
@@ -93,13 +92,13 @@ namespace StyleCop.Analyzers.ReadabilityRules
             context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(BaseMethodDeclarationAction, BaseMethodDeclarationKinds);
-            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKindEx.LocalFunctionStatement);
+            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKind.LocalFunctionStatement);
             context.RegisterSyntaxNodeAction(ConstructorInitializerAction, SyntaxKinds.ConstructorInitializer);
             context.RegisterSyntaxNodeAction(DelegateDeclarationAction, SyntaxKind.DelegateDeclaration);
             context.RegisterSyntaxNodeAction(IndexerDeclarationAction, SyntaxKind.IndexerDeclaration);
             context.RegisterSyntaxNodeAction(InvocationExpressionAction, SyntaxKind.InvocationExpression);
             context.RegisterSyntaxNodeAction(ObjectCreationExpressionAction, SyntaxKind.ObjectCreationExpression);
-            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKindEx.ImplicitObjectCreationExpression);
+            context.RegisterSyntaxNodeAction(ImplicitObjectCreationExpressionAction, SyntaxKind.ImplicitObjectCreationExpression);
             context.RegisterSyntaxNodeAction(ElementAccessExpressionAction, SyntaxKind.ElementAccessExpression);
             context.RegisterSyntaxNodeAction(ElementBindingExpressionAction, SyntaxKind.ElementBindingExpression);
             context.RegisterSyntaxNodeAction(ArrayCreationExpressionAction, SyntaxKind.ArrayCreationExpression);
@@ -116,7 +115,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
-            var statement = (LocalFunctionStatementSyntaxWrapper)context.Node;
+            var statement = (LocalFunctionStatementSyntax)context.Node;
             HandleParameterListSyntax(context, statement.ParameterList);
         }
 
@@ -134,7 +133,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleImplicitObjectCreationExpression(SyntaxNodeAnalysisContext context)
         {
-            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntaxWrapper)context.Node;
+            var implicitObjectCreation = (ImplicitObjectCreationExpressionSyntax)context.Node;
             HandleArgumentListSyntax(context, implicitObjectCreation.ArgumentList);
         }
 

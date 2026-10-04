@@ -39,9 +39,9 @@ namespace StyleCop.Analyzers.Test.Lightup
         {
             get
             {
-                foreach (var field in typeof(LanguageVersionEx).GetTypeInfo().DeclaredFields)
+                foreach (var versionField in typeof(LanguageVersionEx).GetTypeInfo().DeclaredFields)
                 {
-                    yield return new object[] { field.Name, (LanguageVersion)field.GetRawConstantValue() };
+                    yield return new object[] { versionField.Name, (LanguageVersion)versionField.GetRawConstantValue() };
                 }
             }
         }

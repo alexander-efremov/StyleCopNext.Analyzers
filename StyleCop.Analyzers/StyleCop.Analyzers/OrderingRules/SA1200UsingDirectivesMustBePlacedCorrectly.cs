@@ -13,7 +13,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -238,7 +237,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
                 case SyntaxKind.UsingDirective:
                     // Global using directives are only allowed at the top level, so ignore those
-                    if (!((UsingDirectiveSyntax)child).GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    if (!((UsingDirectiveSyntax)child).GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                     {
                         usingDirectives.Add(child);
                     }
@@ -246,7 +245,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     continue;
 
                 case SyntaxKind.NamespaceDeclaration:
-                case SyntaxKindEx.FileScopedNamespaceDeclaration:
+                case SyntaxKind.FileScopedNamespaceDeclaration:
                 case SyntaxKind.ExternAliasDirective:
                 default:
                     continue;
@@ -274,7 +273,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            BaseNamespaceDeclarationSyntaxWrapper syntax = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            BaseNamespaceDeclarationSyntax syntax = (BaseNamespaceDeclarationSyntax)context.Node;
             foreach (UsingDirectiveSyntax directive in syntax.Usings)
             {
                 // Using directive should appear outside a namespace declaration

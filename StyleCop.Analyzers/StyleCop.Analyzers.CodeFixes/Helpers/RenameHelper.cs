@@ -14,7 +14,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Rename;
-    using StyleCop.Analyzers.Lightup;
 
     internal static class RenameHelper
     {
@@ -30,7 +29,7 @@ namespace StyleCop.Analyzers.Helpers
             var semanticModel = await annotatedDocument.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var symbol = semanticModel.GetDeclaredSymbol(annotatedToken.Parent, cancellationToken);
 
-            var newSolution = await Renamer.RenameSymbolAsync(annotatedSolution, symbol, newName, null, cancellationToken).ConfigureAwait(false);
+            var newSolution = await Renamer.RenameSymbolAsync(annotatedSolution, symbol, default(SymbolRenameOptions), newName, cancellationToken).ConfigureAwait(false);
 
             // TODO: return annotatedSolution instead of newSolution if newSolution contains any new errors (for any project)
             return newSolution;
@@ -159,8 +158,8 @@ namespace StyleCop.Analyzers.Helpers
                 case SyntaxKind.UsingDirective:
                 case SyntaxKind.LabeledStatement:
                 case SyntaxKind.AnonymousObjectMemberDeclarator:
-                case SyntaxKindEx.LocalFunctionStatement:
-                case SyntaxKindEx.SingleVariableDesignation:
+                case SyntaxKind.LocalFunctionStatement:
+                case SyntaxKind.SingleVariableDesignation:
                     return parent;
 
                 default:
@@ -197,12 +196,12 @@ namespace StyleCop.Analyzers.Helpers
             {
                 switch (node.Kind())
                 {
-                case SyntaxKindEx.LocalFunctionStatement:
-                    this.Found |= ((LocalFunctionStatementSyntaxWrapper)node).Identifier.ValueText == this.name;
+                case SyntaxKind.LocalFunctionStatement:
+                    this.Found |= ((LocalFunctionStatementSyntax)node).Identifier.ValueText == this.name;
                     break;
 
-                case SyntaxKindEx.SingleVariableDesignation:
-                    this.Found |= ((SingleVariableDesignationSyntaxWrapper)node).Identifier.ValueText == this.name;
+                case SyntaxKind.SingleVariableDesignation:
+                    this.Found |= ((SingleVariableDesignationSyntax)node).Identifier.ValueText == this.name;
                     break;
 
                 default:

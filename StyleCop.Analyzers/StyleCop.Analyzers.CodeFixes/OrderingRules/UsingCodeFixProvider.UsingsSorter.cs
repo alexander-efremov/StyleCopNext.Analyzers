@@ -15,7 +15,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -221,7 +220,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 for (var i = 0; i < usingsList.Count; i++)
                 {
                     var currentUsing = usingsList[i];
-                    if (currentUsing.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != isGlobal)
+                    if (currentUsing.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != isGlobal)
                     {
                         continue;
                     }
@@ -432,7 +431,7 @@ namespace StyleCop.Analyzers.OrderingRules
                             {
                                 fullName = "global::System." + symbol.Name;
                             }
-                            else if (namedTypeSymbol.IsTupleType())
+                            else if (namedTypeSymbol.IsTupleType)
                             {
                                 fullName = namedTypeSymbol.TupleUnderlyingTypeOrSelf().ToFullyQualifiedValueTupleDisplayString();
                             }
@@ -525,10 +524,10 @@ namespace StyleCop.Analyzers.OrderingRules
 
             private void ProcessMembers(SyntaxList<MemberDeclarationSyntax> members)
             {
-                foreach (var namespaceDeclaration in members.Where(member => BaseNamespaceDeclarationSyntaxWrapper.IsInstance(member)))
+                foreach (var namespaceDeclaration in members.Where(member => member is BaseNamespaceDeclarationSyntax))
                 {
-                    this.ProcessUsingDirectives(((BaseNamespaceDeclarationSyntaxWrapper)namespaceDeclaration).Usings);
-                    this.ProcessMembers(((BaseNamespaceDeclarationSyntaxWrapper)namespaceDeclaration).Members);
+                    this.ProcessUsingDirectives(((BaseNamespaceDeclarationSyntax)namespaceDeclaration).Usings);
+                    this.ProcessMembers(((BaseNamespaceDeclarationSyntax)namespaceDeclaration).Members);
                 }
             }
 

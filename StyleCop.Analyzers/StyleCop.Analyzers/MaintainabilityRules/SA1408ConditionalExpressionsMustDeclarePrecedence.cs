@@ -11,7 +11,6 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// A C# statement contains a complex conditional expression which omits parenthesis around operators.
@@ -73,7 +72,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             ImmutableArray.Create(SyntaxKind.LogicalAndExpression, SyntaxKind.LogicalOrExpression);
 
         private static readonly ImmutableArray<SyntaxKind> HandledBinaryPatternKinds =
-            ImmutableArray.Create(SyntaxKindEx.AndPattern, SyntaxKindEx.OrPattern);
+            ImmutableArray.Create(SyntaxKind.AndPattern, SyntaxKind.OrPattern);
 
         private static readonly Action<SyntaxNodeAnalysisContext> BinaryExpressionAction = HandleBinaryExpression;
         private static readonly Action<SyntaxNodeAnalysisContext> BinaryPatternAction = HandleBinaryPattern;
@@ -123,23 +122,23 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
         private static void HandleBinaryPattern(SyntaxNodeAnalysisContext context)
         {
-            var binaryPattern = (BinaryPatternSyntaxWrapper)context.Node;
+            var binaryPattern = (BinaryPatternSyntax)context.Node;
 
-            if (BinaryPatternSyntaxWrapper.IsInstance(binaryPattern.Left.SyntaxNode))
+            if (binaryPattern.Left is BinaryPatternSyntax)
             {
-                var left = (BinaryPatternSyntaxWrapper)binaryPattern.Left;
+                var left = (BinaryPatternSyntax)binaryPattern.Left;
                 if (IsLogicalOperator(left.OperatorToken) && !IsSameFamily(binaryPattern.OperatorToken, left.OperatorToken))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, left.SyntaxNode.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, left.GetLocation()));
                 }
             }
 
-            if (BinaryPatternSyntaxWrapper.IsInstance(binaryPattern.Right.SyntaxNode))
+            if (binaryPattern.Right is BinaryPatternSyntax)
             {
-                var right = (BinaryPatternSyntaxWrapper)binaryPattern.Right;
+                var right = (BinaryPatternSyntax)binaryPattern.Right;
                 if (IsLogicalOperator(right.OperatorToken) && !IsSameFamily(binaryPattern.OperatorToken, right.OperatorToken))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, right.SyntaxNode.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(Descriptor, right.GetLocation()));
                 }
             }
         }
@@ -158,13 +157,13 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         private static bool IsAndOperator(SyntaxToken operatorToken)
         {
             return operatorToken.IsKind(SyntaxKind.AmpersandAmpersandToken)
-                || operatorToken.IsKind(SyntaxKindEx.AndKeyword);
+                || operatorToken.IsKind(SyntaxKind.AndKeyword);
         }
 
         private static bool IsOrOperator(SyntaxToken operatorToken)
         {
             return operatorToken.IsKind(SyntaxKind.BarBarToken)
-                || operatorToken.IsKind(SyntaxKindEx.OrKeyword);
+                || operatorToken.IsKind(SyntaxKind.OrKeyword);
         }
     }
 }

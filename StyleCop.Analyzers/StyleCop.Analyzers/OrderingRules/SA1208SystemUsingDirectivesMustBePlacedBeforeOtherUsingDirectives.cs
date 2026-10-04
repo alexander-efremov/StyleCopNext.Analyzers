@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -82,7 +81,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 return;
             }
 
-            var namespaceDeclaration = (BaseNamespaceDeclarationSyntaxWrapper)context.Node;
+            var namespaceDeclaration = (BaseNamespaceDeclarationSyntax)context.Node;
             var usings = namespaceDeclaration.Usings;
             ProcessUsingsAndReportDiagnostic(usings, context);
         }
@@ -108,7 +107,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     }
 
                     var previousUsing = usings[i - 1];
-                    if (previousUsing.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    if (previousUsing.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword) != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                     {
                         // Only compare usings with the same 'global' modifier
                         continue;

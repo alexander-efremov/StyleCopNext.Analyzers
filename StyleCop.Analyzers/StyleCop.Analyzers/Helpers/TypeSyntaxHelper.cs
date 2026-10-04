@@ -8,7 +8,6 @@ namespace StyleCop.Analyzers.Helpers
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using StyleCop.Analyzers.Lightup;
 
     internal static class TypeSyntaxHelper
     {
@@ -51,8 +50,8 @@ namespace StyleCop.Analyzers.Helpers
             case SyntaxKind.VariableDeclaration:
                 return ((VariableDeclarationSyntax)syntax.Parent).Type == syntax;
 
-            case SyntaxKindEx.LocalFunctionStatement:
-                return ((LocalFunctionStatementSyntaxWrapper)syntax.Parent).ReturnType == syntax;
+            case SyntaxKind.LocalFunctionStatement:
+                return ((LocalFunctionStatementSyntax)syntax.Parent).ReturnType == syntax;
 
             default:
                 return false;
@@ -61,9 +60,9 @@ namespace StyleCop.Analyzers.Helpers
 
         public static TypeSyntax StripRefFromType(this TypeSyntax syntax)
         {
-            if (syntax.IsKind(SyntaxKindEx.RefType))
+            if (syntax.IsKind(SyntaxKind.RefType))
             {
-                syntax = ((RefTypeSyntaxWrapper)syntax).Type;
+                syntax = ((RefTypeSyntax)syntax).Type;
             }
 
             return syntax;

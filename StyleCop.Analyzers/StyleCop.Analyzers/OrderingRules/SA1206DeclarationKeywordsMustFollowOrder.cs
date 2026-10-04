@@ -12,7 +12,6 @@ namespace StyleCop.Analyzers.OrderingRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
-    using StyleCop.Analyzers.Lightup;
     using static ModifierOrderHelper;
 
     /// <summary>
@@ -80,7 +79,7 @@ namespace StyleCop.Analyzers.OrderingRules
             context.EnableConcurrentExecution();
 
             context.RegisterSyntaxNodeAction(DeclarationAction, HandledSyntaxKinds);
-            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKindEx.LocalFunctionStatement);
+            context.RegisterSyntaxNodeAction(LocalFunctionStatementAction, SyntaxKind.LocalFunctionStatement);
         }
 
         private static void HandleDeclaration(SyntaxNodeAnalysisContext context)
@@ -91,7 +90,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
         private static void HandleLocalFunctionStatement(SyntaxNodeAnalysisContext context)
         {
-            var localFunction = (LocalFunctionStatementSyntaxWrapper)context.Node;
+            var localFunction = (LocalFunctionStatementSyntax)context.Node;
             CheckModifiersOrderAndReportDiagnostics(context, localFunction.Modifiers);
         }
 

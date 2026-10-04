@@ -9,7 +9,6 @@ namespace StyleCop.Analyzers.SpacingRules
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// The spacing around a C# keyword is incorrect.
@@ -86,7 +85,7 @@ namespace StyleCop.Analyzers.SpacingRules
                 switch (token.Kind())
                 {
                 case SyntaxKind.DelegateKeyword:
-                    if (token.Parent.IsKind(SyntaxKindEx.FunctionPointerType))
+                    if (token.Parent.IsKind(SyntaxKind.FunctionPointerType))
                     {
                         HandleDisallowedSpaceToken(ref context, token);
                         break;
@@ -94,7 +93,7 @@ namespace StyleCop.Analyzers.SpacingRules
 
                     goto default;
 
-                case SyntaxKindEx.AndKeyword:
+                case SyntaxKind.AndKeyword:
                 case SyntaxKind.AwaitKeyword:
                 case SyntaxKind.CaseKeyword:
                 case SyntaxKind.CatchKeyword:
@@ -110,8 +109,8 @@ namespace StyleCop.Analyzers.SpacingRules
                 case SyntaxKind.JoinKeyword:
                 case SyntaxKind.LetKeyword:
                 case SyntaxKind.LockKeyword:
-                case SyntaxKindEx.NotKeyword:
-                case SyntaxKindEx.OrKeyword:
+                case SyntaxKind.NotKeyword:
+                case SyntaxKind.OrKeyword:
                 case SyntaxKind.OrderByKeyword:
                 case SyntaxKind.OutKeyword:
                 case SyntaxKind.RefKeyword:
@@ -126,7 +125,7 @@ namespace StyleCop.Analyzers.SpacingRules
 
                 case SyntaxKind.CheckedKeyword:
                 case SyntaxKind.UncheckedKeyword:
-                    switch (token.Parent.Kind())
+                    switch (token.Parent!.Kind())
                     {
                     case SyntaxKind.CheckedStatement:
                     case SyntaxKind.UncheckedStatement:
@@ -148,7 +147,7 @@ namespace StyleCop.Analyzers.SpacingRules
                     break;
 
                 case SyntaxKind.DefaultKeyword:
-                    if (token.Parent.IsKind(SyntaxKindEx.DefaultLiteralExpression))
+                    if (token.Parent.IsKind(SyntaxKind.DefaultLiteralExpression))
                     {
                         // Ignore spacing around a default literal expression
                         break;
@@ -176,8 +175,8 @@ namespace StyleCop.Analyzers.SpacingRules
                     HandleThrowKeywordToken(ref context, token);
                     break;
 
-                case SyntaxKindEx.UnmanagedKeyword:
-                    if (token.Parent.IsKind(SyntaxKindEx.FunctionPointerCallingConvention))
+                case SyntaxKind.UnmanagedKeyword:
+                    if (token.Parent.IsKind(SyntaxKind.FunctionPointerCallingConvention))
                     {
                         HandleDisallowedSpaceToken(ref context, token);
                     }
@@ -225,12 +224,12 @@ namespace StyleCop.Analyzers.SpacingRules
                 switch (nextToken.Kind())
                 {
                 case SyntaxKind.IdentifierToken:
-                case SyntaxKindEx.UnderscoreToken:
+                case SyntaxKind.UnderscoreToken:
                     // Always check these
                     break;
 
                 case SyntaxKind.OpenParenToken:
-                    if (nextToken.Parent.IsKind(SyntaxKindEx.ParenthesizedVariableDesignation))
+                    if (nextToken.Parent.IsKind(SyntaxKind.ParenthesizedVariableDesignation))
                     {
                         // We have something like this:
                         //   var (x, i) = (a, b);
@@ -312,7 +311,7 @@ namespace StyleCop.Analyzers.SpacingRules
             {
             case SyntaxKind.OpenBracketToken:
                 if (token.Parent.IsKind(SyntaxKind.ImplicitArrayCreationExpression)
-                    || token.Parent.IsKind(SyntaxKindEx.ImplicitStackAllocArrayCreationExpression))
+                    || token.Parent.IsKind(SyntaxKind.ImplicitStackAllocArrayCreationExpression))
                 {
                     // This is handled by SA1026
                     return;
@@ -325,7 +324,7 @@ namespace StyleCop.Analyzers.SpacingRules
             case SyntaxKind.OpenParenToken:
                 // Disallowed for new() constraint, but otherwise allowed for tuple types
                 needSpace = !token.Parent.IsKind(SyntaxKind.ConstructorConstraint)
-                    && !token.Parent.IsKind(SyntaxKindEx.ImplicitObjectCreationExpression);
+                    && !token.Parent.IsKind(SyntaxKind.ImplicitObjectCreationExpression);
                 break;
 
             default:

@@ -269,7 +269,7 @@ namespace StyleCop.Analyzers.SpacingRules
             replaceMap[token] = newReplacement;
         }
 
-        private class FixAll : DocumentBasedFixAllProvider
+        private class FixAll : StyleCopDocumentBasedFixAllProvider
         {
             public static FixAllProvider Instance { get; } = new FixAll();
 
