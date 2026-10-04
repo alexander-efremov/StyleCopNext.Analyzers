@@ -77,6 +77,42 @@ When using an **.editorconfig** file to configure StyleCop Analyzers, the basic 
 > **stylecop.json**. To provide this functionality, we recommend using the **.editorconfig** file instead. Users of the [EditorConfig](https://visualstudiogallery.msdn.microsoft.com/c8bccfe2-650c-4b42-bc5c-845e21f96328)
 > extension for Visual Studio will not need to update their C# indentation settings in order to match your project style.
 
+### Indentation Behavior
+
+The following properties are used by [SA1138](SA1138.md) to determine the expected indentation of code. The default
+values match the default C# formatting options of Visual Studio.
+
+| Property | Default Value | Minimum Version | Summary |
+| --- | --- | --- | --- |
+| `indentBlock` | **true** | 2.0.0 | **true** to indent the contents of blocks (including method bodies) relative to the line containing the block owner; otherwise, **false** to place the contents at the same indentation as the owner. |
+| `indentSwitchSection` | **true** | 2.0.0 | **true** to indent `case` and `default` labels relative to the `switch` statement; otherwise, **false** to align them with the `switch` statement. |
+| `indentSwitchCaseSection` | **true** | 2.0.0 | **true** to indent the statements of a switch section relative to its `case` or `default` labels; otherwise, **false** to align them with the labels. |
+| `labelPositioning` | **oneLess** | 2.0.0 | The position of labels targeted by `goto` statements. `leftMost` places labels in the first column, `oneLess` indents labels one level less than the statements of the enclosing block, and `noIndent` indents labels the same as the statements of the enclosing block. |
+
+The same options can be provided in an [**.editorconfig**](http://editorconfig.org/) file using the standard .NET
+formatting keys. Values in **stylecop.json** take precedence over values in **.editorconfig**, and a severity suffix
+(for example `true:suggestion`) is ignored.
+
+| Property | .editorconfig key | .editorconfig values |
+| --- | --- | --- |
+| `indentBlock` | `csharp_indent_block_contents` | `true`, `false` |
+| `indentSwitchSection` | `csharp_indent_switch_labels` | `true`, `false` |
+| `indentSwitchCaseSection` | `csharp_indent_case_contents` | `true`, `false` |
+| `labelPositioning` | `csharp_indent_labels` | `one_less_than_current` (`oneLess`), `flush_left` (`leftMost`), `no_change` (`noIndent`) |
+
+```json
+{
+  "settings": {
+    "indentation": {
+      "indentBlock": true,
+      "indentSwitchSection": true,
+      "indentSwitchCaseSection": true,
+      "labelPositioning": "oneLess"
+    }
+  }
+}
+```
+
 ## Spacing Rules
 
 This section describes the features of spacing rules which can be configured in **stylecop.json** or **.editorconfig**. Each of the described properties are configured in the `spacingRules` object of the **stylecop.json** file, which is shown in the following sample.

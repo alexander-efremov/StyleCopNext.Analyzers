@@ -197,6 +197,65 @@ csharp_using_directive_placement = {placement}
             Assert.Equal(expected, styleCopSettings.OrderingRules.UsingDirectivesPlacement);
         }
 
+        [Fact]
+        public async Task VerifyIndentationBehaviorFromEditorConfigAsync()
+        {
+            var settings = @"root = true
+
+[*]
+csharp_indent_block_contents = false
+csharp_indent_switch_labels = false:suggestion
+csharp_indent_case_contents = false
+csharp_indent_labels = flush_left
+";
+            var context = await this.CreateAnalysisContextFromEditorConfigAsync(settings).ConfigureAwait(false);
+
+            var styleCopSettings = context.GetStyleCopSettingsInTests(CancellationToken.None);
+
+            Assert.False(styleCopSettings.Indentation.IndentBlock);
+            Assert.False(styleCopSettings.Indentation.IndentSwitchSection);
+            Assert.False(styleCopSettings.Indentation.IndentSwitchCaseSection);
+            Assert.Equal(LabelPositioning.LeftMost, styleCopSettings.Indentation.LabelPositioning);
+        }
+
+        [Theory]
+        [InlineData("one_less_than_current", "OneLess")]
+        [InlineData("flush_left", "LeftMost")]
+        [InlineData("no_change", "NoIndent")]
+        [InlineData("no_change:none", "NoIndent")]
+        [InlineData("unsupported", "OneLess")]
+        public async Task VerifyLabelPositioningFromEditorConfigAsync(string value, string expected)
+        {
+            var settings = $@"root = true
+
+[*]
+csharp_indent_labels = {value}
+";
+            var context = await this.CreateAnalysisContextFromEditorConfigAsync(settings).ConfigureAwait(false);
+
+            var styleCopSettings = context.GetStyleCopSettingsInTests(CancellationToken.None);
+
+            Assert.Equal(expected, styleCopSettings.Indentation.LabelPositioning.ToString());
+        }
+
+        [Fact]
+        public async Task VerifyIndentationBehaviorDefaultsWithoutEditorConfigValuesAsync()
+        {
+            var settings = @"root = true
+
+[*]
+indent_size = 4
+";
+            var context = await this.CreateAnalysisContextFromEditorConfigAsync(settings).ConfigureAwait(false);
+
+            var styleCopSettings = context.GetStyleCopSettingsInTests(CancellationToken.None);
+
+            Assert.True(styleCopSettings.Indentation.IndentBlock);
+            Assert.True(styleCopSettings.Indentation.IndentSwitchSection);
+            Assert.True(styleCopSettings.Indentation.IndentSwitchCaseSection);
+            Assert.Equal(LabelPositioning.OneLess, styleCopSettings.Indentation.LabelPositioning);
+        }
+
         protected virtual AnalyzerConfigOptionsProvider CreateAnalyzerConfigOptionsProvider(AnalyzerConfigSet analyzerConfigSet)
             => new TestAnalyzerConfigOptionsProvider(analyzerConfigSet);
 
