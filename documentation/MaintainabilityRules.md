@@ -15,9 +15,8 @@ Identifier | Name | Description
 [SA1406](SA1406.md) | DebugFailMustProvideMessageText | A call to Debug.Fail in C# code does not include a descriptive message. 
 [SA1407](SA1407.md) | ArithmeticExpressionsMustDeclarePrecedence | A C# statement contains a complex arithmetic expression which omits parenthesis around operators. 
 [SA1408](SA1408.md) | ConditionalExpressionsMustDeclarePrecedence | A C# statement contains a complex conditional expression which omits parenthesis around operators. 
-[SA1409](SA1409.md) | RemoveUnnecessaryCode | A C# file contains code which is unnecessary and can be removed without changing the overall logic of the code. 
+[SA1409](SA1409.md) | RemoveUnnecessaryCode | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1410](SA1410.md) | RemoveDelegateParenthesisWhenPossible | A call to a C# anonymous method does not contain any method parameters, yet the statement still includes parenthesis. 
 [SA1411](SA1411.md) | AttributeConstructorMustNotUseUnnecessaryParenthesis | An attribute declaration does not contain any parameters, yet it still includes parenthesis. 
 [SA1412](SA1412.md) | StoreFilesAsUtf8 | The encoding of the file is not UTF-8 with byte order mark. 
-[SA1413](SA1413.md) | UseTrailingCommasInMultiLineInitializers | A multi-line initializer, enum, switch expression or property pattern should use a comma on the last item. 
-[SA1414](SA1414.md) | TupleTypesInSignaturesShouldHaveElementNames | Tuple types appearing in member declarations should have explicitly named tuple elements.
+[SA1413](SA1413.md) | UseTrailingCommasInMultiLineInitializers | The last item in a multi-line C# initializer, enum declaration, switch expression, or property pattern is missing a trailing comma.
