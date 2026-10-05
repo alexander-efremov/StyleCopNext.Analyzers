@@ -328,6 +328,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
             var memberIndex = members.IndexOf(memberOrder.Member);
             MemberOrderHelper target = default;
+            var targetIndex = -1;
 
             for (var i = memberIndex - 1; i >= 0; --i)
             {
@@ -346,6 +347,7 @@ namespace StyleCop.Analyzers.OrderingRules
                     }
 
                     target = orderHelper;
+                    targetIndex = i;
                 }
                 else
                 {
@@ -365,7 +367,74 @@ namespace StyleCop.Analyzers.OrderingRules
                 return syntaxRoot;
             }
 
+            if (ReordersInitializers(members, targetIndex, memberIndex))
+            {
+                return syntaxRoot;
+            }
+
             return MoveMember(syntaxRoot, memberOrder.Member, target.Member, indentationSettings, endOfLineTrivia);
+        }
+
+        /// <summary>
+        /// Determines whether moving the member at <paramref name="memberIndex"/> before the member at
+        /// <paramref name="targetIndex"/> changes the relative order of initializers that run at the same time (static
+        /// initializers run in the static constructor, instance initializers in each constructor, both in textual
+        /// order). Such a move could silently change behavior, so it is not performed.
+        /// </summary>
+        /// <param name="members">The members of the declaration being reordered.</param>
+        /// <param name="targetIndex">The index of the member the move would precede.</param>
+        /// <param name="memberIndex">The index of the member being moved.</param>
+        /// <returns><see langword="true"/> if the move would reorder initializers.</returns>
+        private static bool ReordersInitializers(SyntaxList<MemberDeclarationSyntax> members, int targetIndex, int memberIndex)
+        {
+            if (!HasInitializer(members[memberIndex], out var isStatic))
+            {
+                return false;
+            }
+
+            for (var i = targetIndex; i < memberIndex; i++)
+            {
+                if (HasInitializer(members[i], out var otherIsStatic) && otherIsStatic == isStatic)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasInitializer(MemberDeclarationSyntax member, out bool isStatic)
+        {
+            VariableDeclarationSyntax declaration;
+            switch (member)
+            {
+                case FieldDeclarationSyntax field when !field.Modifiers.Any(SyntaxKind.ConstKeyword):
+                    declaration = field.Declaration;
+                    break;
+
+                case EventFieldDeclarationSyntax eventField:
+                    declaration = eventField.Declaration;
+                    break;
+
+                case PropertyDeclarationSyntax property when property.Initializer != null:
+                    isStatic = property.Modifiers.Any(SyntaxKind.StaticKeyword);
+                    return true;
+
+                default:
+                    isStatic = false;
+                    return false;
+            }
+
+            isStatic = ((BaseFieldDeclarationSyntax)member).Modifiers.Any(SyntaxKind.StaticKeyword);
+            foreach (var variable in declaration.Variables)
+            {
+                if (variable.Initializer != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static string GetTypeKey(TypeDeclarationSyntax typeDeclaration)
