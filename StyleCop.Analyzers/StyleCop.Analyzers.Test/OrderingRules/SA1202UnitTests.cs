@@ -1025,5 +1025,170 @@ public partial class TestClass
 
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Verifies that a static field is not moved above a static field whose initializer it uses.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestStaticFieldInitializersAreNotReorderedAsync()
+        {
+            var testCode = @"public static class Foo
+{
+    private static readonly string A = string.Empty;
+    public static readonly string {|#0:B|} = A;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0).WithArguments("public", "private") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that an instance field is not moved above an instance field with an initializer.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestInstanceFieldInitializersAreNotReorderedAsync()
+        {
+            var testCode = @"public class Foo
+{
+    private readonly string a = string.Empty;
+    public readonly string {|#0:B|} = string.Empty;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0).WithArguments("public", "private") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that an auto-property is not moved above an auto-property with an initializer.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestAutoPropertyInitializersAreNotReorderedAsync()
+        {
+            var testCode = @"public static class Foo
+{
+    private static string A { get; } = string.Empty;
+    public static string {|#0:B|} { get; } = A;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0).WithArguments("public", "private") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that a field without an initializer is still moved above a field with an initializer.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestFieldWithoutInitializerIsStillMovedAsync()
+        {
+            var testCode = @"public class Foo
+{
+    private int a = 1;
+    public int {|#0:B|};
+}
+";
+
+            var fixedCode = @"public class Foo
+{
+    public int B;
+    private int a = 1;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0).WithArguments("public", "private") },
+                FixedCode = fixedCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that a field with an initializer is still moved across fields without initializers.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestFieldWithInitializerIsMovedAcrossFieldsWithoutInitializersAsync()
+        {
+            var testCode = @"public class Foo
+{
+    private int a;
+    public int {|#0:B|} = 1;
+}
+";
+
+            var fixedCode = @"public class Foo
+{
+    public int B = 1;
+    private int a;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0).WithArguments("public", "private") },
+                FixedCode = fixedCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that Fix All skips a move that would reorder initializers and applies the others.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestFixAllSkipsMovesThatReorderInitializersAsync()
+        {
+            var testCode = @"public class Foo
+{
+    private int a = 1;
+    public int {|#0:B|} = 2;
+    private int c;
+    public int {|#1:D|};
+}
+";
+
+            var fixedCode = @"public class Foo
+{
+    private int a = 1;
+    public int B = 2;
+    public int D;
+    private int c;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics =
+                {
+                    Diagnostic().WithLocation(0).WithArguments("public", "private"),
+                    Diagnostic().WithLocation(1).WithArguments("public", "private"),
+                },
+                FixedCode = fixedCode,
+                RemainingDiagnostics =
+                {
+                    Diagnostic().WithLocation(4, 16).WithArguments("public", "private"),
+                },
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }
