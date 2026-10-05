@@ -1,17 +1,28 @@
 # Contributing
 
-If you want to contribute code you can get started by looking for issues marked as
-[up for grabs](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/labels/up%20for%20grabs).
-We also have the [easy](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/labels/easy) tag
-for issues suitable if you are unfamiliar with roslyn.
+If you want to contribute code you can get started by looking at the
+[issues](https://github.com/alexander-efremov/StyleCopNext.Analyzers/issues) labeled
+[help wanted](https://github.com/alexander-efremov/StyleCopNext.Analyzers/labels/help%20wanted) or
+[good first issue](https://github.com/alexander-efremov/StyleCopNext.Analyzers/labels/good%20first%20issue).
+Confirmed defects are labeled [bug](https://github.com/alexander-efremov/StyleCopNext.Analyzers/labels/bug) and new rules or features
+[enhancement](https://github.com/alexander-efremov/StyleCopNext.Analyzers/labels/enhancement).
 
 You can also help by filing issues, participating in discussions and doing code review.
 
-## Building prerequisites
+## Building and testing
 
-* The latest version of Visual Studio 2026 (Community Edition or higher) is required for building this repository. Version 18.9 is the minimum, because the build uses the Roslyn 5.9 compiler and analyzers.
-* The version of the [.NET SDK](https://dotnet.microsoft.com/download/dotnet) as specified in the global.json file at the root of this repo.
-  Use the init script at the root of the repo to conveniently acquire and install the right version.
+* Install the [.NET SDK](https://dotnet.microsoft.com/download) version specified in the global.json file at the root of this repo
+  (a later feature band or major version is accepted).
+* Build with `dotnet build StyleCopAnalyzers.sln`.
+* Run the tests with `dotnet test` on a test project, for example
+  `dotnet test StyleCop.Analyzers/StyleCop.Analyzers.Test/StyleCop.Analyzers.Test.csproj`. The test projects use xunit 2 and target `net6.0` and `net452` (Windows only); pass `--framework` to run one target.
+
+## Branches and pull requests
+
+This is the 1.x line (`release/1.x`): it takes bug fixes only. New rules and C# language support go to `master` (2.x). A fix that
+applies to both lines is sent as one pull request against each branch.
+
+Pull requests must have green CI before they are merged.
 
 ## Generated files
 
