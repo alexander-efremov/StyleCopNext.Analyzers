@@ -27,15 +27,13 @@
     <PackageReference Include="Xunit.Combinatorial" Version="1.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net452'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" Condition="'$(TargetFramework)' != 'net452'" />
-    <!-- Pin vulnerable transitives (GHSA-5crp-9r3c-p9vr, GHSA-7jgj-8wvc-jh57, GHSA-cmhx-cq75-c4mj) -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <!-- Pin a vulnerable transitive (GHSA-5crp-9r3c-p9vr). The test projects that reference this one get the pins
+         of this project and of the analyzer project through the reference. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <!-- Pin vulnerable transitives (GHSA-68w7-72jg-6qpp, GHSA-447r-wph3-92pm) -->
-    <PackageReference Include="NuGet.Packaging" Version="6.3.4" />
+    <!-- Pin a vulnerable transitive (GHSA-447r-wph3-92pm) -->
     <PackageReference Include="System.Formats.Asn1" Version="6.0.1" />
   </ItemGroup>
 
@@ -54,7 +52,7 @@
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" ExcludeAssets="all" />
 
     <!-- Make sure Windows-1252 is available for testing -->
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
