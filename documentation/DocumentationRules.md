@@ -8,7 +8,7 @@ Identifier | Name | Description
 [SA1600](SA1600.md) | ElementsMustBeDocumented | A C# code element is missing a documentation header. 
 [SA1601](SA1601.md) | PartialElementsMustBeDocumented | A C# partial element is missing a documentation header. 
 [SA1602](SA1602.md) | EnumerationItemsMustBeDocumented | An item within a C# enumeration is missing an Xml documentation header. 
-[SA1603](SA1603.md) | DocumentationMustContainValidXml | The Xml within a C# element's document header is badly formed. 
+[SA1603](SA1603.md) | DocumentationMustContainValidXml | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1604](SA1604.md) | ElementDocumentationMustHaveSummary | The Xml header documentation for a C# element is missing a `<summary>` tag. 
 [SA1605](SA1605.md) | PartialElementDocumentationMustHaveSummary | The `<summary>` or `<content>` tag within the documentation header for a C# code element is missing or empty. 
 [SA1606](SA1606.md) | ElementDocumentationMustHaveSummaryText | The `<summary>` tag within the documentation header for a C# code element is empty. 
@@ -33,11 +33,11 @@ Identifier | Name | Description
 [SA1625](SA1625.md) | ElementDocumentationMustNotBeCopiedAndPasted | The Xml documentation for a C# element contains two or more identical entries, indicating that the documentation has been copied and pasted.
 [SA1626](SA1626.md) | SingleLineCommentsMustNotUseDocumentationStyleSlashes | The C# code contains a single-line comment which begins with three forward slashes in a row. 
 [SA1627](SA1627.md) | DocumentationTextMustNotBeEmpty | The Xml header documentation for a C# code element contains an empty tag. 
-[SA1628](SA1628.md) | DocumentationTextMustBeginWithACapitalLetter | A section of the Xml header documentation for a C# element does not begin with a capital letter. 
+[SA1628](SA1628.md) | DocumentationTextMustBeginWithACapitalLetter | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1629](SA1629.md) | DocumentationTextMustEndWithAPeriod | A section of the Xml header documentation for a C# element does not end with a period (also known as a full stop). 
-[SA1630](SA1630.md) | DocumentationTextMustContainWhitespace | A section of the Xml header documentation for a C# element does not contain any whitespace between words. 
-[SA1631](SA1631.md) | DocumentationMustMeetCharacterPercentage | A section of the Xml header documentation for a C# element does not contain enough alphabetic characters. 
-[SA1632](SA1632.md) | DocumentationTextMustMeetMinimumCharacterLength | From StyleCop 4.5 this rule is disabled by default. 
+[SA1630](SA1630.md) | DocumentationTextMustContainWhitespace | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
+[SA1631](SA1631.md) | DocumentationMustMeetCharacterPercentage | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
+[SA1632](SA1632.md) | DocumentationTextMustMeetMinimumCharacterLength | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1633](SA1633.md) | FileMustHaveHeader | A C# code file is missing a standard file header. 
 [SA1634](SA1634.md) | FileHeaderMustShowCopyright | The file header at the top of a C# code file is missing a copyright tag. 
 [SA1635](SA1635.md) | FileHeaderMustHaveCopyrightText | The file header at the top of a C# code file is missing copyright text. 
@@ -49,12 +49,12 @@ Identifier | Name | Description
 [SA1641](SA1641.md) | FileHeaderCompanyNameTextMustMatch | The file header at the top of a C# code file does not contain the appropriate company name text. 
 [SA1642](SA1642.md) | ConstructorSummaryDocumentationMustBeginWithStandardText | The XML documentation header for a C# constructor does not contain the appropriate summary text. 
 [SA1643](SA1643.md) | DestructorSummaryDocumentationMustBeginWithStandardText | The Xml documentation header for a C# finalizer does not contain the appropriate summary text. 
-[SA1644](SA1644.md) | DocumentationHeadersMustNotContainBlankLines | A section within the Xml documentation header for a C# element contains blank lines. 
-[SA1645](SA1645.md) | IncludedDocumentationFileDoesNotExist | An included Xml documentation file does not exist. 
-[SA1646](SA1646.md) | IncludedDocumentationXPathDoesNotExist | An included Xml documentation link contains an invalid path. 
-[SA1647](SA1647.md) | IncludeNodeDoesNotContainValidFileAndPath | An include tag within an Xml documentation header does not contain valid file and path attribute. 
+[SA1644](SA1644.md) | DocumentationHeadersMustNotContainBlankLines | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
+[SA1645](SA1645.md) | IncludedDocumentationFileDoesNotExist | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
+[SA1646](SA1646.md) | IncludedDocumentationXPathDoesNotExist | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
+[SA1647](SA1647.md) | IncludeNodeDoesNotContainValidFileAndPath | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1648](SA1648.md) | InheritDocMustBeUsedWithInheritingClass | `<inheritdoc>` has been used on an element that doesn't inherit from a base class or implement an interface. 
 [SA1649](SA1649.md) | FileNameMustMatchTypeName | The file name of a C# code file does not match the first type declared in the file. 
-[SA1650](SA1650.md) | ElementDocumentationMustBeSpelledCorrectly | The element documentation for the element contains one or more spelling mistakes or unrecognized words. 
+[SA1650](SA1650.md) | ElementDocumentationMustBeSpelledCorrectly | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1651](SA1651.md) | DoNotUsePlaceholderElements | The documentation for the element contains one or more `<placeholder>` elements. 
 [SA1652](SA1652.md) | EnableXmlDocumentationOutput | This rule was moved to [SA0001](SA0001.md)
