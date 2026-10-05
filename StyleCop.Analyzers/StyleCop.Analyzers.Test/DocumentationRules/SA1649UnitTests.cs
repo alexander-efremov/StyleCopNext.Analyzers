@@ -5,9 +5,15 @@
 
 namespace StyleCop.Analyzers.Test.DocumentationRules
 {
+    using System.Collections.Immutable;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CodeActions;
+    using Microsoft.CodeAnalysis.CodeFixes;
+    using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Testing;
+    using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.DocumentationRules;
     using StyleCop.Analyzers.Test.Helpers;
     using StyleCop.Analyzers.Test.Verifiers;
@@ -485,6 +491,42 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
                             ";
 
             await VerifyCSharpDiagnosticAsync("Class1.cs", testCode, testSettings: null, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Verifies that no code fix is offered for a document that is shared with another project (Shared Project or
+        /// linked file), because the fix cannot update the other projects.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task VerifyNoCodeFixForDocumentWithLinkedDocumentsAsync()
+        {
+            const string source = "namespace TestNamespace\r\n{\r\n    public class TestType\r\n    {\r\n    }\r\n}\r\n";
+            const string filePath = "C:\\Shared\\WrongFileName.cs";
+
+            using (var workspace = new AdhocWorkspace())
+            {
+                var projectA = workspace.AddProject("ProjectA", LanguageNames.CSharp);
+                var documentA = workspace.AddDocument(DocumentInfo.Create(DocumentId.CreateNewId(projectA.Id), "WrongFileName.cs", filePath: filePath, loader: TextLoader.From(TextAndVersion.Create(SourceText.From(source), VersionStamp.Create()))));
+                var projectB = workspace.AddProject("ProjectB", LanguageNames.CSharp);
+                var documentB = workspace.AddDocument(DocumentInfo.Create(DocumentId.CreateNewId(projectB.Id), "WrongFileName.cs", filePath: filePath, loader: TextLoader.From(TextAndVersion.Create(SourceText.From(source), VersionStamp.Create()))));
+
+                documentA = workspace.CurrentSolution.GetDocument(documentA.Id);
+                Assert.Equal(documentB.Id, Assert.Single(documentA.GetLinkedDocumentIds()));
+
+                var compilation = await documentA.Project.GetCompilationAsync(CancellationToken.None).ConfigureAwait(false);
+                var diagnostics = await compilation
+                    .WithAnalyzers(ImmutableArray.Create<DiagnosticAnalyzer>(new SA1649FileNameMustMatchTypeName()))
+                    .GetAnalyzerDiagnosticsAsync(CancellationToken.None)
+                    .ConfigureAwait(false);
+                var diagnostic = Assert.Single(diagnostics, d => d.Id == SA1649FileNameMustMatchTypeName.DiagnosticId);
+
+                var actions = ImmutableArray.CreateBuilder<CodeAction>();
+                var context = new CodeFixContext(documentA, diagnostic, (action, ignored) => actions.Add(action), CancellationToken.None);
+                await new SA1649CodeFixProvider().RegisterCodeFixesAsync(context).ConfigureAwait(false);
+
+                Assert.Empty(actions);
+            }
         }
 
         protected static string GetTypeDeclaration(string typeKind, string typeName, int? diagnosticKey = null)
