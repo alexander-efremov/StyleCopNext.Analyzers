@@ -141,7 +141,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 }
             }
 
-            if (target.Member == null || HasDirectiveTrivia(members, targetIndex, memberIndex))
+            if (target.Member == null || HasDirectiveTrivia(members, targetIndex, memberIndex) || ReordersInitializers(members, targetIndex, memberIndex))
             {
                 return syntaxRoot;
             }
@@ -175,6 +175,64 @@ namespace StyleCop.Analyzers.OrderingRules
                             return true;
                         }
                     }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether moving the member at <paramref name="memberIndex"/> before the member at
+        /// <paramref name="targetIndex"/> changes the relative order of initializers that run at the same time (static
+        /// initializers run in the static constructor, instance initializers in each constructor, both in textual
+        /// order). Such a move could silently change behavior, so it is not performed.
+        /// </summary>
+        private static bool ReordersInitializers(SyntaxList<MemberDeclarationSyntax> members, int targetIndex, int memberIndex)
+        {
+            if (!HasInitializer(members[memberIndex], out var isStatic))
+            {
+                return false;
+            }
+
+            for (var i = targetIndex; i < memberIndex; i++)
+            {
+                if (HasInitializer(members[i], out var otherIsStatic) && otherIsStatic == isStatic)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasInitializer(MemberDeclarationSyntax member, out bool isStatic)
+        {
+            VariableDeclarationSyntax declaration;
+            switch (member)
+            {
+            case FieldDeclarationSyntax field when !field.Modifiers.Any(SyntaxKind.ConstKeyword):
+                declaration = field.Declaration;
+                break;
+
+            case EventFieldDeclarationSyntax eventField:
+                declaration = eventField.Declaration;
+                break;
+
+            case PropertyDeclarationSyntax property when property.Initializer != null:
+                isStatic = property.Modifiers.Any(SyntaxKind.StaticKeyword);
+                return true;
+
+            default:
+                isStatic = false;
+                return false;
+            }
+
+            isStatic = ((BaseFieldDeclarationSyntax)member).Modifiers.Any(SyntaxKind.StaticKeyword);
+            foreach (var variable in declaration.Variables)
+            {
+                if (variable.Initializer != null)
+                {
+                    return true;
                 }
             }
 

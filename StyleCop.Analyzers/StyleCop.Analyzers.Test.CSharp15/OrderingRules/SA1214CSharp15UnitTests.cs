@@ -31,14 +31,14 @@ public union Pet(int, string)
 {
     private static int count = 0;
 
-    private static readonly int {|#0:legs|} = 4;
+    private static readonly int {|#0:legs|};
 }
 ";
 
             var fixedCode = @"
 public union Pet(int, string)
 {
-    private static readonly int legs = 4;
+    private static readonly int legs;
 
     private static int count = 0;
 }
