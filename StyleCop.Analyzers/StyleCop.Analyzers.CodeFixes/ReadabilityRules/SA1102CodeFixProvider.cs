@@ -8,11 +8,13 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeActions;
     using Microsoft.CodeAnalysis.CodeFixes;
+    using Microsoft.CodeAnalysis.CSharp;
     using StyleCop.Analyzers.Helpers;
 
     /// <summary>
@@ -58,17 +60,65 @@ namespace StyleCop.Analyzers.ReadabilityRules
             var indentationTrivia = QueryIndentationHelpers.GetQueryIndentationTrivia(settings.Indentation, token);
 
             var precedingToken = token.GetPreviousToken();
+            var newPrecedingToken = precedingToken;
             var options = document.Project.Solution.Workspace.Options;
             var endOfLineTrivia = FormattingHelper.GetEndOfLineForCodeFix(token, text, options);
 
+            if (!precedingToken.TrailingTrivia.Any(trivia => trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) || trivia.IsKind(SyntaxKind.MultiLineCommentTrivia)))
+            {
+                newPrecedingToken = precedingToken.WithTrailingTrivia(endOfLineTrivia);
+            }
+
+            // Remove only the empty lines; comments and directives between the clauses are kept as written.
+            var newLeadingTrivia = new List<SyntaxTrivia>();
+            var currentLine = new List<SyntaxTrivia>();
+            foreach (var trivia in token.LeadingTrivia)
+            {
+                if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+                {
+                    if (!IsWhitespaceOnly(currentLine))
+                    {
+                        newLeadingTrivia.AddRange(currentLine);
+                        newLeadingTrivia.Add(trivia);
+                    }
+
+                    currentLine.Clear();
+                }
+                else if (trivia.IsDirective)
+                {
+                    newLeadingTrivia.AddRange(currentLine);
+                    newLeadingTrivia.Add(trivia);
+                    currentLine.Clear();
+                }
+                else
+                {
+                    currentLine.Add(trivia);
+                }
+            }
+
+            newLeadingTrivia.Add(indentationTrivia);
+
             var replaceMap = new Dictionary<SyntaxToken, SyntaxToken>()
             {
-                [precedingToken] = precedingToken.WithTrailingTrivia(endOfLineTrivia),
-                [token] = token.WithLeadingTrivia(indentationTrivia),
+                [precedingToken] = newPrecedingToken,
+                [token] = token.WithLeadingTrivia(newLeadingTrivia),
             };
 
             var newSyntaxRoot = syntaxRoot.ReplaceTokens(replaceMap.Keys, (t1, t2) => replaceMap[t1]).WithoutFormatting();
             return document.WithSyntaxRoot(newSyntaxRoot);
+        }
+
+        private static bool IsWhitespaceOnly(List<SyntaxTrivia> trivia)
+        {
+            foreach (var item in trivia)
+            {
+                if (!item.IsKind(SyntaxKind.WhitespaceTrivia))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
