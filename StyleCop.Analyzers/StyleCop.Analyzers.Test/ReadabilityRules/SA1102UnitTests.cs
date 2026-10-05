@@ -188,5 +188,184 @@ public class Foo4
 
             await VerifyCSharpFixAsync(testCode, expected, fixedTestCode, CancellationToken.None).ConfigureAwait(false);
         }
+
+        [Theory]
+        [InlineData("// A single-line comment.")]
+        [InlineData("/* A multi-line comment. */")]
+        [InlineData("/* A multi-line comment\n            with an empty line inside\n\n            still the comment. */")]
+        [InlineData("/// A documentation-style comment.")]
+        [InlineData("// First comment.\n            // Second comment.")]
+        public async Task TestCommentLinesBetweenClausesAreNotReportedAsync(string comment)
+        {
+            var testCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            let z = m + 1
+            COMMENT
+            select m + z;
+    }
+}".Replace("COMMENT", comment).ReplaceLineEndings("\n");
+
+            await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestCommentLineInsideNestedCallIsNotReportedAsync()
+        {
+            var testCode = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+public class Foo4
+{
+    public int Bar(int[] summaries, Func<int, int> weightSelector)
+    {
+        return Sum(
+            from summary in summaries
+            let weight = weightSelector(summary)
+            // Multiplies each value independently while preserving the structure.
+            select summary * weight);
+    }
+
+    private static int Sum(IEnumerable<int> values) => 0;
+}";
+
+            await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData("\n")]
+        [InlineData("\r\n")]
+        public async Task TestEmptyLineBeforeCommentIsReportedAndCommentKeptAsync(string lineEnding)
+        {
+            var testCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+
+            // The comment stays.
+            {|#0:select|} m;
+    }
+}".ReplaceLineEndings(lineEnding);
+
+            var fixedTestCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+            // The comment stays.
+            select m;
+    }
+}".ReplaceLineEndings(lineEnding);
+
+            DiagnosticResult expected = Diagnostic(SA110xQueryClauses.SA1102Descriptor).WithLocation(0);
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedTestCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestEmptyLineAfterCommentIsReportedAndCommentKeptAsync()
+        {
+            var testCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+            /* The comment stays. */
+
+            {|#0:select|} m;
+    }
+}";
+
+            var fixedTestCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+            /* The comment stays. */
+            select m;
+    }
+}";
+
+            DiagnosticResult expected = Diagnostic(SA110xQueryClauses.SA1102Descriptor).WithLocation(0);
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedTestCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestEmptyLinesAroundMultiLineCommentAreReportedAndCommentKeptAsync()
+        {
+            var testCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+
+            /* A comment
+               over two lines. */
+
+            {|#0:select|} m;
+    }
+}";
+
+            var fixedTestCode = @"
+using System.Linq;
+public class Foo4
+{
+    public void Bar()
+    {
+        var source = new int[0];
+
+        var query =
+            from m in source
+            where m > 0
+            /* A comment
+               over two lines. */
+            select m;
+    }
+}";
+
+            DiagnosticResult expected = Diagnostic(SA110xQueryClauses.SA1102Descriptor).WithLocation(0);
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedTestCode, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

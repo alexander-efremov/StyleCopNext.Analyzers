@@ -133,7 +133,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
                 if (((location2.StartLinePosition.Line - location1.EndLinePosition.Line) > 1)
                     && isEnabledSA1102
-                    && !token2.LeadingTrivia.Any(trivia => trivia.IsDirective))
+                    && !token2.LeadingTrivia.Any(trivia => trivia.IsDirective)
+                    && HasEmptyLineBefore(token2, location1.EndLinePosition.Line, location2.StartLinePosition.Line))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(SA1102Descriptor, token2.GetLocation()));
                 }
@@ -184,6 +185,39 @@ namespace StyleCop.Analyzers.ReadabilityRules
             {
                 HandleContinuation(body.Continuation, tokensToCheck);
             }
+        }
+
+        private static bool HasEmptyLineBefore(SyntaxToken token, int previousClauseEndLine, int clauseStartLine)
+        {
+            var lines = token.SyntaxTree.GetText().Lines;
+            for (var lineNumber = previousClauseEndLine + 1; lineNumber < clauseStartLine; lineNumber++)
+            {
+                var line = lines[lineNumber];
+                if (!string.IsNullOrWhiteSpace(line.ToString()))
+                {
+                    continue;
+                }
+
+                // A whitespace-only line inside a multi-line comment belongs to the comment.
+                var insideComment = false;
+                foreach (var trivia in token.LeadingTrivia)
+                {
+                    if (trivia.IsKind(SyntaxKind.MultiLineCommentTrivia)
+                        && trivia.FullSpan.Start < line.Start
+                        && line.Start < trivia.FullSpan.End)
+                    {
+                        insideComment = true;
+                        break;
+                    }
+                }
+
+                if (!insideComment)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void HandleQueryClause(QueryClauseSyntax queryClause, List<SyntaxToken> tokensToCheck)
