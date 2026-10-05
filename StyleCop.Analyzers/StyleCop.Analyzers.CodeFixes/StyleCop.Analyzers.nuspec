@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/alexander-efremov/StyleCopNext.Analyzers</projectUrl>
     <repository type="git" url="https://github.com/alexander-efremov/StyleCopNext.Analyzers.git" branch="master" commit="$commit$" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>StyleCop's rules as Roslyn analyzers and code fixes. A maintained continuation of StyleCop.Analyzers (https://github.com/DotNetAnalyzers/StyleCopAnalyzers) with the same SA rules and stylecop.json settings.</description>
+    <description>StyleCop's rules as Roslyn analyzers and code fixes. A maintained continuation of StyleCop.Analyzers (https://github.com/DotNetAnalyzers/StyleCopAnalyzers) with the same SA rules and stylecop.json settings. Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later; on older toolchains its analyzers do not load, so use 1.0.x there.</description>
     <releaseNotes>https://github.com/alexander-efremov/StyleCopNext.Analyzers/releases/$tag$</releaseNotes>
     <copyright>Copyright 2015 Tunnel Vision Laboratories, LLC; Copyright 2026 Alexander Efremov</copyright>
     <tags>StyleCop StyleCopNext Roslyn Diagnostic Analyzer</tags>

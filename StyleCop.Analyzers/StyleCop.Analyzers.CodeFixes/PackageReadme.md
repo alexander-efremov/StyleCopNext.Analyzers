@@ -12,7 +12,9 @@ dotnet add package StyleCopNext.Analyzers
 
 ## Requirements
 
-Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later. For older toolchains use version 1.0.x.
+Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later. Use version 1.0.x with Visual Studio 2015, 2017 or 2019,
+Visual Studio 2022 before 17.8, .NET SDK 7 or earlier, and Unity. On these toolchains the 2.x package installs without
+errors, but its analyzers do not load and no SA warnings are reported.
 
 ## Migrate from StyleCop.Analyzers
 
