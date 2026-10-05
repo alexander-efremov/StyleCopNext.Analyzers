@@ -42,10 +42,21 @@ namespace StyleCop.Analyzers.OrderingRules
         }
 
         /// <inheritdoc/>
-        public override Task RegisterCodeFixesAsync(CodeFixContext context)
+        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
+            var syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            var settings = SettingsHelper.GetStyleCopSettingsInCodeFix(context.Document.Project.AnalyzerOptions, syntaxRoot.SyntaxTree, context.CancellationToken);
+
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
+                var memberDeclaration = syntaxRoot.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<MemberDeclarationSyntax>();
+                if (memberDeclaration == null
+                    || UpdateSyntaxRoot(memberDeclaration, settings.OrderingRules.ElementOrder, syntaxRoot, settings.Indentation) == syntaxRoot)
+                {
+                    // Nothing can be moved, for example because the move would cross a preprocessor directive.
+                    continue;
+                }
+
                 context.RegisterCodeFix(
                     CodeAction.Create(
                         OrderingResources.ElementOrderCodeFix,
@@ -53,8 +64,6 @@ namespace StyleCop.Analyzers.OrderingRules
                         nameof(ElementOrderCodeFixProvider)),
                     diagnostic);
             }
-
-            return SpecializedTasks.CompletedTask;
         }
 
         private static async Task<Document> GetTransformedDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
@@ -116,6 +125,7 @@ namespace StyleCop.Analyzers.OrderingRules
         {
             var memberIndex = members.IndexOf(memberOrder.Member);
             MemberOrderHelper target = default;
+            var targetIndex = -1;
 
             for (var i = memberIndex - 1; i >= 0; --i)
             {
@@ -123,6 +133,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 if (orderHelper.Priority < memberOrder.Priority)
                 {
                     target = orderHelper;
+                    targetIndex = i;
                 }
                 else
                 {
@@ -130,7 +141,44 @@ namespace StyleCop.Analyzers.OrderingRules
                 }
             }
 
-            return target.Member != null ? MoveMember(syntaxRoot, memberOrder.Member, target.Member, indentationSettings) : syntaxRoot;
+            if (target.Member == null || HasDirectiveTrivia(members, targetIndex, memberIndex))
+            {
+                return syntaxRoot;
+            }
+
+            return MoveMember(syntaxRoot, memberOrder.Member, target.Member, indentationSettings);
+        }
+
+        /// <summary>
+        /// Determines whether any member in the inclusive range has preprocessor directive trivia (for example
+        /// <c>#if</c> or <c>#region</c>) attached to it. Moving a member across such a directive would change the
+        /// conditional compilation block or region the member belongs to, so such moves are not performed.
+        /// </summary>
+        private static bool HasDirectiveTrivia(SyntaxList<MemberDeclarationSyntax> members, int firstIndex, int lastIndex)
+        {
+            for (var i = firstIndex; i <= lastIndex; i++)
+            {
+                if (members[i].ContainsDirectives)
+                {
+                    foreach (var trivia in members[i].GetLeadingTrivia())
+                    {
+                        if (trivia.IsDirective)
+                        {
+                            return true;
+                        }
+                    }
+
+                    foreach (var trivia in members[i].GetTrailingTrivia())
+                    {
+                        if (trivia.IsDirective)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static SyntaxNode MoveMember(SyntaxNode syntaxRoot, MemberDeclarationSyntax member, MemberDeclarationSyntax targetMember, IndentationSettings indentationSettings)
