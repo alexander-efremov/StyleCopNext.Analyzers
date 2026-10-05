@@ -289,7 +289,7 @@ namespace StyleCop.Analyzers.OrderingRules
             var withLeadingBlankLine = rootNamespace.IsKind(SyntaxKind.FileScopedNamespaceDeclaration);
             var withTrailingBlankLine = hasConditionalDirectives || rootNamespace.Members.Any() || rootNamespace.Externs.Any();
 
-            var groupedUsings = usingsHelper.GenerateGroupedUsings(TreeTextSpan.Empty, usingsIndentation, endOfLine, withLeadingBlankLine, withTrailingBlankLine, qualifyNames: false, includeGlobal: false, includeLocal: true);
+            var groupedUsings = usingsHelper.GenerateGroupedUsings(TreeTextSpan.Empty, usingsIndentation, endOfLine, withLeadingBlankLine, withTrailingBlankLine, qualifyNames: false, includeGlobal: false, includeLocal: true, expandAliases: true);
             groupedUsings = groupedUsings.AddRange(rootNamespace.Usings);
 
             var newRootNamespace = rootNamespace.WithUsings(groupedUsings);
