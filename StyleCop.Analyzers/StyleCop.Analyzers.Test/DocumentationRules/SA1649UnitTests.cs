@@ -529,6 +529,46 @@ namespace StyleCop.Analyzers.Test.DocumentationRules
             }
         }
 
+        /// <summary>
+        /// Verifies that the code fix renames the document in place instead of removing it and adding a new one, so
+        /// that source control can track the rename.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task VerifyCodeFixRenamesDocumentInPlaceAsync()
+        {
+            const string source = "namespace TestNamespace\r\n{\r\n    public class TestType\r\n    {\r\n    }\r\n}\r\n";
+
+            using (var workspace = new AdhocWorkspace())
+            {
+                var project = workspace.AddProject("ProjectA", LanguageNames.CSharp);
+                var document = workspace.AddDocument(DocumentInfo.Create(DocumentId.CreateNewId(project.Id), "WrongFileName.cs", filePath: "C:\\Project\\WrongFileName.cs", loader: TextLoader.From(TextAndVersion.Create(SourceText.From(source), VersionStamp.Create()))));
+                document = workspace.CurrentSolution.GetDocument(document.Id);
+
+                var compilation = await document.Project.GetCompilationAsync(CancellationToken.None).ConfigureAwait(false);
+                var diagnostics = await compilation
+                    .WithAnalyzers(ImmutableArray.Create<DiagnosticAnalyzer>(new SA1649FileNameMustMatchTypeName()))
+                    .GetAnalyzerDiagnosticsAsync(CancellationToken.None)
+                    .ConfigureAwait(false);
+                var diagnostic = Assert.Single(diagnostics, d => d.Id == SA1649FileNameMustMatchTypeName.DiagnosticId);
+
+                var actions = ImmutableArray.CreateBuilder<CodeAction>();
+                var context = new CodeFixContext(document, diagnostic, (action, ignored) => actions.Add(action), CancellationToken.None);
+                await new SA1649CodeFixProvider().RegisterCodeFixesAsync(context).ConfigureAwait(false);
+
+                var action = Assert.Single(actions);
+                var operations = await action.GetOperationsAsync(CancellationToken.None).ConfigureAwait(false);
+                var applyOperation = Assert.IsType<ApplyChangesOperation>(Assert.Single(operations));
+                var fixedSolution = applyOperation.ChangedSolution;
+
+                var fixedDocument = fixedSolution.GetDocument(document.Id);
+                Assert.NotNull(fixedDocument);
+                Assert.Equal("TestType.cs", fixedDocument.Name);
+                Assert.Equal(source, (await fixedDocument.GetTextAsync(CancellationToken.None).ConfigureAwait(false)).ToString());
+                Assert.Equal(document.Id, Assert.Single(fixedSolution.GetProject(project.Id).DocumentIds));
+            }
+        }
+
         protected static string GetTypeDeclaration(string typeKind, string typeName, int? diagnosticKey = null)
         {
             if (diagnosticKey is not null)
