@@ -101,9 +101,9 @@ namespace Namespace2
 
 namespace Namespace3
 {{
-  [My]
-  [My]
-  {baseTypeKind} TypeName {{ }}
+    [My]
+    [My]
+    {baseTypeKind} TypeName {{ }}
 }}
 
 namespace Namespace4
@@ -137,8 +137,7 @@ class MyAttribute : Attribute {{ }}
             {
                 Diagnostic().WithLocation(12, 1),
                 Diagnostic().WithLocation(18, 1),
-                Diagnostic().WithLocation(24, 1),
-                Diagnostic().WithLocation(25, 1),
+                Diagnostic().WithLocation(26, 1),
                 Diagnostic().WithLocation(33, 1),
                 Diagnostic().WithLocation(41, 1),
                 Diagnostic().WithLocation(48, 1),
@@ -335,13 +334,13 @@ enum Enum1
   /// <summary>
   /// Summary.
   /// </summary>
-    [My]
-    Element1,
+  [My]
+  Element1,
 
   /// <summary>
   /// Summary.
   /// </summary>
-    Element2,
+  Element2,
 }
 
 enum Enum2
@@ -349,13 +348,13 @@ enum Enum2
   /// <summary>
   /// Summary.
   /// </summary>
-[My]
-Element1,
+  [My]
+  Element1,
 
   /// <summary>
   /// Summary.
   /// </summary>
-Element2,
+  Element2,
 }
 
 enum Enum3
@@ -377,10 +376,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(14, 1),
-                Diagnostic().WithLocation(22, 1),
-                Diagnostic().WithLocation(28, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(23, 1),
                 Diagnostic().WithLocation(36, 1),
             };
 
@@ -422,18 +419,18 @@ class MyAttribute : Attribute { }
 using System;
 enum Enum1
 {
-    [My]
-    Element1,
+  [My]
+  Element1,
 
-    Element2,
+  Element2,
 }
 
 enum Enum2
 {
-[My]
-Element1,
+  [My]
+  Element1,
 
-Element2,
+  Element2,
 }
 
 enum Enum3
@@ -449,10 +446,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(5, 1),
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(13, 1),
-                Diagnostic().WithLocation(16, 1),
+                Diagnostic().WithLocation(6, 1),
+                Diagnostic().WithLocation(14, 1),
                 Diagnostic().WithLocation(21, 1),
             };
 
@@ -575,18 +570,18 @@ class Container
 {
     int Property1
     {
-        [My]
-        get;
+      [My]
+      get;
 
-        set;
+      set;
     }
 
     int Property2
     {
-[My]
-get;
+      [My]
+      get;
 
-set;
+      set;
     }
 
     int Property3
@@ -603,10 +598,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(11, 1),
-                Diagnostic().WithLocation(16, 1),
-                Diagnostic().WithLocation(19, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(17, 1),
                 Diagnostic().WithLocation(24, 1),
             };
 
@@ -661,10 +654,10 @@ interface IContainer1
 {
     int this[int arg]
     {
-        [My]
-        get;
+      [My]
+      get;
 
-        set;
+      set;
     }
 }
 
@@ -672,10 +665,10 @@ interface IContainer2
 {
     int this[int arg]
     {
-[My]
-get;
+      [My]
+      get;
 
-set;
+      set;
     }
 }
 
@@ -695,10 +688,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(11, 1),
-                Diagnostic().WithLocation(19, 1),
-                Diagnostic().WithLocation(22, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(20, 1),
                 Diagnostic().WithLocation(30, 1),
             };
 
@@ -747,18 +738,18 @@ class Container
 {
     event EventHandler Event1
     {
-        [My]
-        add { }
+      [My]
+      add { }
 
-        remove { }
+      remove { }
     }
 
     event EventHandler Event2
     {
-[My]
-add { }
+      [My]
+      add { }
 
-remove { }
+      remove { }
     }
 
     event EventHandler Event3
@@ -775,10 +766,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(11, 1),
-                Diagnostic().WithLocation(16, 1),
-                Diagnostic().WithLocation(19, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(17, 1),
                 Diagnostic().WithLocation(24, 1),
             };
 
@@ -1459,7 +1448,7 @@ case 5:
 
           break;
         }
-default:
+        default:
 label5a:
  label5b:
 break;
@@ -1476,11 +1465,11 @@ class ClassName
         {
         case 0:
       label1:
-            if (true)
+           if (true)
             {
             }
 
-            break;
+           break;
 
         case 1:
        {
@@ -1494,11 +1483,11 @@ class ClassName
         case 2:
         case 3:
       label3:
-            while (true)
+           while (true)
             {
             }
 
-            break;
+           break;
 
         case 4:
         case 5:
@@ -1513,7 +1502,7 @@ class ClassName
         default:
       label5a:
       label5b:
-            break;
+           break;
         }
     }
 }
@@ -1521,18 +1510,16 @@ class ClassName
 
             DiagnosticResult[] expected =
             {
+                Diagnostic().WithLocation(10, 1),
                 Diagnostic().WithLocation(14, 1),
                 Diagnostic().WithLocation(23, 1),
                 Diagnostic().WithLocation(25, 1),
                 Diagnostic().WithLocation(26, 1),
                 Diagnostic().WithLocation(27, 1),
-                Diagnostic().WithLocation(28, 1),
-                Diagnostic().WithLocation(32, 1),
                 Diagnostic().WithLocation(34, 1),
                 Diagnostic().WithLocation(35, 1),
                 Diagnostic().WithLocation(36, 1),
                 Diagnostic().WithLocation(43, 1),
-                Diagnostic().WithLocation(44, 1),
                 Diagnostic().WithLocation(45, 1),
                 Diagnostic().WithLocation(46, 1),
                 Diagnostic().WithLocation(47, 1),
@@ -2051,6 +2038,128 @@ public class TestClass2
 ";
 
             await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task VerifyMisplacedOpeningBraceIsReportedAndFixedAsync()
+        {
+            var testCode = @"
+class C
+{
+    void M()
+    {
+        var xs = new[]
+{
+            1,
+        };
+    }
+}
+";
+
+            var fixedCode = @"
+class C
+{
+    void M()
+    {
+        var xs = new[]
+        {
+            1,
+        };
+    }
+}
+";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(7, 1), fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task VerifyMisindentedFirstMemberIsTheOnlyOneReportedAsync()
+        {
+            var testCode = @"
+class C
+{
+      internal const string Name = ""Name"";
+    internal const string A = ""A"";
+    internal const string B = ""B"";
+    internal const string D = ""D"";
+}
+";
+
+            var fixedCode = @"
+class C
+{
+    internal const string Name = ""Name"";
+    internal const string A = ""A"";
+    internal const string B = ""B"";
+    internal const string D = ""D"";
+}
+";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(4, 1), fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task VerifyMisindentedMiddleAndLastElementsAreReportedAsync()
+        {
+            var testCode = @"
+class C
+{
+    void M()
+    {
+        A();
+         B();
+        E();
+        D();
+    }
+
+    void N()
+    {
+        A();
+        B();
+        E();
+       D();
+    }
+
+    void A() { }
+    void B() { }
+    void E() { }
+    void D() { }
+}
+";
+
+            var fixedCode = @"
+class C
+{
+    void M()
+    {
+        A();
+        B();
+        E();
+        D();
+    }
+
+    void N()
+    {
+        A();
+        B();
+        E();
+        D();
+    }
+
+    void A() { }
+    void B() { }
+    void E() { }
+    void D() { }
+}
+";
+
+            DiagnosticResult[] expected =
+            {
+                Diagnostic().WithLocation(7, 1),
+                Diagnostic().WithLocation(17, 1),
+            };
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
