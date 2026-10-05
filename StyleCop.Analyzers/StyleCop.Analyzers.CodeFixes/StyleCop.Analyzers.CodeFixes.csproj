@@ -57,10 +57,9 @@
              Properties="RoslynVersion=5.0;Configuration=$(Configuration)" />
   </Target>
 
-  <Target Name="SetNuspecProperties" AfterTargets="GetBuildVersion">
+  <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec" DependsOnTargets="InitializeSourceControlInformation">
     <PropertyGroup>
-      <ReleaseTag Condition="'$(PublicRelease)' == 'true'">v$(PackageVersion)</ReleaseTag>
-      <NuspecProperties>id=StyleCopNext.Analyzers;configuration=$(Configuration);GitCommitIdShort=$(GitCommitIdShort);version=$(PackageVersion);commit=$(GitCommitId);tag=$(ReleaseTag)</NuspecProperties>
+      <NuspecProperties>id=StyleCopNext.Analyzers;configuration=$(Configuration);version=$(PackageVersion);commit=$(SourceRevisionId);tag=v$(PackageVersion)</NuspecProperties>
     </PropertyGroup>
   </Target>
 
