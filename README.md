@@ -5,7 +5,8 @@ A maintained continuation of [StyleCop.Analyzers](https://github.com/DotNetAnaly
 settings, with stable releases. To switch, replace the `StyleCop.Analyzers` package reference with
 `StyleCopNext.Analyzers`.
 
-Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later. For older toolchains (and Unity) use 1.0.x from the
+Version 2.x needs .NET SDK 8 or Visual Studio 17.8 or later. With an older toolchain the 2.x package installs without
+errors, but its analyzers do not load and no SA warnings are reported. For older toolchains (and Unity) use 1.0.x from the
 [release/1.x](https://github.com/alexander-efremov/StyleCopNext.Analyzers/tree/release/1.x) branch, which receives bug fixes
 only. The original README follows.
 
@@ -41,6 +42,11 @@ switching to StyleCopNext.Analyzers.
 |------------------------|--------------------|
 | 2.x (`master`) | .NET SDK 8 or Visual Studio 17.8 or later |
 | 1.x (`release/1.x`, bug fixes only) | Older toolchains, including Visual Studio 2015 or later, and Unity |
+
+The toolchain is the compiler that builds the project, not the target framework: a .NET Framework 4.x project built
+with Visual Studio 17.8 can use 2.x. Use 1.x with Visual Studio 2015, 2017 or 2019, Visual Studio 2022 before 17.8,
+.NET SDK 7 or earlier (for example one pinned in `global.json`), and Unity. On these toolchains the 2.x analyzers do not
+load and no warning says so.
 
 Syntax of C# 7 through C# 13 is covered by the test suite on both lines. The compiler of your toolchain determines which
 C# language versions can be used in the project.
