@@ -14,7 +14,7 @@ Identifier | Name | Description
 [SA1106](SA1106.md) | CodeMustNotContainEmptyStatements | The C# code contains an extra semicolon. 
 [SA1107](SA1107.md) | CodeMustNotContainMultipleStatementsOnOneLine | The C# code contains more than one statement on a single line. 
 [SA1108](SA1108.md) | BlockStatementsMustNotContainEmbeddedComments | A C# statement contains a comment between the declaration of the statement and the opening brace of the statement. 
-[SA1109](SA1109.md) | BlockStatementsMustNotContainEmbeddedRegions | A C# statement contains a region tag between the declaration of the statement and the opening brace of the statement. 
+[SA1109](SA1109.md) | BlockStatementsMustNotContainEmbeddedRegions | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1110](SA1110.md) | OpeningParenthesisMustBeOnDeclarationLine | The opening parenthesis or bracket in a call to a C# method or indexer, or the declaration of a method or indexer, is not placed on the same line as the method or indexer name.
 [SA1111](SA1111.md) | ClosingParenthesisMustBeOnLineOfLastParameter | The closing parenthesis or bracket in a call to a C# method or indexer, or the declaration of a method or indexer, is not placed on the same line as the last parameter. 
 [SA1112](SA1112.md) | ClosingParenthesisMustBeOnLineOfOpeningParenthesis | The closing parenthesis or bracket in a call to a C# method or indexer, or the declaration of a method or indexer, is not placed on the same line as the opening bracket when the element does not take any parameters. 
@@ -30,7 +30,7 @@ Identifier | Name | Description
 [SA1123](SA1123.md) | DoNotPlaceRegionsWithinElements | The C# code contains a region within the body of a code element. 
 [SA1124](SA1124.md) | DoNotUseRegions | The C# code contains a region. 
 [SA1125](SA1125.md) | UseShorthandForNullableTypes | The Nullable type has been defined not using the C# shorthand.
-[SA1126](SA1126.md) | PrefixCallsCorrectly | A call to a member is not prefixed with the 'this.', 'base.', 'object.' or 'typename.' prefix to indicate the intended method call, within a C# code file. 
+[SA1126](SA1126.md) | PrefixCallsCorrectly | This rule has been intentionally omitted from StyleCop Analyzers, see [KnownChanges.md](KnownChanges.md).
 [SA1127](SA1127.md) | GenericTypeConstraintsMustBeOnOwnLine | A generic constraint on a type or method declaration is on the same line as the declaration, within a C# code file. 
 [SA1128](SA1128.md) | ConstructorInitializerMustBeOnOwnLine | A constructor initializer is on the same line as the constructor declaration, within a C# code file. 
 [SA1129](SA1129.md) | DoNotUseDefaultValueTypeConstructor | A value type was constructed using the syntax `new T()`. 
@@ -43,6 +43,7 @@ Identifier | Name | Description
 [SA1136](SA1136.md) | EnumValuesShouldBeOnSeparateLines | Multiple enum values are placed on the same line of code. 
 [SA1137](SA1137.md) | ElementsShouldHaveTheSameIndentation | Two sibling elements which each start on their own line have different levels of indentation.
 [SA1138](SA1138.md) | IndentElementsCorrectly | A line of code is not indented the correct amount, according to the currently applied style settings for the project.
-[SA1139](SA1139.md) | UseLiteralsSuffixNotationInsteadOfCasting | Use literal suffix notation instead of casting. 
+[SA1139](SA1139.md) | UseLiteralSuffixNotationInsteadOfCasting | Use literal suffix notation instead of casting.
 [SA1141](SA1141.md) | UseTupleSyntax | Use tuple syntax instead of the underlying ValueTuple implementation type.
 [SA1142](SA1142.md) | ReferToTupleElementsByName | An element of a tuple was referenced by its metadata name when an element name is available.
+[SA1414](SA1414.md) | TupleTypesInSignaturesShouldHaveElementNames | Tuple types appearing in member declarations should have explicitly named tuple elements.

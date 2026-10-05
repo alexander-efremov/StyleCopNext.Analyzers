@@ -28,7 +28,7 @@ To enable the analyzers for all projects at once, add the reference to **Directo
 ```xml
 <Project>
   <ItemGroup>
-    <PackageReference Include="StyleCopNext.Analyzers" Version="1.0.2" PrivateAssets="all" />
+    <PackageReference Include="StyleCopNext.Analyzers" Version="2.0.0" PrivateAssets="all" />
   </ItemGroup>
 </Project>
 ```
