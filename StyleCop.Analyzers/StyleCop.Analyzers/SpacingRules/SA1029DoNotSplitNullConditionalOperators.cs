@@ -26,7 +26,7 @@ namespace StyleCop.Analyzers.SpacingRules
         /// The ID for diagnostics produced by the <see cref="SA1029DoNotSplitNullConditionalOperators"/> analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1029";
-        private const string HelpLink = "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1029.md";
+        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/SA1029.md";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(SpacingResources.SA1029Title), SpacingResources.ResourceManager, typeof(SpacingResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(SpacingResources.SA1029MessageFormat), SpacingResources.ResourceManager, typeof(SpacingResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(SpacingResources.SA1029Description), SpacingResources.ResourceManager, typeof(SpacingResources));
