@@ -24,6 +24,9 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
+  # No project here uses a workload. Without this, every MSBuild start reads the workload manifests of the runner image,
+  # which takes several seconds on Windows.
+  MSBuildEnableWorkloadResolver: false
   # The parts of a split test job take about the same time. The last filter is the negation of the others, so every test
   # runs in exactly one part, including the tests of a namespace added later.
   TEST_PART_1_OF_3: 'FullyQualifiedName~.ReadabilityRules.|FullyQualifiedName~.MaintainabilityRules.'
