@@ -42,6 +42,14 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         /// <inheritdoc/>
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
+            // The new file is added to a single project and the type is removed from the shared file, so the other
+            // projects that share the file (Shared Projects and linked files) would lose the type. Roslyn has no notion
+            // of a Shared Project, so the code fix is not offered for them.
+            if (!context.Document.GetLinkedDocumentIds().IsEmpty)
+            {
+                return SpecializedTasks.CompletedTask;
+            }
+
             foreach (var diagnostic in context.Diagnostics)
             {
                 context.RegisterCodeFix(
