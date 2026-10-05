@@ -8,6 +8,7 @@
     <owners>alexander-efremov</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/alexander-efremov/StyleCopNext.Analyzers</projectUrl>
+    <repository type="git" url="https://github.com/alexander-efremov/StyleCopNext.Analyzers.git" branch="master" commit="$commit$" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>StyleCop's rules as Roslyn analyzers and code fixes. A maintained continuation of StyleCop.Analyzers (https://github.com/DotNetAnalyzers/StyleCopAnalyzers) with the same SA rules and stylecop.json settings.</description>
     <releaseNotes>https://github.com/alexander-efremov/StyleCopNext.Analyzers/releases/$tag$</releaseNotes>
