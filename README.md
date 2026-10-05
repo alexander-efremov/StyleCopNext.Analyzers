@@ -21,42 +21,48 @@ This repository contains an implementation of the StyleCop rules using the .NET 
 The preferable way to use the analyzers is to add the nuget package [StyleCopNext.Analyzers](https://www.nuget.org/packages/StyleCopNext.Analyzers/)
 to the project where you want to enforce StyleCop rules.
 
-The severity of individual rules may be configured using [rule set files](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules)
-in Visual Studio 2015 or newer. **Settings.StyleCop** is not supported, but a **stylecop.json** file may be used to
-customize the behavior of certain rules. See [Configuration.md](documentation/Configuration.md) for more information.
-See [ConfiguringRules.md](documentation/ConfiguringRules.md) for how to set rule severities in **.editorconfig** and
+The severity of individual rules is configured in **.editorconfig** or **.globalconfig** files, or in
+[rule set files](https://docs.microsoft.com/en-us/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules).
+**Settings.StyleCop** is not supported, but a **stylecop.json** file may be used to customize the behavior of certain
+rules. See [Configuration.md](documentation/Configuration.md) for more information. See
+[ConfiguringRules.md](documentation/ConfiguringRules.md) for how to set rule severities in **.editorconfig** and
 **.globalconfig**, run the analyzers only in the IDE, and exclude files from analysis.
 
 For documentation and reasoning on the rules themselves, see the [Documentation](DOCUMENTATION.md).
 
 For users upgrading from StyleCop Classic, see the [migration guide](documentation/MigratingFromStyleCopClassic.md) and
 [KnownChanges.md](documentation/KnownChanges.md) for information about known differences which you may notice when
-switching to StyleCop Analyzers.
+switching to StyleCopNext.Analyzers.
 
-### C# language versions
-Not all versions of StyleCop.Analyzers support all features of each C# language version. The table below shows the minimum version of StyleCop.Analyzers required for proper support of a C# language version.
+### Versions and toolchains
 
-| C# version | StyleCop.Analyzers version | Visual Studio version |
-|------------|----------------------------|-----------------------|
-| 1.0 - 6.0  | v1.0.2 or higher           | VS2015+               |
-| 7.0 - 7.3  | v1.1.0-beta or higher      | VS2017+               |
-|    8.0     | v1.2.0-beta or higher      | VS2019                |
+| StyleCopNext.Analyzers | Required toolchain |
+|------------------------|--------------------|
+| 2.x (`master`) | .NET SDK 8 or Visual Studio 17.8 or later |
+| 1.x (`release/1.x`, bug fixes only) | Older toolchains, including Visual Studio 2015 or later, and Unity |
+
+Syntax of C# 7 through C# 13 is covered by the test suite on both lines. The compiler of your toolchain determines which
+C# language versions can be used in the project.
 
 ## Installation
 
-StyleCopNext.Analyzers can be installed using the NuGet command line or the NuGet Package Manager in Visual Studio 2015.
+Add the package to a project with the .NET CLI:
 
-**Install using the command line:**
-```bash
-Install-Package StyleCopNext.Analyzers
+```shell
+dotnet add package StyleCopNext.Analyzers
 ```
 
-**Install using the package manager:**
-![Install via nuget](https://cloud.githubusercontent.com/assets/1408396/8233513/491f301a-159c-11e5-8b7a-1e16a0695da6.png)
+Or reference it in the project file:
+
+```xml
+<PackageReference Include="StyleCopNext.Analyzers" Version="1.0.2" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+```
 
 ## Team Considerations
 
-If you use older versions of Visual Studio in addition to Visual Studio 2015 or Visual Studio 2017, you may still install these analyzers. They will be automatically disabled when you open the project back up in Visual Studio 2013 or earlier.
+Every team member and the CI build must use a toolchain that supports the chosen line of the package: 2.x needs
+.NET SDK 8 or Visual Studio 17.8 or later, while 1.x works with older toolchains. Include **stylecop.json**,
+**.editorconfig** and **.globalconfig** in source control so that all machines apply the same settings.
 
 ## Contributing
 
