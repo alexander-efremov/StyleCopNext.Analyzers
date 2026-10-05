@@ -23,18 +23,6 @@
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" />
-    <!-- Pin vulnerable transitives (GHSA-68w7-72jg-6qpp, GHSA-7jgj-8wvc-jh57, GHSA-cmhx-cq75-c4mj) -->
-    <PackageReference Include="NuGet.Packaging" Version="6.3.4" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-
-    <!-- Increase the NuGet.Framworks version to the minimum supported by the net472 build of the testing library -->
-    <PackageReference Include="NuGet.Frameworks" Version="6.3.4" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <!-- Pin vulnerable transitive (GHSA-447r-wph3-92pm) -->
-    <PackageReference Include="System.Formats.Asn1" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
