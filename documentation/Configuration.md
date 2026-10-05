@@ -15,6 +15,7 @@ StyleCop Analyzers is configured using two separate mechanisms: code analysis ru
 Rule severities can also be set in **.editorconfig** and **.globalconfig** files, see [ConfiguringRules.md](ConfiguringRules.md).
 Many of the **stylecop.json** settings can also be provided in **.editorconfig**, see
 [Settings in .editorconfig](#settings-in-editorconfig).
+Each rule page lists the settings which affect that rule in its **Configuration** section.
 
 Code analysis rule sets are the standard way to configure most diagnostic analyzers within Visual Studio. Information about creating and customizing these files can be found in the [Using Rule Sets to Group Code Analysis Rules](https://docs.microsoft.com/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules) documentation on docs.microsoft.com.
 
