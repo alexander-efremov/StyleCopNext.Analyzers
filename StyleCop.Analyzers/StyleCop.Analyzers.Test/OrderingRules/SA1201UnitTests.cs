@@ -381,5 +381,148 @@ public enum OtherEnum { A }
 ";
             await VerifyCSharpDiagnosticAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task TestMemberInConditionalCompilationBlockIsNotMovedAsync()
+        {
+            var testCode = @"namespace ClassLibrary1
+{
+    public class Class1
+    {
+        public void Method1()
+        {
+        }
+
+#if true
+        public string Property1 { get; }
+#endif
+    }
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(10, 23).WithArguments("A property", "a method") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestMemberInConditionalCompilationElseBlockIsNotMovedAsync()
+        {
+            var testCode = @"namespace ClassLibrary1
+{
+    public class Class1
+    {
+        public void Method1()
+        {
+        }
+
+#if false
+        public void Method2()
+        {
+        }
+#else
+        public string Property1 { get; }
+#endif
+    }
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(14, 23).WithArguments("A property", "a method") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestFixAllSkipsMembersWithDirectivesAsync()
+        {
+            var testCode = @"namespace ClassLibrary1
+{
+    public class Class1
+    {
+        public void Method1()
+        {
+        }
+
+        public int Field1;
+
+        public void Method2()
+        {
+        }
+
+#if true
+        public string Property1 { get; }
+#endif
+    }
+}
+";
+
+            var fixedCode = @"namespace ClassLibrary1
+{
+    public class Class1
+    {
+        public int Field1;
+
+        public void Method1()
+        {
+        }
+
+        public void Method2()
+        {
+        }
+
+#if true
+        public string Property1 { get; }
+#endif
+    }
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics =
+                {
+                    Diagnostic().WithLocation(9, 20).WithArguments("A field", "a method"),
+                    Diagnostic().WithLocation(16, 23).WithArguments("A property", "a method"),
+                },
+                FixedCode = fixedCode,
+                RemainingDiagnostics =
+                {
+                    Diagnostic().WithLocation(16, 23).WithArguments("A property", "a method"),
+                },
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestMemberInRegionIsNotMovedAsync()
+        {
+            var testCode = @"namespace ClassLibrary1
+{
+    public class Class1
+    {
+        public void Method1()
+        {
+        }
+
+        #region Properties
+        public string Property1 { get; }
+        #endregion
+    }
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(10, 23).WithArguments("A property", "a method") },
+                FixedCode = testCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }
