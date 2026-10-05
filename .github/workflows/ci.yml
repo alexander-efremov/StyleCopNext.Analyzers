@@ -24,31 +24,63 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+env:
+  # The two halves of a split test job take about the same time. The second filter is the negation of the first, so
+  # every test runs in exactly one half, including the tests of a namespace added later.
+  TEST_PART_1: 'FullyQualifiedName~.DocumentationRules.|FullyQualifiedName~.ReadabilityRules.|FullyQualifiedName~.NamingRules.'
+  TEST_PART_2: 'FullyQualifiedName!~.DocumentationRules.&FullyQualifiedName!~.ReadabilityRules.&FullyQualifiedName!~.NamingRules.'
+
 jobs:
+  # Builds every project with the analyzers on: CSharp13 references all the others. The test jobs build without the
+  # analyzers, which halves their build; source generators run either way.
+  build:
+    name: Build
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Nerdbank.GitVersioning computes the version from the history.
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # Warnings are errors, so a successful build means there are none.
+      - name: Build
+        env:
+          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
+        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.Test.CSharp13/StyleCop.Analyzers.Test.CSharp13.csproj --configuration Release --framework net6.0
+
   test:
-    name: Test (${{ matrix.project }})
+    name: Test (${{ matrix.project }}, ${{ matrix.framework }}${{ matrix.part && format(', part {0}', matrix.part) || '' }})
     # .NET Framework needs Windows; the net6.0 runs go to Linux on Arm, which starts and builds faster.
     runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-24.04-arm' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        project:
-          - StyleCop.Analyzers.Test
-          - StyleCop.Analyzers.Test.CSharp7
-          - StyleCop.Analyzers.Test.CSharp8
-          - StyleCop.Analyzers.Test.CSharp9
-          - StyleCop.Analyzers.Test.CSharp10
-          - StyleCop.Analyzers.Test.CSharp11
-          - StyleCop.Analyzers.Test.CSharp12
-          - StyleCop.Analyzers.Test.CSharp13
-        framework:
-          - net6.0
-        # Older Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so
-        # one project covers .NET Framework, in a job of its own: CSharp13, which inherits the tests of every other project.
+        # The tests need all four cores of a runner for one to two minutes, so the slowest projects run as two halves on
+        # two runners.
         include:
-          - project: StyleCop.Analyzers.Test.CSharp13
-            framework: net472
+          - { project: StyleCop.Analyzers.Test, framework: net6.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp7, framework: net6.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp8, framework: net6.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp9, framework: net6.0, part: 1 }
+          - { project: StyleCop.Analyzers.Test.CSharp9, framework: net6.0, part: 2 }
+          - { project: StyleCop.Analyzers.Test.CSharp10, framework: net6.0, part: 1 }
+          - { project: StyleCop.Analyzers.Test.CSharp10, framework: net6.0, part: 2 }
+          - { project: StyleCop.Analyzers.Test.CSharp11, framework: net6.0, part: 1 }
+          - { project: StyleCop.Analyzers.Test.CSharp11, framework: net6.0, part: 2 }
+          - { project: StyleCop.Analyzers.Test.CSharp12, framework: net6.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net6.0 }
+          # Older Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes,
+          # so one project covers .NET Framework: CSharp13, which inherits the tests of every other project.
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 1 }
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 2 }
     steps:
       # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
       - name: Allow Long Paths
@@ -69,19 +101,18 @@ jobs:
             ${{ matrix.framework != 'net472' && '6.0.x' || '' }}
             10.0.x
 
-      # Analyzers take half of the build. The net6.0 CSharp13 job builds every project, so it alone runs them; source
-      # generators run either way. Packages go to the work drive; the system drive of the runner is slow. They are not
-      # cached: downloading them takes 7-11 s on Linux and 17 s on Windows, restoring a cache entry of 540-620 MB as long.
+      # Packages go to the work drive; the system drive of the runner is slow. They are not cached: downloading them
+      # takes 7-11 s on Linux and 17 s on Windows, restoring a cache entry of 540-620 MB as long.
       - name: Test
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
-          RunAnalyzers: ${{ matrix.project == 'StyleCop.Analyzers.Test.CSharp13' && matrix.framework == 'net6.0' }}
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults
+          RunAnalyzers: false
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults ${{ matrix.part && format('--filter "{0}"', matrix.part == 1 && env.TEST_PART_1 || env.TEST_PART_2) || '' }}
 
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: test-results-${{ matrix.project }}-${{ matrix.framework }}
+          name: test-results-${{ matrix.project }}-${{ matrix.framework }}${{ matrix.part && format('-part{0}', matrix.part) || '' }}
           path: TestResults/*.trx
           if-no-files-found: ignore
