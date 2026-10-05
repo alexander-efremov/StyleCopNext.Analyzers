@@ -15,7 +15,7 @@ You can also help by filing issues, participating in discussions and doing code 
   (a later feature band or major version is accepted).
 * Build with `dotnet build StyleCopAnalyzers.sln`.
 * Run the tests with `dotnet test` on a test project, for example
-  `dotnet test StyleCop.Analyzers/StyleCop.Analyzers.Test/StyleCop.Analyzers.Test.csproj`. The test projects use xunit 2 and target `net6.0` and `net452` (Windows only); pass `--framework` to run one target.
+  `dotnet test StyleCop.Analyzers/StyleCop.Analyzers.Test/StyleCop.Analyzers.Test.csproj`. The test projects use xunit 2 and target `net10.0` and `net472` (Windows only); pass `--framework` to run one target.
 
 ## Branches and pull requests
 
