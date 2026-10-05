@@ -24,6 +24,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     /// </para>
     /// </remarks>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    [NoCodeFix("Roslyn cannot change only the encoding of a document; removing and re-adding it deletes dependent files")]
     internal class SA1412StoreFilesAsUtf8 : DiagnosticAnalyzer
     {
         /// <summary>
