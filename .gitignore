@@ -489,3 +489,8 @@ $RECYCLE.BIN/
 /build/coverage/
 .nuget/NuGet.exe
 build/nuget/
+*.nettrace
+*.speedscope.json
+
+# Copies of the sources that the source generators write on every build
+StyleCop.Analyzers/StyleCop.Analyzers/Lightup/.generated/
