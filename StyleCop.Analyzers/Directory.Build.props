@@ -49,9 +49,10 @@
     <SharedMicrosoftCodeAnalysisBetaVersion>3.11.0-beta1.24052.1</SharedMicrosoftCodeAnalysisBetaVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.10.94" PrivateAssets="all" />
-  </ItemGroup>
+  <PropertyGroup>
+    <!-- The release workflow publishes a tag only when this version matches it. -->
+    <Version>1.0.3</Version>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="all" />
