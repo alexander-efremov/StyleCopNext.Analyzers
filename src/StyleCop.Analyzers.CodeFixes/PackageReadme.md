@@ -10,6 +10,10 @@ settings, with stable releases.
 dotnet add package StyleCopNext.Analyzers
 ```
 
+## Requirements
+
+This is the 1.x line, for older toolchains and Unity. For .NET SDK 8 or Visual Studio 17.8 and later use version 2.x.
+
 ## Migrate from StyleCop.Analyzers
 
 Replace the `StyleCop.Analyzers` package reference with `StyleCopNext.Analyzers`. Rule IDs, `.editorconfig` severities
@@ -19,5 +23,5 @@ example SA1121 asks for `nint` instead of `IntPtr`.
 ## Links
 
 - [Source and releases](https://github.com/alexander-efremov/StyleCopNext.Analyzers)
-- [Rule documentation](https://github.com/alexander-efremov/StyleCopNext.Analyzers/tree/master/documentation)
+- [Rule documentation](https://github.com/alexander-efremov/StyleCopNext.Analyzers/tree/release/1.x/documentation)
 - License: MIT
