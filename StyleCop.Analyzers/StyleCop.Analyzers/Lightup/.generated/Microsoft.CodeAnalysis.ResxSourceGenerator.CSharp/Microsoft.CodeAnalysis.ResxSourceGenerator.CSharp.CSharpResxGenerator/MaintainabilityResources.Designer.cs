@@ -44,6 +44,8 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         public static string @SA1402MessageFormat => GetResourceString("SA1402MessageFormat")!;
         /// <summary>File may only contain a single type</summary>
         public static string @SA1402Title => GetResourceString("SA1402Title")!;
+        /// <summary>Move namespace to new file</summary>
+        public static string @SA1403CodeFix => GetResourceString("SA1403CodeFix")!;
         /// <summary>A C# code file contains more than one namespace.</summary>
         public static string @SA1403Description => GetResourceString("SA1403Description")!;
         /// <summary>File may only contain a single namespace</summary>
