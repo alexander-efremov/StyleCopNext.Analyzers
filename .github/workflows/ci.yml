@@ -25,40 +25,6 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Restores the whole solution into the package cache when the cache misses; on a hit it only looks the cache up.
-  packages:
-    name: Package Cache
-    runs-on: windows-latest
-    timeout-minutes: 20
-    steps:
-      - name: Allow Long Paths
-        run: git config --system core.longpaths true
-
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Package Cache
-        id: packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ runner.temp }}/nuget-packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
-
-      # Packages go to the work drive; the system drive of the runner is slow.
-      - name: Restore
-        if: steps.packages.outputs.cache-hit != 'true'
-        env:
-          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
-        run: dotnet restore StyleCopAnalyzers.sln
-
-
   test:
     name: Test (${{ matrix.project }})
     # .NET Framework needs Windows; the net6.0 runs go to Linux on Arm, which starts and builds faster.
@@ -103,19 +69,9 @@ jobs:
             ${{ matrix.framework != 'net472' && '6.0.x' || '' }}
             10.0.x
 
-      # The Linux jobs save their own cache entry on a miss. The bare "nuget-" fallback lets the first Linux
-      # run reuse the Windows entry, since the global packages folder is portable across operating systems.
-      - name: Package Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ runner.temp }}/nuget-packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
-            nuget-
-
       # Analyzers take half of the build. The net6.0 CSharp13 job builds every project, so it alone runs them; source
-      # generators run either way. Packages go to the work drive; the system drive of the runner is slow.
+      # generators run either way. Packages go to the work drive; the system drive of the runner is slow. They are not
+      # cached: downloading them takes 7-11 s on Linux and 17 s on Windows, restoring a cache entry of 540-620 MB as long.
       - name: Test
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
