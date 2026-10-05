@@ -26,9 +26,9 @@ concurrency:
 env:
   # The parts of a split test job take about the same time. The last filter is the negation of the others, so every test
   # runs in exactly one part, including the tests of a namespace added later.
-  TEST_PART_1_OF_3: 'FullyQualifiedName~.DocumentationRules.|FullyQualifiedName~.LayoutRules.'
-  TEST_PART_2_OF_3: 'FullyQualifiedName~.ReadabilityRules.|FullyQualifiedName~.SpacingRules.'
-  TEST_PART_3_OF_3: 'FullyQualifiedName!~.DocumentationRules.&FullyQualifiedName!~.LayoutRules.&FullyQualifiedName!~.ReadabilityRules.&FullyQualifiedName!~.SpacingRules.'
+  TEST_PART_1_OF_3: 'FullyQualifiedName~.ReadabilityRules.|FullyQualifiedName~.MaintainabilityRules.'
+  TEST_PART_2_OF_3: 'FullyQualifiedName~.SpacingRules.|FullyQualifiedName~.LayoutRules.'
+  TEST_PART_3_OF_3: 'FullyQualifiedName!~.ReadabilityRules.&FullyQualifiedName!~.MaintainabilityRules.&FullyQualifiedName!~.SpacingRules.&FullyQualifiedName!~.LayoutRules.'
 
 jobs:
   # Builds every project with the analyzers on, one job per target framework: CSharp13 references all the other test
