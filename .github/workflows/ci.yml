@@ -129,11 +129,13 @@ jobs:
 
       # Packages go to the work drive; the system drive of the runner is slow. They are not cached: on release/1.x
       # downloading them took as long as restoring a cache entry of several hundred megabytes.
+      # The tests do not use the NuGet package; building it would also restore and build the Roslyn 5.0 flavor, which
+      # the build job already checks.
       - name: Test
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
           RunAnalyzers: false
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults -p:RoslynVersion=${{ matrix.roslyn || '4.8' }} ${{ matrix.part && format('--filter "{0}"', env[format('TEST_PART_{0}_OF_{1}', matrix.part, matrix.parts)]) || '' }}
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults -p:RoslynVersion=${{ matrix.roslyn || '4.8' }} -p:GeneratePackageOnBuild=false ${{ matrix.part && format('--filter "{0}"', env[format('TEST_PART_{0}_OF_{1}', matrix.part, matrix.parts)]) || '' }}
 
       - name: Upload Test Results
         if: ${{ !cancelled() }}
