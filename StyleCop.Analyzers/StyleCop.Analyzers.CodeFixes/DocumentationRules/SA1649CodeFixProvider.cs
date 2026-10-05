@@ -36,6 +36,13 @@ namespace StyleCop.Analyzers.DocumentationRules
         /// <inheritdoc/>
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
+            // Replacing a document cannot update the other projects that share the file (Shared Projects and linked
+            // files), so the code fix is not offered for them.
+            if (!context.Document.GetLinkedDocumentIds().IsEmpty)
+            {
+                return SpecializedTasks.CompletedTask;
+            }
+
             foreach (var diagnostic in context.Diagnostics)
             {
                 context.RegisterCodeFix(
@@ -62,13 +69,6 @@ namespace StyleCop.Analyzers.DocumentationRules
             var newSolution = solution
                 .RemoveDocument(document.Id)
                 .AddDocument(newDocumentId, expectedFileName, syntaxRoot, document.Folders, newPath);
-
-            // Make sure to also add the file to linked projects
-            foreach (var linkedDocumentId in document.GetLinkedDocumentIds())
-            {
-                DocumentId linkedExtractedDocumentId = DocumentId.CreateNewId(linkedDocumentId.ProjectId);
-                newSolution = newSolution.AddDocument(linkedExtractedDocumentId, expectedFileName, syntaxRoot, document.Folders);
-            }
 
             return newSolution;
         }
