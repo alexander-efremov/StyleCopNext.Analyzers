@@ -160,7 +160,7 @@ namespace StyleCop.Analyzers.OrderingRules
         /// </summary>
         public const string DiagnosticId = "SA1200";
 
-        private const string HelpLink = "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1200.md";
+        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/SA1200.md";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(OrderingResources.SA1200Title), OrderingResources.ResourceManager, typeof(OrderingResources));
 
