@@ -14,6 +14,7 @@ namespace StyleCop.Analyzers.DocumentationRules
     using Microsoft.CodeAnalysis.CodeActions;
     using Microsoft.CodeAnalysis.CodeFixes;
     using StyleCop.Analyzers.Helpers;
+    using StyleCop.Analyzers.Lightup;
 
     /// <summary>
     /// Implements a code fix for <see cref="SA1649FileNameMustMatchTypeName"/>.
@@ -59,9 +60,17 @@ namespace StyleCop.Analyzers.DocumentationRules
         private static async Task<Solution> GetTransformedSolutionAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
         {
             var solution = document.Project.Solution;
+            var expectedFileName = diagnostic.Properties[SA1649FileNameMustMatchTypeName.ExpectedFileNameKey];
+
+            // Rename the document in place so that source control sees a rename instead of a delete and an add. This
+            // requires Solution.WithDocumentName, which is not available in older versions of Roslyn.
+            if (solution.TryWithDocumentName(document.Id, expectedFileName, out var renamedSolution))
+            {
+                return renamedSolution;
+            }
+
             var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
-            var expectedFileName = diagnostic.Properties[SA1649FileNameMustMatchTypeName.ExpectedFileNameKey];
             var newPath = document.FilePath != null ? Path.Combine(Path.GetDirectoryName(document.FilePath), expectedFileName) : null;
 
             var newDocumentId = DocumentId.CreateNewId(document.Id.ProjectId);
