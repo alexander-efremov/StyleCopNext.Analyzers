@@ -4,7 +4,16 @@ At this time, the code fix is not able to fully configure the newly-created **st
 tracked in bug report [dotnet/roslyn#4655](https://github.com/dotnet/roslyn/issues/4655). In the mean time, users must
 manually perform the following additional steps after creating the **stylecop.json** file.
 
-In Visual Studio 2017, 2019, and 2022:
+In SDK-style projects, add the file to the project file (or a shared **Directory.Build.props**), which works in every IDE
+and on the command line:
+
+```xml
+<ItemGroup>
+  <AdditionalFiles Include="stylecop.json" />
+</ItemGroup>
+```
+
+Alternatively, in Visual Studio 2017 and newer:
 
 1. Select the file in **Solution Explorer**.
 2. In the **Properties** window, set the value for **Build Action** to:
