@@ -104,18 +104,18 @@ class Container
 {
     int Property1
     {
-        [My]
-        get;
+      [My]
+      get;
 
-        init;
+      init;
     }
 
     int Property2
     {
-[My]
-get;
+      [My]
+      get;
 
-init;
+      init;
     }
 
     int Property3
@@ -132,10 +132,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(11, 1),
-                Diagnostic().WithLocation(16, 1),
-                Diagnostic().WithLocation(19, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(17, 1),
                 Diagnostic().WithLocation(24, 1),
             };
 
@@ -191,10 +189,10 @@ interface IContainer1
 {
     int this[int arg]
     {
-        [My]
-        get;
+      [My]
+      get;
 
-        init;
+      init;
     }
 }
 
@@ -202,10 +200,10 @@ interface IContainer2
 {
     int this[int arg]
     {
-[My]
-get;
+      [My]
+      get;
 
-init;
+      init;
     }
 }
 
@@ -225,10 +223,8 @@ class MyAttribute : Attribute { }
 
             DiagnosticResult[] expected =
             {
-                Diagnostic().WithLocation(8, 1),
-                Diagnostic().WithLocation(11, 1),
-                Diagnostic().WithLocation(19, 1),
-                Diagnostic().WithLocation(22, 1),
+                Diagnostic().WithLocation(9, 1),
+                Diagnostic().WithLocation(20, 1),
                 Diagnostic().WithLocation(30, 1),
             };
 
