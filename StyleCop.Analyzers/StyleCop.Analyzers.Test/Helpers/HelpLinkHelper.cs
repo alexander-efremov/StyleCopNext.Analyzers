@@ -7,7 +7,7 @@ namespace StyleCop.Analyzers.Test.Helpers
     {
         internal static string GetHelpLink(string diagnosticId)
         {
-            return $"https://dotnetanalyzers.github.io/StyleCopAnalyzers/{diagnosticId}.html";
+            return $"https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/1.x/documentation/{diagnosticId}.md";
         }
     }
 }

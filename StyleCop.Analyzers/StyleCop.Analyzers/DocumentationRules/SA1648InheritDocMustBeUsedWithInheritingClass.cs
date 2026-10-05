@@ -18,7 +18,7 @@ namespace StyleCop.Analyzers.DocumentationRules
     /// <c>&lt;inheritdoc&gt;</c> has been used on an element that doesn't inherit from a base class or implement an
     /// interface.
     /// </summary>
-    /// <seealso href="https://dotnetanalyzers.github.io/StyleCopAnalyzers/SA1648.html">SA1648</seealso>
+    /// <seealso href="https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/1.x/documentation/SA1648.md">SA1648</seealso>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class SA1648InheritDocMustBeUsedWithInheritingClass : DiagnosticAnalyzer
     {

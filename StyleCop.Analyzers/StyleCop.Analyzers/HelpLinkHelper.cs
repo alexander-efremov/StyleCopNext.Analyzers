@@ -5,5 +5,5 @@ namespace StyleCop.Analyzers;
 
 internal static class HelpLinkHelper
 {
-    internal static string GetHelpLink(string diagnosticId) => $"https://dotnetanalyzers.github.io/StyleCopAnalyzers/{diagnosticId}.html";
+    internal static string GetHelpLink(string diagnosticId) => $"https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/1.x/documentation/{diagnosticId}.md";
 }
