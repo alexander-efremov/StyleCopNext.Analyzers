@@ -435,5 +435,23 @@ const string foo = ""a"";
 ",
             }.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task TestConstantInRegionIsNotMovedAsync()
+        {
+            var testCode = @"
+public class MyClass
+{
+    #region region 1
+    public int field1;
+    #endregion
+
+    #region region 2
+    public const int Const = 1;
+    #endregion
+}";
+
+            await VerifyCSharpFixAsync(testCode, Diagnostic().WithLocation(9, 22), testCode, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }
