@@ -32,7 +32,7 @@ namespace StyleCop.Analyzers.NamingRules
         /// </summary>
         internal const string ExpectedTupleElementNameKey = "ExpectedTupleElementName";
 
-        private const string HelpLink = "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1316.md";
+        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/1.x/documentation/SA1316.md";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(NamingResources.SA1316Title), NamingResources.ResourceManager, typeof(NamingResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(NamingResources.SA1316MessageFormat), NamingResources.ResourceManager, typeof(NamingResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(NamingResources.SA1316Description), NamingResources.ResourceManager, typeof(NamingResources));
