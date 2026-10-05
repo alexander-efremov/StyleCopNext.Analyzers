@@ -559,5 +559,35 @@ public class TestClass : TestInterface
 
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Verifies that a static field with an initializer is still moved above an instance field with an
+        /// initializer, because static and instance initializers do not affect each other.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Fact]
+        public async Task TestStaticInitializerIsMovedAcrossInstanceInitializerAsync()
+        {
+            var testCode = @"public class Foo
+{
+    public int A = 1;
+    public static int {|#0:B|} = 2;
+}
+";
+
+            var fixedCode = @"public class Foo
+{
+    public static int B = 2;
+    public int A = 1;
+}
+";
+
+            await new CSharpTest
+            {
+                TestCode = testCode,
+                ExpectedDiagnostics = { Diagnostic().WithLocation(0) },
+                FixedCode = fixedCode,
+            }.RunAsync(CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }
