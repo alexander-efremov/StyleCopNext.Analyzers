@@ -93,7 +93,7 @@ public class TestClass2
 public {keyword} Foo
 {{
     private static int i = 0;
-    private static readonly int {{|#0:j|}} = 0;
+    private static readonly int {{|#0:j|}};
 }}";
 
             var expected = new[]
@@ -104,7 +104,7 @@ public {keyword} Foo
             var fixTestCode = $@"
 public {keyword} Foo
 {{
-    private static readonly int j = 0;
+    private static readonly int j;
     private static int i = 0;
 }}";
             await VerifyCSharpFixAsync(testCode, expected, fixTestCode, CancellationToken.None).ConfigureAwait(false);
@@ -119,7 +119,7 @@ public {keyword} Foo
 public class Foo
 {
     private static int i = 0;
-    private static readonly int {|#0:j|} = 0;
+    private static readonly int {|#0:j|};
 }".ReplaceLineEndings(lineEnding);
 
             var expected = new[]
@@ -130,7 +130,7 @@ public class Foo
             var fixTestCode = @"
 public class Foo
 {
-    private static readonly int j = 0;
+    private static readonly int j;
     private static int i = 0;
 }".ReplaceLineEndings(lineEnding);
             await VerifyCSharpFixAsync(testCode, expected, fixTestCode, CancellationToken.None).ConfigureAwait(false);
@@ -155,7 +155,7 @@ public class Foo
             var testCode = @"
 public class Foo
 {
-    private static int i = 0;private static readonly int j = 0;
+    private static int i = 0;private static readonly int j;
 }";
 
             var expected = new[]
@@ -166,7 +166,7 @@ public class Foo
             var fixTestCode = @"
 public class Foo
 {
-    private static readonly int j = 0;
+    private static readonly int j;
     private static int i = 0;}";
             await VerifyCSharpFixAsync(testCode, expected, fixTestCode, CancellationToken.None).ConfigureAwait(false);
         }
@@ -200,7 +200,7 @@ public {keyword} Foo
 public struct Foo
 {
     private static int i = 0;
-    private static readonly int j = 0;
+    private static readonly int j;
 }";
 
             var expected = new[]
@@ -211,7 +211,7 @@ public struct Foo
             var fixTestCode = @"
 public struct Foo
 {
-    private static readonly int j = 0;
+    private static readonly int j;
     private static int i = 0;
 }";
             await VerifyCSharpFixAsync(testCode, expected, fixTestCode, CancellationToken.None).ConfigureAwait(false);
@@ -230,14 +230,14 @@ public class Foo
 
     public static string s2 = ""qwe"";
 
-    public static readonly int  u = 5;
+    public static readonly int  u;
 
     public class FooInner 
     {
         private int aa = 0;
         public static readonly int t = 2;
         private static int z = 999;
-        private static readonly int e = 1;
+        private static readonly int e;
     }
 
     public static readonly int j = 0;
@@ -254,7 +254,7 @@ public class Foo
             var fixTestCode = @"
 public class Foo
 {
-    public static readonly int  u = 5;
+    public static readonly int  u;
 
     public string s = ""qwe"";
     private static readonly int i = 0;
@@ -267,7 +267,7 @@ public class Foo
     {
         private int aa = 0;
         public static readonly int t = 2;
-        private static readonly int e = 1;
+        private static readonly int e;
         private static int z = 999;
     }
 
