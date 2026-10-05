@@ -31,6 +31,6 @@ Identifier | Name | Description
 [SA1023](SA1023.md) | DereferenceAndAccessOfMustBeSpacedCorrectly | A dereference symbol or an access-of symbol within a C# element is not spaced correctly. 
 [SA1024](SA1024.md) | ColonsMustBeSpacedCorrectly | A colon within a C# element is not spaced correctly. 
 [SA1025](SA1025.md) | CodeMustNotContainMultipleWhitespaceInARow | The code contains multiple whitespace characters in a row. 
-[SA1026](SA1026.md) | CodeMustNotContainSpaceAfterNewKeywordInImplicitlyTypedArrayAllocation | An implicitly typed new array allocation within a C# code file is not spaced correctly. 
+[SA1026](SA1026.md) | CodeMustNotContainSpaceAfterNewKeywordInImplicitlyTypedArrayAllocation | An implicitly typed array allocation within a C# code file is not spaced correctly.
 [SA1027](SA1027.md) | UseTabsCorrectly | The code contains a tab or space character which is not consistent with the current project settings. 
 [SA1028](SA1028.md) | CodeMustNotContainTrailingWhitespace | A line of code ends with a space, tab, or other whitespace characters before the end of line character(s). 
