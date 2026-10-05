@@ -150,3 +150,6 @@ for a whole file, such as [SA1633](SA1633.md) (file header) and [SA1200](SA1200.
 ## Next steps
 
 Settings that change the behavior of individual rules are described in [Configuration.md](Configuration.md).
+
+Rule pages such as [SA1200](SA1200.md) end with a **Related .NET rules** section, which lists the .NET code style rules
+and **.editorconfig** options that match or overlap the rule, so that Visual Studio formatting can agree with StyleCop.
