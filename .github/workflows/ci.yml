@@ -41,11 +41,14 @@ jobs:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
     steps:
+      # Fetches only the commit under test, the same way as the test jobs.
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # Nerdbank.GitVersioning computes the version from the history.
-          fetch-depth: 0
+        run: |
+          git init -q
+          git config core.longpaths true
+          git remote add origin ${{ github.server_url }}/${{ github.repository }}
+          git fetch -q --depth=1 --no-tags origin ${{ github.sha }}
+          git checkout -q FETCH_HEAD
 
       - name: Setup .NET
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -86,16 +89,16 @@ jobs:
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 2, parts: 3 }
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 3, parts: 3 }
     steps:
-      # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
-      - name: Allow Long Paths
-        if: runner.os == 'Windows'
-        run: git config --system core.longpaths true
-
+      # Fetches only the commit under test. actions/checkout spends seconds on Windows removing credentials from submodules,
+      # which this repository does not have; the repository is public, so plain git needs no token. Some generated files
+      # exceed the 260 character path limit of Windows under the runner's work directory.
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # Nerdbank.GitVersioning computes the version from the history.
-          fetch-depth: 0
+        run: |
+          git init -q
+          git config core.longpaths true
+          git remote add origin ${{ github.server_url }}/${{ github.repository }}
+          git fetch -q --depth=1 --no-tags origin ${{ github.sha }}
+          git checkout -q FETCH_HEAD
 
       - name: Setup .NET
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0

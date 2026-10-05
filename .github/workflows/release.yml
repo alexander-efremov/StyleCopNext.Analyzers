@@ -1,7 +1,7 @@
 name: Release
 
 # Pushing a tag vX.Y.Z publishes StyleCopNext.Analyzers X.Y.Z to nuget.org and attaches the package to the GitHub release.
-# The version comes from StyleCop.Analyzers/version.json, so it has to match the tag.
+# The version comes from <Version> in StyleCop.Analyzers/Directory.Build.props, so it has to match the tag.
 on:
   push:
     tags:
@@ -23,9 +23,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # Nerdbank.GitVersioning computes the version from the history.
-          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -43,7 +40,7 @@ jobs:
           package="StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/StyleCopNext.Analyzers.${version}.nupkg"
           if [ ! -f "$package" ]; then
             ls StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/*.nupkg
-            echo "The build produced no package for version ${version}; version.json and the tag disagree." >&2
+            echo "The build produced no package for version ${version}; Directory.Build.props and the tag disagree." >&2
             exit 1
           fi
           echo "path=${package}" >> "$GITHUB_OUTPUT"
