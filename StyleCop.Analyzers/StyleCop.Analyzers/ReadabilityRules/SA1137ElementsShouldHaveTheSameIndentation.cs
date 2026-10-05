@@ -416,8 +416,14 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return;
             }
 
-            bool first = true;
-            string expectedIndentation = null;
+            var openBraceIndentations = new List<string>(elements.Count);
+            foreach (BlockSyntax element in elements)
+            {
+                SyntaxTrivia trivia = element.OpenBraceToken.LeadingTrivia.LastOrDefault();
+                openBraceIndentations.Add(trivia.IsKind(SyntaxKind.WhitespaceTrivia) ? trivia.ToString() : string.Empty);
+            }
+
+            string expectedIndentation = GetMostCommonIndentation(openBraceIndentations);
             foreach (BlockSyntax element in elements)
             {
                 SyntaxTrivia openBraceIndentationTrivia = element.OpenBraceToken.LeadingTrivia.LastOrDefault();
@@ -425,13 +431,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
                 SyntaxTrivia closeBraceIndentationTrivia = element.CloseBraceToken.LeadingTrivia.LastOrDefault();
                 string closeBraceIndentation = closeBraceIndentationTrivia.IsKind(SyntaxKind.WhitespaceTrivia) ? closeBraceIndentationTrivia.ToString() : string.Empty;
-
-                if (first)
-                {
-                    expectedIndentation = openBraceIndentation;
-                    first = false;
-                    continue;
-                }
 
                 if (!string.Equals(expectedIndentation, openBraceIndentation, StringComparison.Ordinal))
                 {
@@ -469,26 +468,51 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 elements = elements.RemoveAt(desiredFirst).Insert(0, newFirstElement);
             }
 
-            bool first = true;
-            string expectedIndentation = null;
+            var indentations = new List<string>(elements.Count);
+            foreach (T element in elements)
+            {
+                SyntaxTrivia trivia = GetFirstTokenForAnalysis(element).LeadingTrivia.LastOrDefault();
+                indentations.Add(trivia.IsKind(SyntaxKind.WhitespaceTrivia) ? trivia.ToString() : string.Empty);
+            }
+
+            string expectedIndentation = GetMostCommonIndentation(indentations);
             foreach (T element in elements)
             {
                 SyntaxToken firstToken = GetFirstTokenForAnalysis(element);
                 SyntaxTrivia indentationTrivia = firstToken.LeadingTrivia.LastOrDefault();
                 string indentation = indentationTrivia.IsKind(SyntaxKind.WhitespaceTrivia) ? indentationTrivia.ToString() : string.Empty;
 
-                if (first)
-                {
-                    expectedIndentation = indentation;
-                    first = false;
-                    continue;
-                }
-
                 if (!string.Equals(expectedIndentation, indentation, StringComparison.Ordinal))
                 {
                     ReportDiagnostic(context, firstToken, indentationTrivia, indentation, expectedIndentation);
                 }
             }
+        }
+
+        // The indentation shared by the most elements wins; on a tie the earliest of the tied indentations wins.
+        private static string GetMostCommonIndentation(List<string> indentations)
+        {
+            string best = indentations[0];
+            int bestCount = 0;
+            for (int i = 0; i < indentations.Count; i++)
+            {
+                int count = 0;
+                for (int j = 0; j < indentations.Count; j++)
+                {
+                    if (string.Equals(indentations[i], indentations[j], StringComparison.Ordinal))
+                    {
+                        count++;
+                    }
+                }
+
+                if (count > bestCount)
+                {
+                    best = indentations[i];
+                    bestCount = count;
+                }
+            }
+
+            return best;
         }
 
         private static ImmutableList<T> CleanupElementsList<T>(ImmutableList<T> elements)
@@ -541,8 +565,39 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             if (!string.Equals(openBraceIndentation, closeBraceIndentation, StringComparison.Ordinal))
             {
+                // When the closing brace is aligned with the line that owns the initializer but the opening brace is
+                // not, the opening brace is the misplaced one.
+                if (GetIndentationOfLine(openBraceToken.GetPreviousToken()) is string ownerIndentation
+                    && string.Equals(ownerIndentation, closeBraceIndentation, StringComparison.Ordinal))
+                {
+                    ReportDiagnostic(context, openBraceToken, openBraceIndentationTrivia, openBraceIndentation, closeBraceIndentation);
+                    return;
+                }
+
                 ReportDiagnostic(context, closeBraceToken, closeBraceIndentationTrivia, closeBraceIndentation, openBraceIndentation);
             }
+        }
+
+        private static string GetIndentationOfLine(SyntaxToken token)
+        {
+            if (token.IsMissingOrDefault())
+            {
+                return null;
+            }
+
+            while (!token.IsFirstInLine(allowNonWhitespaceTrivia: true))
+            {
+                SyntaxToken previous = token.GetPreviousToken();
+                if (previous.IsMissingOrDefault())
+                {
+                    return null;
+                }
+
+                token = previous;
+            }
+
+            SyntaxTrivia trivia = token.LeadingTrivia.LastOrDefault();
+            return trivia.IsKind(SyntaxKind.WhitespaceTrivia) ? trivia.ToString() : string.Empty;
         }
 
         private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxToken token, SyntaxTrivia tokenLeadingTrivia, string indentation, string expectedIndentation)
