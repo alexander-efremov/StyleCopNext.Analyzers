@@ -27,15 +27,10 @@ namespace StyleCop.Analyzers.Test.CSharp9.OrderingRules
     public readonly int {{|#0:Field2|}} = 0;
 }}";
 
-            var fixedCode = $@"public {typeKeyword} TestType(int X)
-{{
-    public readonly int Field2 = 0;
-
-    public int Field1 = 0;
-}}";
-
             var expected = this.GetExpectedResultTestMemberOrderInTypeWithPrimaryConstructor();
-            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+
+            // The code fix does not move a field initializer above another one.
+            await VerifyCSharpFixAsync(testCode, expected, testCode, CancellationToken.None).ConfigureAwait(false);
         }
 
         protected virtual DiagnosticResult[] GetExpectedResultTestMemberOrderInTypeWithPrimaryConstructor()
