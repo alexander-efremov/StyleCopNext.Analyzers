@@ -9,14 +9,11 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Testing;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Test.Helpers;
     using Xunit;
-    using static StyleCop.Analyzers.Test.Verifiers.StyleCopCodeFixVerifier<
-        StyleCop.Analyzers.MaintainabilityRules.SA1412StoreFilesAsUtf8,
-        StyleCop.Analyzers.MaintainabilityRules.SA1412CodeFixProvider>;
+    using static StyleCop.Analyzers.Test.Verifiers.StyleCopDiagnosticVerifier<StyleCop.Analyzers.MaintainabilityRules.SA1412StoreFilesAsUtf8>;
 
     public class SA1412UnitTests
     {
@@ -51,7 +48,6 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
         public async Task TestFileWithWrongEncodingAsync(int codepage)
         {
             var testCode = SourceText.From("class TypeName { }", GetEncoding(codepage));
-            var fixedCode = SourceText.From(testCode.ToString(), Encoding.UTF8);
 
             var expected = Diagnostic().WithLocation(1, 1);
 
@@ -59,7 +55,6 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
             {
                 TestSources = { testCode },
                 ExpectedDiagnostics = { expected },
-                FixedSources = { fixedCode },
             };
 
             test.TestBehaviors |= TestBehaviors.SkipSuppressionCheck;
@@ -73,7 +68,6 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
         {
             var source = "class TypeName\n{\n}\n".ReplaceLineEndings(lineEnding);
             var testCode = SourceText.From(source, new UTF8Encoding(false));
-            var fixedCode = SourceText.From(source, Encoding.UTF8);
 
             var expected = Diagnostic().WithLocation(1, 1);
 
@@ -81,48 +75,6 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
             {
                 TestSources = { testCode },
                 ExpectedDiagnostics = { expected },
-                FixedSources = { fixedCode },
-            };
-
-            test.TestBehaviors |= TestBehaviors.SkipSuppressionCheck;
-            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
-        }
-
-        [Theory]
-        [MemberData(nameof(NonUtf8Encodings))]
-        public async Task TestFixAllAsync(int codepage)
-        {
-            await this.TestFixAllExecuterAsync(codepage, FixAllScope.Project).ConfigureAwait(false);
-            await this.TestFixAllExecuterAsync(codepage, FixAllScope.Solution).ConfigureAwait(false);
-        }
-
-        [Fact]
-        public async Task TestFixAllWithMultipleEncodingsAsync()
-        {
-            var test = new CSharpTest
-            {
-                TestSources =
-                {
-                    SourceText.From("class Foo { }", Encoding.Unicode),
-                    SourceText.From("class Bar { }", Encoding.Unicode),
-#pragma warning disable SYSLIB0001 // Type or member is obsolete
-                    SourceText.From("class FooBar { }", Encoding.UTF7),
-#pragma warning restore SYSLIB0001 // Type or member is obsolete
-                },
-                ExpectedDiagnostics =
-                {
-                    Diagnostic().WithLocation("/0/Test0.cs", 1, 1),
-                    Diagnostic().WithLocation("/0/Test1.cs", 1, 1),
-                    Diagnostic().WithLocation("/0/Test2.cs", 1, 1),
-                },
-                FixedSources =
-                {
-                    SourceText.From("class Foo { }", Encoding.UTF8),
-                    SourceText.From("class Bar { }", Encoding.UTF8),
-                    SourceText.From("class FooBar { }", Encoding.UTF8),
-                },
-                NumberOfFixAllIterations = 2,
-                NumberOfFixAllInDocumentIterations = 3,
             };
 
             test.TestBehaviors |= TestBehaviors.SkipSuppressionCheck;
@@ -139,36 +91,6 @@ namespace StyleCop.Analyzers.Test.MaintainabilityRules
 #pragma warning restore SYSLIB0001 // Type or member is obsolete
 
             return Encoding.GetEncoding(codepage);
-        }
-
-        private async Task TestFixAllExecuterAsync(int codepage, FixAllScope scope)
-        {
-            // Currently unused
-            _ = scope;
-
-            var test = new CSharpTest
-            {
-                TestSources =
-                {
-                    SourceText.From("class Foo { }", GetEncoding(codepage)),
-                    SourceText.From("class Bar { }", GetEncoding(codepage)),
-                },
-                ExpectedDiagnostics =
-                {
-                    Diagnostic().WithLocation("/0/Test0.cs", 1, 1),
-                    Diagnostic().WithLocation("/0/Test1.cs", 1, 1),
-                },
-                FixedSources =
-                {
-                    SourceText.From("class Foo { }", Encoding.UTF8),
-                    SourceText.From("class Bar { }", Encoding.UTF8),
-                },
-                NumberOfFixAllIterations = 1,
-                NumberOfFixAllInDocumentIterations = 2,
-            };
-
-            test.TestBehaviors |= TestBehaviors.SkipSuppressionCheck;
-            await test.RunAsync(CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
