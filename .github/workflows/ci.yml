@@ -23,13 +23,31 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+env:
+  # The parts of a split test job take about the same time. The last filter is the negation of the others, so every test
+  # runs in exactly one part, including the tests of a namespace added later.
+  TEST_PART_1_OF_3: 'FullyQualifiedName~.DocumentationRules.|FullyQualifiedName~.LayoutRules.'
+  TEST_PART_2_OF_3: 'FullyQualifiedName~.ReadabilityRules.|FullyQualifiedName~.SpacingRules.'
+  TEST_PART_3_OF_3: 'FullyQualifiedName!~.DocumentationRules.&FullyQualifiedName!~.LayoutRules.&FullyQualifiedName!~.ReadabilityRules.&FullyQualifiedName!~.SpacingRules.'
+
 jobs:
+  # Builds every project with the analyzers on, one job per target framework: CSharp13 references all the other test
+  # projects. The test jobs build without the analyzers, which halves their build; source generators run either way.
   build:
-    runs-on: windows-latest
+    name: Build (${{ matrix.framework }})
+    # .NET Framework needs Windows; the net10.0 build goes to Linux on Arm, which starts and builds faster.
+    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-24.04-arm' }}
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - net10.0
+          - net472
     steps:
       # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
       - name: Allow Long Paths
+        if: runner.os == 'Windows'
         run: git config --system core.longpaths true
 
       - name: Checkout
@@ -43,61 +61,54 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Packages go to the work drive; the system drive of the runner is slow.
-      - name: Use The Work Drive For Packages
-        run: echo "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget-packages" >> $env:GITHUB_ENV
-
-      # This job restores the whole solution, so it saves the package cache; the test jobs only read it.
-      - name: Package Cache
-        id: packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ runner.temp }}/nuget-packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
-
-      # Warnings are errors, so a successful build means there are none.
+      # Warnings are errors, so a successful build means there are none. Packages go to the work drive; the system
+      # drive of the runner is slow.
       - name: Build
-        run: dotnet build StyleCopAnalyzers.sln --configuration Release
+        env:
+          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
+        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.Test.CSharp13/StyleCop.Analyzers.Test.CSharp13.csproj --configuration Release --framework ${{ matrix.framework }}
+
+      # The only project that CSharp13 does not reference; it targets .NET Framework.
+      - name: Build StyleCopTester
+        if: matrix.framework == 'net472'
+        env:
+          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
+        run: dotnet build StyleCop.Analyzers/StyleCopTester/StyleCopTester.csproj --configuration Release
 
       # The default build of the code fixes also builds the Roslyn 5.0 flavor for the package. Build it on its own as
       # well so that a problem in that flavor is reported against this step.
       - name: Build Roslyn 5.0 flavor
+        if: matrix.framework == 'net10.0'
+        env:
+          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
         run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release -p:RoslynVersion=5.0
 
   test:
-    # .NET Framework needs Windows; the net10.0 runs go to Linux, which starts and builds faster.
-    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-latest' }}
+    name: Test (${{ matrix.project }}, ${{ matrix.framework }}${{ matrix.roslyn && format(', Roslyn {0}', matrix.roslyn) || '' }}${{ matrix.part && format(', part {0} of {1}', matrix.part, matrix.parts) || '' }})
+    # .NET Framework needs Windows; the net10.0 runs go to Linux on Arm, which starts and builds faster.
+    runs-on: ${{ matrix.framework == 'net472' && 'windows-latest' || 'ubuntu-24.04-arm' }}
     timeout-minutes: 30
     strategy:
       # Let every project finish so one failure does not hide the others.
       fail-fast: false
       matrix:
-        project:
-          - StyleCop.Analyzers.Test
-          - StyleCop.Analyzers.Test.CSharp7
-          - StyleCop.Analyzers.Test.CSharp8
-          - StyleCop.Analyzers.Test.CSharp9
-          - StyleCop.Analyzers.Test.CSharp10
-          - StyleCop.Analyzers.Test.CSharp11
-          - StyleCop.Analyzers.Test.CSharp12
-          - StyleCop.Analyzers.Test.CSharp13
-        framework:
-          - net10.0
-        # Roslyn flavor of the analyzers under test. It is an axis only so that the include entry below, which repeats the
-        # project and framework of an existing combination, adds a job instead of modifying that combination.
-        roslyn:
-          - '4.8'
-        # Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so one
-        # project covers .NET Framework, in a job of its own: CSharp13, which inherits the tests of every other project.
         include:
-          - project: StyleCop.Analyzers.Test.CSharp13
-            framework: net472
+          - { project: StyleCop.Analyzers.Test, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp7, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp8, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp9, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp10, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp11, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp12, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net10.0 }
           # The same tests against the Roslyn 5.0 build of the analyzers, the compiler of the .NET 10 SDK.
-          - project: StyleCop.Analyzers.Test.CSharp13
-            framework: net10.0
-            roslyn: '5.0'
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net10.0, roslyn: '5.0' }
+          # Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so
+          # one project covers .NET Framework: CSharp13, which inherits the tests of every other project. It is the
+          # slowest run and has the longest setup, so it runs in three parts on three runners.
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 1, parts: 3 }
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 2, parts: 3 }
+          - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 3, parts: 3 }
     steps:
       - name: Allow Long Paths
         if: runner.os == 'Windows'
@@ -113,29 +124,18 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Packages go to the work drive; the system drive of the runner is slow.
-      - name: Use The Work Drive For Packages
-        shell: pwsh
-        run: echo "NUGET_PACKAGES=$(Join-Path $env:RUNNER_TEMP nuget-packages)" >> $env:GITHUB_ENV
-
-      # The Linux jobs save their own cache entry on a miss. The bare "nuget-" fallback lets the first Linux
-      # run reuse the Windows entry, since the global packages folder is portable across operating systems.
-      - name: Package Cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ runner.temp }}/nuget-packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', 'global.json') }}
-          restore-keys: |
-            nuget-${{ runner.os }}-
-            nuget-
-
+      # Packages go to the work drive; the system drive of the runner is slow. They are not cached: on release/1.x
+      # downloading them took as long as restoring a cache entry of several hundred megabytes.
       - name: Test
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults -p:RoslynVersion=${{ matrix.roslyn || '4.8' }}
+        env:
+          NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
+          RunAnalyzers: false
+        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults -p:RoslynVersion=${{ matrix.roslyn || '4.8' }} ${{ matrix.part && format('--filter "{0}"', env[format('TEST_PART_{0}_OF_{1}', matrix.part, matrix.parts)]) || '' }}
 
       - name: Upload Test Results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: test-results-${{ matrix.project }}-${{ matrix.framework }}-roslyn${{ matrix.roslyn || '4.8' }}
+          name: test-results-${{ matrix.project }}-${{ matrix.framework }}-roslyn${{ matrix.roslyn || '4.8' }}${{ matrix.part && format('-part{0}of{1}', matrix.part, matrix.parts) || '' }}
           path: TestResults/*.trx
           if-no-files-found: warn
