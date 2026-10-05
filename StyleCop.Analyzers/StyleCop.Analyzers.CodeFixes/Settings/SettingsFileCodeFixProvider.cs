@@ -31,7 +31,7 @@ namespace StyleCop.Analyzers.Settings
   //
   // https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/1.x/documentation/EnableConfiguration.md
 
-  ""$schema"": ""https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"",
+  ""$schema"": ""https://raw.githubusercontent.com/alexander-efremov/StyleCopNext.Analyzers/release/1.x/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"",
   ""settings"": {
     ""documentationRules"": {
       ""companyName"": """ + DocumentationSettings.DefaultCompanyName + @"""
