@@ -49,9 +49,10 @@
     <IsAnalyzerCompatibilityProject>true</IsAnalyzerCompatibilityProject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
-  </ItemGroup>
+  <PropertyGroup>
+    <!-- The release workflow publishes a tag only when this version matches it. -->
+    <Version>1.0.3</Version>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" PrivateAssets="all" />
