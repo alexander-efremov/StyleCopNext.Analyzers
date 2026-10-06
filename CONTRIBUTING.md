@@ -19,7 +19,7 @@ You can also help by filing issues, participating in discussions and doing code 
 
 ## Branches and pull requests
 
-This is the 1.x line (`release/1.x`): it takes bug fixes only. New rules and C# language support go to `master` (2.x). A fix that
+This is the 1.x line (`release/1.x`): it takes bug fixes only. New rules and C# language support go to `release/2.x` (2.x). A fix that
 applies to both lines is sent as one pull request against each branch.
 
 Pull requests must have green CI before they are merged.
