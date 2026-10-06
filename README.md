@@ -6,7 +6,7 @@ settings, with stable releases. To switch, replace the `StyleCop.Analyzers` pack
 `StyleCopNext.Analyzers`.
 
 This is the 1.x line for older toolchains (.NET SDK before 8, Visual Studio before 17.8, Unity). It receives bug fixes
-only; new rules and C# support go to 2.x on master. The original README follows.
+only; new rules and C# support go to 2.x on `release/2.x`. The original README follows.
 
 # StyleCop Analyzers for the .NET Compiler Platform
 
@@ -38,7 +38,7 @@ switching to StyleCopNext.Analyzers.
 
 | StyleCopNext.Analyzers | Required toolchain |
 |------------------------|--------------------|
-| 2.x (`master`) | .NET SDK 8 or Visual Studio 17.8 or later |
+| 2.x (`release/2.x`) | .NET SDK 8 or Visual Studio 17.8 or later |
 | 1.x (`release/1.x`, bug fixes only) | Older toolchains, including Visual Studio 2015 or later, and Unity |
 
 Syntax of C# 7 through C# 13 is covered by the test suite on both lines. The compiler of your toolchain determines which
