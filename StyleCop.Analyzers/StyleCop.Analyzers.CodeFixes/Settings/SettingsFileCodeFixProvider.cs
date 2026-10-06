@@ -29,9 +29,9 @@ namespace StyleCop.Analyzers.Settings
   // will not take effect until additional steps are taken to enable it. See the
   // following page for additional information:
   //
-  // https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/EnableConfiguration.md
+  // https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/2.x/documentation/EnableConfiguration.md
 
-  ""$schema"": ""https://raw.githubusercontent.com/alexander-efremov/StyleCopNext.Analyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"",
+  ""$schema"": ""https://raw.githubusercontent.com/alexander-efremov/StyleCopNext.Analyzers/release/2.x/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"",
   ""settings"": {
     ""documentationRules"": {
       ""companyName"": """ + DocumentationSettings.DefaultCompanyName + @"""
