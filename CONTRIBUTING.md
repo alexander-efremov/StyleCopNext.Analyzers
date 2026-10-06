@@ -19,8 +19,10 @@ You can also help by filing issues, participating in discussions and doing code 
 
 ## Branches and pull requests
 
-`master` is the 2.x line and takes features and fixes. `release/1.x` is the 1.x line and takes bug fixes only; a fix that applies to
+`release/2.x` is the 2.x line and takes features and fixes. `release/1.x` is the 1.x line and takes bug fixes only; a fix that applies to
 both lines is sent as one pull request against each branch.
+
+`master` mirrors upstream StyleCop.Analyzers and is used only to send changes upstream.
 
 Pull requests must have green CI before they are merged.
 

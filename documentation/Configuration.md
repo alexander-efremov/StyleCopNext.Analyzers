@@ -20,7 +20,7 @@ Each rule page lists the settings which affect that rule in its **Configuration*
 Rule severities are best set in **.editorconfig** or **.globalconfig** files, see [ConfiguringRules.md](ConfiguringRules.md).
 Code analysis rule sets remain supported as an alternative. Information about creating and customizing these files can be found in the [Using Rule Sets to Group Code Analysis Rules](https://docs.microsoft.com/visualstudio/code-quality/using-rule-sets-to-group-code-analysis-rules) documentation on docs.microsoft.com.
 
-An example rule set file containing the default StyleCop Analyzers configuration is available at <https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/rulesets/StyleCopAnalyzersDefault.ruleset>.
+An example rule set file containing the default StyleCop Analyzers configuration is available at <https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/2.x/StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/rulesets/StyleCopAnalyzersDefault.ruleset>.
 
 ## Getting Started with **stylecop.json**
 
@@ -34,7 +34,7 @@ A JSON schema is available for **stylecop.json**. By including a reference in **
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/alexander-efremov/StyleCopNext.Analyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"
+  "$schema": "https://raw.githubusercontent.com/alexander-efremov/StyleCopNext.Analyzers/release/2.x/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json"
 }
 ```
 
