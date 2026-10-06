@@ -67,6 +67,13 @@ Windows-built payload even when the rest of the source checkout uses LF. It also
 and shipped C# source line endings so multiline localized values and verbatim string literals
 remain identical across hosts.
 
+## Branches and pull requests
+
+This is the 1.x line (`release/1.x`): it takes bug fixes only. New rules and C# language support go to `release/2.x` (2.x). A fix that
+applies to both lines is sent as one pull request against each branch.
+
+Pull requests must have green CI before they are merged.
+
 ## Running analyzer tests
 
 The GitHub Build workflow builds and runs all C# 6 through C# 15 test assemblies
