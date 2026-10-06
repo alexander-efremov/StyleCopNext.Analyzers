@@ -25,5 +25,5 @@ example SA1121 asks for `nint` instead of `IntPtr`.
 ## Links
 
 - [Source and releases](https://github.com/alexander-efremov/StyleCopNext.Analyzers)
-- [Rule documentation](https://github.com/alexander-efremov/StyleCopNext.Analyzers/tree/master/documentation)
+- [Rule documentation](https://github.com/alexander-efremov/StyleCopNext.Analyzers/tree/release/2.x/documentation)
 - License: MIT

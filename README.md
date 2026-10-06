@@ -14,7 +14,7 @@ only. The original README follows.
 
 [![NuGet](https://img.shields.io/nuget/v/StyleCopNext.Analyzers.svg)](https://www.nuget.org/packages/StyleCopNext.Analyzers)
 
-[![CI](https://github.com/alexander-efremov/StyleCopNext.Analyzers/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/alexander-efremov/StyleCopNext.Analyzers/actions/workflows/ci.yml?query=branch%3Amaster)
+[![CI](https://github.com/alexander-efremov/StyleCopNext.Analyzers/actions/workflows/ci.yml/badge.svg?branch=release%2F2.x)](https://github.com/alexander-efremov/StyleCopNext.Analyzers/actions/workflows/ci.yml?query=branch%3Arelease%2F2.x)
 
 This repository contains an implementation of the StyleCop rules using the .NET Compiler Platform. Where possible, code fixes are also provided to simplify the process of correcting violations.
 
@@ -40,7 +40,7 @@ switching to StyleCopNext.Analyzers.
 
 | StyleCopNext.Analyzers | Required toolchain |
 |------------------------|--------------------|
-| 2.x (`master`) | .NET SDK 8 or Visual Studio 17.8 or later |
+| 2.x (`release/2.x`) | .NET SDK 8 or Visual Studio 17.8 or later |
 | 1.x (`release/1.x`, bug fixes only) | Older toolchains, including Visual Studio 2015 or later, and Unity |
 
 The toolchain is the compiler that builds the project, not the target framework: a .NET Framework 4.x project built

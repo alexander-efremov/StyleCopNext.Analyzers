@@ -17,7 +17,7 @@ namespace StyleCop.Analyzers.DocumentationRules
     /// <c>&lt;inheritdoc&gt;</c> has been used on an element that doesn't inherit from a base class or implement an
     /// interface.
     /// </summary>
-    /// <seealso href="https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/SA1648.md">SA1648</seealso>
+    /// <seealso href="https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/2.x/documentation/SA1648.md">SA1648</seealso>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class SA1648InheritDocMustBeUsedWithInheritingClass : DiagnosticAnalyzer
     {
@@ -25,7 +25,7 @@ namespace StyleCop.Analyzers.DocumentationRules
         /// The ID for diagnostics produced by the <see cref="SA1648InheritDocMustBeUsedWithInheritingClass"/> analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1648";
-        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/SA1648.md";
+        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/2.x/documentation/SA1648.md";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(DocumentationResources.SA1648Title), DocumentationResources.ResourceManager, typeof(DocumentationResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(DocumentationResources.SA1648MessageFormat), DocumentationResources.ResourceManager, typeof(DocumentationResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(DocumentationResources.SA1648Description), DocumentationResources.ResourceManager, typeof(DocumentationResources));

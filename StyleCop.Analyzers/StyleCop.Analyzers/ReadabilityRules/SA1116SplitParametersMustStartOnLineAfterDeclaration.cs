@@ -44,7 +44,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         /// analyzer.
         /// </summary>
         public const string DiagnosticId = "SA1116";
-        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/master/documentation/SA1116.md";
+        private const string HelpLink = "https://github.com/alexander-efremov/StyleCopNext.Analyzers/blob/release/2.x/documentation/SA1116.md";
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(ReadabilityResources.SA1116Title), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(ReadabilityResources.SA1116MessageFormat), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(ReadabilityResources.SA1116Description), ReadabilityResources.ResourceManager, typeof(ReadabilityResources));
