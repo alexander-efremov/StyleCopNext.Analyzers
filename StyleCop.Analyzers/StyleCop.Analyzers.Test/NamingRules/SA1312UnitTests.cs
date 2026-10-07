@@ -529,5 +529,30 @@ public class TypeName
 
             await VerifyCSharpFixAsync(testCode, expected, testCode, CancellationToken.None).ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task TestUnderscoreOnlyUsingStatementResourceIsNotReportedAsync()
+        {
+            var testCode = @"using System.IO;
+
+public class TypeName
+{
+    public void MethodName()
+    {
+        using (var _ = new MemoryStream())
+        using (MemoryStream __ = new MemoryStream(), ___ = new MemoryStream())
+        {
+        }
+
+        using (var _Stream = new MemoryStream())
+        {
+        }
+    }
+}";
+
+            var expected = Diagnostic().WithArguments("_Stream").WithLocation(12, 20);
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }
