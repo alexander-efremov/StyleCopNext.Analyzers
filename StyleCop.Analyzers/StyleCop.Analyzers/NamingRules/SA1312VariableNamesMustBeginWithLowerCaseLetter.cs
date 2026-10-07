@@ -89,6 +89,10 @@ namespace StyleCop.Analyzers.NamingRules
                 return;
             }
 
+            // A resource that is acquired only to be disposed has no discard syntax, so an underscore-only name stands in for one.
+            bool isUsingResource = syntax.Parent.IsKind(SyntaxKind.UsingStatement)
+                || (parentDeclaration != null && !parentDeclaration.UsingKeyword().IsKind(SyntaxKind.None));
+
             foreach (VariableDeclaratorSyntax variableDeclarator in syntax.Variables)
             {
                 if (variableDeclarator == null)
@@ -97,8 +101,31 @@ namespace StyleCop.Analyzers.NamingRules
                 }
 
                 var identifier = variableDeclarator.Identifier;
+                if (isUsingResource && IsUnderscoreOnly(identifier.ValueText))
+                {
+                    continue;
+                }
+
                 CheckIdentifier(context, identifier);
             }
+        }
+
+        private static bool IsUnderscoreOnly(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+
+            foreach (char c in name)
+            {
+                if (c != '_')
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static void HandleCatchDeclaration(SyntaxNodeAnalysisContext context)
