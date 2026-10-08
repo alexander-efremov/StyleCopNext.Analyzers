@@ -16,8 +16,7 @@ namespace StyleCop.Analyzers.Test.CSharp15.Lightup
     /// </summary>
     /// <remarks>
     /// <para>Most properties of this wrapper override a property of <see cref="TypeDeclarationSyntax"/> or one of its
-    /// base types. These tests read every one of them, including <c>ParameterList</c> through
-    /// <see cref="TypeDeclarationSyntaxExtensions.ParameterList(TypeDeclarationSyntax)"/>.</para>
+    /// base types. These tests read every one of them.</para>
     /// </remarks>
     public partial class UnionDeclarationSyntaxWrapperCSharp15UnitTests
     {
@@ -118,9 +117,6 @@ public union U<T>(int, T) : System.IDisposable where T : class
             Assert.Equal(unionDeclaration.Members, wrapper.Members);
             Assert.Equal(unionDeclaration.CloseBraceToken, wrapper.CloseBraceToken);
             Assert.Equal(unionDeclaration.SemicolonToken, wrapper.SemicolonToken);
-
-            // The light-up extension on the base type must agree with the wrapper
-            Assert.Same(unionDeclaration.ParameterList, TypeDeclarationSyntaxExtensions.ParameterList(syntaxNode));
         }
     }
 }

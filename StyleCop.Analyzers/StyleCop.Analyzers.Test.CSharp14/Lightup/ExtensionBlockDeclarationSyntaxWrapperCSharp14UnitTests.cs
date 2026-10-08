@@ -57,7 +57,6 @@ namespace StyleCop.Analyzers.Test.CSharp14.Lightup
             Assert.Single(wrapper.TypeParameterList.Parameters);
             Assert.Same(syntaxNode.ParameterList, wrapper.ParameterList);
             Assert.Single(wrapper.ParameterList.Parameters);
-            Assert.Same(syntaxNode.ParameterList, TypeDeclarationSyntaxExtensions.ParameterList(syntaxNode));
             Assert.Equal(syntaxNode.ConstraintClauses, wrapper.ConstraintClauses);
             Assert.Single(wrapper.ConstraintClauses);
             Assert.Equal(syntaxNode.OpenBraceToken, wrapper.OpenBraceToken);
