@@ -95,7 +95,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 var usingDirective = usings[i];
 
                 if (systemUsingDirectivesShouldBeBeforeThisName != null
-                    && systemUsingDirectivesShouldBeBeforeThisNameIsGlobal != usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                    && systemUsingDirectivesShouldBeBeforeThisNameIsGlobal != usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                 {
                     // Global and local using directives are ordered independently
                     systemUsingDirectivesShouldBeBeforeThisName = null;
@@ -126,7 +126,7 @@ namespace StyleCop.Analyzers.OrderingRules
                         || !previousUsing.StaticKeyword.IsKind(SyntaxKind.None))
                     {
                         systemUsingDirectivesShouldBeBeforeThisName = previousUsing.Name.ToNormalizedString();
-                        systemUsingDirectivesShouldBeBeforeThisNameIsGlobal = previousUsing.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword);
+                        systemUsingDirectivesShouldBeBeforeThisNameIsGlobal = previousUsing.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword);
                         context.ReportDiagnostic(Diagnostic.Create(Descriptor, usingDirective.GetLocation(), usingDirective.Name.ToNormalizedString(), systemUsingDirectivesShouldBeBeforeThisName));
                     }
                 }

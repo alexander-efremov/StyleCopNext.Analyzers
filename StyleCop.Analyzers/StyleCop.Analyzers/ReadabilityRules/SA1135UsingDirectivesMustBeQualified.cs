@@ -144,7 +144,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static bool AliasExpandedStringMatches(SyntaxNodeAnalysisContext context, UsingDirectiveSyntax usingDirective, string symbolString)
         {
             var builder = StringBuilderPool.Allocate();
-            AppendCanonicalString(builder, usingDirective.Name, context.SemanticModel, context.CancellationToken);
+            AppendCanonicalString(builder, usingDirective.Name!, context.SemanticModel, context.CancellationToken);
             string expanded = StringBuilderPool.ReturnAndFree(builder);
             return expanded == symbolString;
         }
@@ -164,7 +164,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static string UsingDirectiveSyntaxToCanonicalString(UsingDirectiveSyntax usingDirective)
         {
             var builder = StringBuilderPool.Allocate();
-            AppendCanonicalString(builder, usingDirective.Name, semanticModel: null, cancellationToken: default);
+            AppendCanonicalString(builder, usingDirective.Name!, semanticModel: null, cancellationToken: default);
             return StringBuilderPool.ReturnAndFree(builder);
         }
 

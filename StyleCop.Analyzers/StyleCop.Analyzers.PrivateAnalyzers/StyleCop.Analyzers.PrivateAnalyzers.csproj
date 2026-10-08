@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- These build-time projects compile against Roslyn 5.9, which requires the matching analyzers package. -->
+    <MicrosoftCodeAnalysisAnalyzersVersion>5.9.0</MicrosoftCodeAnalysisAnalyzersVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <CodeAnalysisRuleSet>..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

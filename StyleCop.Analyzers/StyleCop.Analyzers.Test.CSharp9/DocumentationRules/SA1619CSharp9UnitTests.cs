@@ -30,8 +30,6 @@ public partial {typeKeyword} TestType<{{|#0:T|}}>(T X);";
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic().WithLocation(0).WithArguments("T"),
                 Diagnostic().WithLocation(0).WithArguments("T"),
             };
         }

@@ -97,8 +97,6 @@ public class DerivedClass : BaseClass
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic().WithLocation(0).WithArguments("public", "sealed"),
                 Diagnostic().WithLocation(0).WithArguments("public", "sealed"),
             };
         }

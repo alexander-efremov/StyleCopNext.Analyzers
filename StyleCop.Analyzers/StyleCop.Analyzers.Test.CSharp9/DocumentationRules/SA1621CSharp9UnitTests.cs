@@ -49,8 +49,6 @@ public {typeKeyword} TestType<T>(T X);";
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic(StyleCop.Analyzers.DocumentationRules.GenericTypeParameterDocumentationAnalyzer.SA1621Descriptor).WithLocation(0),
                 Diagnostic(StyleCop.Analyzers.DocumentationRules.GenericTypeParameterDocumentationAnalyzer.SA1621Descriptor).WithLocation(0),
             };
         }

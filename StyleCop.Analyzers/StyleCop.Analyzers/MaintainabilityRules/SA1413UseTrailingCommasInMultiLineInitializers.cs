@@ -158,15 +158,15 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
         private static void HandleCollectionExpression(SyntaxNodeAnalysisContext context)
         {
-            var collectionExpression = (CollectionExpressionSyntaxWrapper)context.Node;
-            if (collectionExpression.SyntaxNode == null || !collectionExpression.SyntaxNode.SpansMultipleLines())
+            var collectionExpression = (CollectionExpressionSyntax)context.Node;
+            if (!collectionExpression.SpansMultipleLines())
             {
                 return;
             }
 
             if (collectionExpression.Elements.SeparatorCount < collectionExpression.Elements.Count)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Descriptor, collectionExpression.Elements.Last().SyntaxNode.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Descriptor, collectionExpression.Elements.Last().GetLocation()));
             }
         }
     }

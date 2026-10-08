@@ -272,7 +272,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 anonymousMethod.Body);
             var invocationExpression = originalInvocableExpression.ReplaceNode(anonymousMethod, lambdaExpression);
             var newSymbol = semanticModel.GetSpeculativeSymbolInfo(originalInvocableExpression.SpanStart, invocationExpression, SpeculativeBindingOption.BindAsExpression).Symbol;
-            return originalSymbol.Equals(newSymbol);
+            return SymbolEqualityComparer.Default.Equals(originalSymbol, newSymbol);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return false;
             }
 
-            return !parameters[index].Type.Equals(originalParameters[index].Type);
+            return !SymbolEqualityComparer.Default.Equals(parameters[index].Type, originalParameters[index].Type);
         }
 
         private static ImmutableArray<string>? GetMethodInvocationArgumentList(SemanticModel semanticModel, AnonymousMethodExpressionSyntax anonymousMethod)

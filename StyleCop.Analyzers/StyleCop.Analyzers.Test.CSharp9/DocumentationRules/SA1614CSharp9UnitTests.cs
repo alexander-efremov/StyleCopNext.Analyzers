@@ -31,8 +31,6 @@ public {typeKeyword} TestType(int X);";
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic().WithLocation(0),
                 Diagnostic().WithLocation(0),
             };
         }

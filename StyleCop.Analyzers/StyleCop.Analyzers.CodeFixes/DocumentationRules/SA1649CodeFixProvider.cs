@@ -51,8 +51,8 @@ namespace StyleCop.Analyzers.DocumentationRules
         private static async Task<Solution> GetTransformedSolutionAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
         {
             var solution = document.Project.Solution;
-            var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            var expectedFileName = diagnostic.Properties[SA1649FileNameMustMatchTypeName.ExpectedFileNameKey];
+            var syntaxRoot = (await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false))!;
+            var expectedFileName = diagnostic.Properties[SA1649FileNameMustMatchTypeName.ExpectedFileNameKey]!;
 
             var newSolution = RenameDocument(solution, document, document.Id, syntaxRoot, expectedFileName);
 
@@ -80,7 +80,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             }
 
             // Continue by instead removing and re-adding the file again
-            document ??= solution.GetDocument(documentId);
+            document ??= solution.GetDocument(documentId)!;
             var newDocumentFilePath = document.FilePath != null ? Path.Combine(Path.GetDirectoryName(document.FilePath), expectedFileName) : null;
             var newDocumentId = DocumentId.CreateNewId(documentId.ProjectId);
 

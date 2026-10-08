@@ -133,7 +133,7 @@ namespace StyleCop.Analyzers.DocumentationRules
             // implementing part is required to provide a body (or expression body) for at least one accessor.
             foreach (AccessorDeclarationSyntax accessor in accessorList.Accessors)
             {
-                if (accessor.Body != null || accessor.ExpressionBody() != null)
+                if (accessor.Body != null || accessor.ExpressionBody != null)
                 {
                     return false;
                 }
@@ -150,7 +150,7 @@ namespace StyleCop.Analyzers.DocumentationRules
                 // The declaring part of a partial constructor has no body.
                 return constructorDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword)
                     && constructorDeclaration.Body == null
-                    && constructorDeclaration.ExpressionBody() == null;
+                    && constructorDeclaration.ExpressionBody == null;
 
             case EventFieldDeclarationSyntax eventFieldDeclaration:
                 // The declaring part of a partial event is field-like; the implementing part has accessors.

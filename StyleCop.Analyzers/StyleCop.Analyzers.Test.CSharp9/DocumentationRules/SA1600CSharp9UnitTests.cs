@@ -92,29 +92,10 @@ public partial class TestClass
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
 
-        protected override DiagnosticResult[] GetExpectedResultTestRegressionMethodGlobalNamespace(string code)
-        {
-            if (code == "public void {|#0:TestMember|}() { }")
-            {
-                return new[]
-                {
-                    // error CS8805: Program using top-level statements must be an executable.
-                    DiagnosticResult.CompilerError("CS8805"),
-
-                    // /0/Test0.cs(4,1): error CS0106: The modifier 'public' is not valid for this item
-                    DiagnosticResult.CompilerError("CS0106").WithSpan(4, 1, 4, 7).WithArguments("public"),
-                };
-            }
-
-            return base.GetExpectedResultTestRegressionMethodGlobalNamespace(code);
-        }
-
         protected virtual DiagnosticResult[] GetExpectedResultTestTypeWithPrimaryConstructorWithoutDocumentation()
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic().WithLocation(0),
                 Diagnostic().WithLocation(0),
             };
         }

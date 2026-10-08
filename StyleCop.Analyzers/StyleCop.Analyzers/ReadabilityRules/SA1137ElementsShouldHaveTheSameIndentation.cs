@@ -14,6 +14,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using StyleCop.Analyzers.Helpers;
+    using StyleCop.Analyzers.Lightup;
 
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     internal class SA1137ElementsShouldHaveTheSameIndentation : DiagnosticAnalyzer
@@ -266,7 +267,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandleCollectionExpression(SyntaxNodeAnalysisContext context)
         {
-            var collectionExpression = (CollectionExpressionSyntaxWrapper)context.Node;
+            var collectionExpression = (CollectionExpressionSyntax)context.Node;
 
             CheckBraces(context, collectionExpression.OpenBracketToken, collectionExpression.CloseBracketToken);
             CheckElements(context, collectionExpression.Elements);

@@ -111,7 +111,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static void HandleTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
             var declaration = (TypeDeclarationSyntax)context.Node;
-            var parameterList = declaration.ParameterList();
+            var parameterList = declaration.ParameterList;
             if (parameterList != null)
             {
                 HandleParameterListSyntax(context, parameterList);
@@ -120,7 +120,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
         private static void HandlePrimaryConstructorBaseType(SyntaxNodeAnalysisContext context)
         {
-            var primaryConstructorBaseType = (PrimaryConstructorBaseTypeSyntaxWrapper)context.Node;
+            var primaryConstructorBaseType = (PrimaryConstructorBaseTypeSyntax)context.Node;
             HandleArgumentListSyntax(context, primaryConstructorBaseType.ArgumentList);
         }
 

@@ -15,6 +15,7 @@ namespace StyleCop.Analyzers.LayoutRules
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Text;
     using StyleCop.Analyzers.Helpers;
+    using StyleCop.Analyzers.Lightup;
     using StyleCop.Analyzers.Settings.ObjectModel;
 
     /// <summary>
@@ -282,13 +283,13 @@ namespace StyleCop.Analyzers.LayoutRules
             var blankLinesBetweenUsingGroups = settings.OrderingRules.BlankLinesBetweenUsingGroups;
 
             var previousGroupType = usings[0].GetUsingGroupType(settings);
-            var previousIsGlobal = usings[0].GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword);
+            var previousIsGlobal = usings[0].GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword);
             var previousLineSpan = usings[0].GetLineSpan();
 
             for (var i = 1; i < usings.Count; i++)
             {
                 var currentGroupType = usings[i].GetUsingGroupType(settings);
-                var currentIsGlobal = usings[i].GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword);
+                var currentIsGlobal = usings[i].GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword);
                 var currentLineSpan = usings[i].GetLineSpan();
 
                 // Global using directives form their own set of using groups.

@@ -168,8 +168,6 @@ public struct {|#1:FooStruct|} { }
         {
             return new[]
             {
-                // Diagnostic issued twice because of https://github.com/dotnet/roslyn/issues/53136
-                Diagnostic().WithLocation(0).WithArguments("A field", "a property"),
                 Diagnostic().WithLocation(0).WithArguments("A field", "a property"),
             };
         }

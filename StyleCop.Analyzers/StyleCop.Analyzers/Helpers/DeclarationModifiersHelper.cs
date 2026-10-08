@@ -167,7 +167,7 @@ namespace StyleCop.Analyzers.Helpers
 
             case SyntaxKind.RecordDeclaration:
             case SyntaxKind.RecordStructDeclaration:
-                return ((RecordDeclarationSyntaxWrapper)node).WithModifiers(modifiers);
+                return ((RecordDeclarationSyntax)node).WithModifiers(modifiers);
 
             case SyntaxKindEx.UnionDeclaration:
                 return ((UnionDeclarationSyntaxWrapper)node).WithModifiers(modifiers);

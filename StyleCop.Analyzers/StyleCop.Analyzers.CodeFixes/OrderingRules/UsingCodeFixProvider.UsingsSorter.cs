@@ -490,9 +490,9 @@ namespace StyleCop.Analyzers.OrderingRules
                 // therefore replaced by their fully qualified form before the directive is moved.
                 NameSyntax originalName = usingDirective.Name;
                 string enclosingNamespaceName = null;
-                if (BaseNamespaceDeclarationSyntaxWrapper.IsInstance(usingDirective.Parent))
+                if (usingDirective.Parent is BaseNamespaceDeclarationSyntax namespaceDeclaration)
                 {
-                    enclosingNamespaceName = ((BaseNamespaceDeclarationSyntaxWrapper)usingDirective.Parent).Name.WithoutTrivia().ToString();
+                    enclosingNamespaceName = namespaceDeclaration.Name.WithoutTrivia().ToString();
                 }
 
                 var rewriter = new AliasReferenceExpander(this.semanticModel, enclosingNamespaceName);
@@ -680,7 +680,7 @@ namespace StyleCop.Analyzers.OrderingRules
                 {
                     foreach (var reference in alias.DeclaringSyntaxReferences)
                     {
-                        if (reference.GetSyntax() is UsingDirectiveSyntax u && !u.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword))
+                        if (reference.GetSyntax() is UsingDirectiveSyntax u && !u.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword))
                         {
                             return true;
                         }
@@ -702,7 +702,7 @@ namespace StyleCop.Analyzers.OrderingRules
                         {
                             fullName = "global::System." + symbol.Name;
                         }
-                        else if (namedTypeSymbol.IsTupleType())
+                        else if (namedTypeSymbol.IsTupleType)
                         {
                             fullName = namedTypeSymbol.TupleUnderlyingTypeOrSelf().ToFullyQualifiedValueTupleDisplayString();
                         }
