@@ -37,6 +37,10 @@ jobs:
     - name: Configure git line endings
       run: git config --global core.autocrlf true
 
+    # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
+    - name: Allow long paths
+      run: git config --global core.longpaths true
+
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -212,6 +216,9 @@ jobs:
           project: StyleCop.Analyzers.Test.CSharp15
 
     steps:
+    - name: Allow long paths
+      run: git config --global core.longpaths true
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -305,6 +312,9 @@ jobs:
       contents: read
       id-token: write # Codecov upload authenticates with GitHub OIDC, so no Codecov token secret is needed
     steps:
+    - name: Allow long paths
+      run: git config --global core.longpaths true
+
     - name: Checkout
       uses: actions/checkout@v4
 
