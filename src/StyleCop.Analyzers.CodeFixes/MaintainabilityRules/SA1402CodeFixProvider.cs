@@ -7,6 +7,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
@@ -45,8 +46,10 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         {
             // The new file is added to a single project and the type is removed from the shared file, so the other
             // projects that share the file (Shared Projects and linked files) would lose the type. Roslyn has no notion
-            // of a Shared Project, so the code fix is not offered for them.
-            if (!context.Document.GetLinkedDocumentIds().IsEmpty)
+            // of a Shared Project, so the code fix is not offered for them. The target framework projects of a
+            // multi-targeted project share a project file and are not affected: the new file is added to a single
+            // project with an explicit path, and the other target frameworks pick it up from disk.
+            if (LinkedDocumentHelper.IsSharedWithOtherProjects(context.Document))
             {
                 return SpecializedTasks.CompletedTask;
             }
@@ -171,16 +174,16 @@ namespace StyleCop.Analyzers.MaintainabilityRules
             SyntaxNode extractedDocumentNode = extractedRoot.RemoveNodes(nodesToRemoveFromExtracted, SyntaxRemoveOptions.KeepUnbalancedDirectives);
             extractedDocumentNode = RemoveBlankLinesLeftByRemovedSiblings(extractedDocumentNode);
 
-            Solution updatedSolution = document.Project.Solution.AddDocument(extractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders);
-            List<DocumentId> extractedDocumentIds = new List<DocumentId> { extractedDocumentId };
+            // Place the new file next to the original, so that a multi-targeted project creates it once on disk
+            // instead of once for every target framework.
+            string extractedFilePath = document.FilePath != null
+                ? Path.Combine(Path.GetDirectoryName(document.FilePath), extractedDocumentName)
+                : null;
+            Solution updatedSolution = document.Project.Solution.AddDocument(extractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders, extractedFilePath);
 
-            // Make sure to also add the file to linked projects
-            foreach (var linkedDocumentId in document.GetLinkedDocumentIds())
-            {
-                DocumentId linkedExtractedDocumentId = DocumentId.CreateNewId(linkedDocumentId.ProjectId);
-                updatedSolution = updatedSolution.AddDocument(linkedExtractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders);
-                extractedDocumentIds.Add(linkedExtractedDocumentId);
-            }
+            // The new file is added only to the current project: the linked projects of a multi-targeted
+            // build share it through its path on disk, so they must not receive their own copies.
+            List<DocumentId> extractedDocumentIds = new List<DocumentId> { extractedDocumentId };
 
             foreach (var linkedExtractedDocumentId in extractedDocumentIds)
             {
