@@ -124,6 +124,10 @@ jobs:
         configuration: [ Debug, Release ]
 
     steps:
+      # Some generated files exceed the 260 character path limit of Windows under the runner's work directory.
+    - name: Allow long paths
+      run: git config --global core.longpaths true
+
     - name: Checkout
       uses: actions/checkout@v7
       with:
