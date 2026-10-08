@@ -124,7 +124,7 @@ namespace StyleCop.Analyzers.ReadabilityRules
         private static string UsingDirectiveSyntaxToCanonicalString(UsingDirectiveSyntax usingDirective)
         {
             var builder = StringBuilderPool.Allocate();
-            AppendCanonicalString(builder, usingDirective.Name);
+            AppendCanonicalString(builder, usingDirective.Name!);
             return StringBuilderPool.ReturnAndFree(builder);
         }
 

@@ -80,7 +80,7 @@ namespace StyleCop.Analyzers.OrderingRules
 
             foreach (var usingDirective in usingDirectives)
             {
-                var isGlobal = usingDirective.GlobalKeyword().IsKind(SyntaxKind.GlobalKeyword);
+                var isGlobal = usingDirective.GlobalKeyword.IsKind(SyntaxKind.GlobalKeyword);
                 if (reportedForGlobal == isGlobal)
                 {
                     // Only a single diagnostic is reported for each set (global or local) of using directives

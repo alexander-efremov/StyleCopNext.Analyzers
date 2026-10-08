@@ -54,12 +54,8 @@ Console.WriteLine();
 
         protected virtual DiagnosticResult[] GetExpectedResultTestBlankLineRequiredBetweenGlobalAndLocalUsingGroups()
         {
-            // NOTE: Seems like a Roslyn bug made diagnostics be reported twice. Fixed in a later version.
             return new[]
             {
-                // /0/Test0.cs(4,1): warning SA1516: Using directives should be separated by blank line
-                Diagnostic(SA1516ElementsMustBeSeparatedByBlankLine.DescriptorRequire).WithLocation(0),
-
                 // /0/Test0.cs(4,1): warning SA1516: Using directives should be separated by blank line
                 Diagnostic(SA1516ElementsMustBeSeparatedByBlankLine.DescriptorRequire).WithLocation(0),
             };

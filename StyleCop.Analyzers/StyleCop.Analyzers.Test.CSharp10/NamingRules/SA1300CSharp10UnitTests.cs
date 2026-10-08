@@ -126,12 +126,8 @@ public record struct R(int A)
 
         protected virtual DiagnosticResult[] GetExpectedResultTestRecordStructNameMustStartWithUpperCaseLetter()
         {
-            // NOTE: Seems like a Roslyn bug made diagnostics be reported twice. Fixed in a later version.
             return new[]
             {
-                // /0/Test0.cs(2,22): warning SA1300: Element 'r' should begin with an uppercase letter
-                Diagnostic().WithLocation(0).WithArguments("r"),
-
                 // /0/Test0.cs(2,22): warning SA1300: Element 'r' should begin with an uppercase letter
                 Diagnostic().WithLocation(0).WithArguments("r"),
             };
