@@ -9,6 +9,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
@@ -45,8 +46,10 @@ namespace StyleCop.Analyzers.MaintainabilityRules
         {
             // The new file is added to a single project and the type is removed from the shared file, so the other
             // projects that share the file (Shared Projects and linked files) would lose the type. Roslyn has no notion
-            // of a Shared Project, so the code fix is not offered for them.
-            if (!context.Document.GetLinkedDocumentIds().IsEmpty)
+            // of a Shared Project, so the code fix is not offered for them. The target framework projects of a
+            // multi-targeted project share a project file and are not affected: the new file is added to a single
+            // project with an explicit path, and the other target frameworks pick it up from disk.
+            if (LinkedDocumentHelper.IsSharedWithOtherProjects(context.Document))
             {
                 return SpecializedTasks.CompletedTask;
             }
@@ -116,14 +119,13 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
             // Add the new file
             SyntaxNode extractedDocumentNode = root.RemoveNodes(nodesToRemoveFromExtracted, SyntaxRemoveOptions.KeepUnbalancedDirectives);
-            Solution updatedSolution = document.Project.Solution.AddDocument(extractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders);
 
-            // Make sure to also add the file to linked projects
-            foreach (var linkedDocumentId in document.GetLinkedDocumentIds())
-            {
-                DocumentId linkedExtractedDocumentId = DocumentId.CreateNewId(linkedDocumentId.ProjectId);
-                updatedSolution = updatedSolution.AddDocument(linkedExtractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders);
-            }
+            // Place the new file next to the original, so that a multi-targeted project creates it once on disk
+            // instead of once for every target framework.
+            string extractedFilePath = document.FilePath != null
+                ? Path.Combine(Path.GetDirectoryName(document.FilePath), extractedDocumentName)
+                : null;
+            Solution updatedSolution = document.Project.Solution.AddDocument(extractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders, extractedFilePath);
 
             // Remove the type from its original location
             updatedSolution = updatedSolution.WithDocumentSyntaxRoot(document.Id, root.RemoveNode(node, SyntaxRemoveOptions.KeepUnbalancedDirectives));
