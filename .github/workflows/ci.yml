@@ -34,7 +34,7 @@ env:
   TEST_PART_3_OF_3: 'FullyQualifiedName!~.ReadabilityRules.&FullyQualifiedName!~.MaintainabilityRules.&FullyQualifiedName!~.SpacingRules.&FullyQualifiedName!~.LayoutRules.'
 
 jobs:
-  # Builds every project with the analyzers on, one job per target framework: CSharp13 references all the other test
+  # Builds every project with the analyzers on, one job per target framework: CSharp15 references all the other test
   # projects. The test jobs build without the analyzers, which halves their build; source generators run either way.
   build:
     name: Build (${{ matrix.framework }})
@@ -69,9 +69,9 @@ jobs:
       - name: Build
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
-        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.Test.CSharp13/StyleCop.Analyzers.Test.CSharp13.csproj --configuration Release --framework ${{ matrix.framework }}
+        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.Test.CSharp15/StyleCop.Analyzers.Test.CSharp15.csproj --configuration Release --framework ${{ matrix.framework }}
 
-      # The only project that CSharp13 does not reference; it targets .NET Framework.
+      # The only project that CSharp15 does not reference; it targets .NET Framework.
       - name: Build StyleCopTester
         if: matrix.framework == 'net472'
         env:
@@ -104,6 +104,8 @@ jobs:
           - { project: StyleCop.Analyzers.Test.CSharp11, framework: net10.0 }
           - { project: StyleCop.Analyzers.Test.CSharp12, framework: net10.0 }
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp14, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp15, framework: net10.0 }
           # The same tests against the Roslyn 5.0 build of the analyzers, the compiler of the .NET 10 SDK.
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net10.0, roslyn: '5.0' }
           # Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes, so
