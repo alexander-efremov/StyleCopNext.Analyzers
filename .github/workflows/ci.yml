@@ -86,6 +86,8 @@ jobs:
           - { project: StyleCop.Analyzers.Test.CSharp11, framework: net10.0, part: 2, parts: 2 }
           - { project: StyleCop.Analyzers.Test.CSharp12, framework: net10.0 }
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp14, framework: net10.0 }
+          - { project: StyleCop.Analyzers.Test.CSharp15, framework: net10.0 }
           # Older Visual Studio and MSBuild run the analyzers on .NET Framework. The rule code is the same on both runtimes,
           # so one project covers .NET Framework: CSharp13, which inherits the tests of every other project.
           - { project: StyleCop.Analyzers.Test.CSharp13, framework: net472, part: 1, parts: 3 }
