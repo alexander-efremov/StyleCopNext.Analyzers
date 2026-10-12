@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -26,6 +26,12 @@
   <ItemGroup>
     <ProjectReference Include="..\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
     <ProjectReference Include="..\StyleCop.Analyzers.Test.CSharp7\StyleCop.Analyzers.Test.CSharp7.csproj" />
+    <!--
+      RunAnalyzers=false skips the private code fixes, which also carries the derived test generator the higher
+      language test projects need to inherit their base tests. Reference that generator on its own in that case, so
+      the projects still compile without paying for the code fixes in every test job.
+    -->
+    <ProjectReference Include="..\StyleCop.Analyzers.PrivateAnalyzers\StyleCop.Analyzers.PrivateAnalyzers.csproj" Condition="'$(RunAnalyzers)' == 'false'" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\StyleCop.Analyzers.PrivateCodeFixes\StyleCop.Analyzers.PrivateCodeFixes.csproj" Condition="'$(RunAnalyzers)' != 'false'" PrivateAssets="all" SetTargetFramework="TargetFramework=netstandard2.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
