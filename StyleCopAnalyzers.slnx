@@ -220,7 +220,6 @@
     <File Path="documentation/SX1309S.md" />
   </Folder>
   <Folder Name="/Solution Items/">
-    <File Path=".codecov.yml" />
     <File Path=".editorconfig" />
     <File Path="CONTRIBUTING.md" />
     <File Path="LICENSE" />
@@ -249,10 +248,6 @@
     <Project Path="tools/StyleCop.Analyzers.CodeGeneration/StyleCop.Analyzers.CodeGeneration.csproj" />
     <Project Path="tools/StyleCop.Analyzers.PrivateAnalyzers/StyleCop.Analyzers.PrivateAnalyzers.csproj" />
     <Project Path="tools/StyleCop.Analyzers.PrivateCodeFixes/StyleCop.Analyzers.PrivateCodeFixes.csproj" />
-    <Project Path="tools/StyleCop.Analyzers.Status.Generator/StyleCop.Analyzers.Status.Generator.csproj">
-      <BuildDependency Project="src/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj" />
-      <BuildDependency Project="src/StyleCop.Analyzers/StyleCop.Analyzers.csproj" />
-    </Project>
     <Project Path="tools/StyleCopTester/StyleCopTester.csproj" />
   </Folder>
 </Solution>
