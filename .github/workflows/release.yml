@@ -1,7 +1,7 @@
 name: Release
 
 # Pushing a tag vX.Y.Z publishes StyleCopNext.Analyzers X.Y.Z to nuget.org and attaches the package to the GitHub release.
-# The version comes from <Version> in StyleCop.Analyzers/Directory.Build.props, so it has to match the tag.
+# The version comes from <Version> in Directory.Build.props, so it has to match the tag.
 on:
   push:
     tags:
@@ -30,16 +30,16 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build Package
-        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release
+        run: dotnet build src/StyleCop.Analyzers.CodeFixes/StyleCop.Analyzers.CodeFixes.csproj --configuration Release
 
       - name: Find Package For The Tag
         id: package
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
-          package="StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/StyleCopNext.Analyzers.${version}.nupkg"
+          package="src/StyleCop.Analyzers.CodeFixes/bin/Release/StyleCopNext.Analyzers.${version}.nupkg"
           if [ ! -f "$package" ]; then
-            ls StyleCop.Analyzers/StyleCop.Analyzers.CodeFixes/bin/Release/*.nupkg
+            ls src/StyleCop.Analyzers.CodeFixes/bin/Release/*.nupkg
             echo "The build produced no package for version ${version}; Directory.Build.props and the tag disagree." >&2
             exit 1
           fi
