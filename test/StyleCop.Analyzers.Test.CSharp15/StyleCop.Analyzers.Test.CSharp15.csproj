@@ -34,7 +34,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
     <ProjectReference Include="..\StyleCop.Analyzers.Test.CSharp14\StyleCop.Analyzers.Test.CSharp14.csproj" />
-    <ProjectReference Include="..\..\tools\StyleCop.Analyzers.PrivateCodeFixes\StyleCop.Analyzers.PrivateCodeFixes.csproj" PrivateAssets="all" SetTargetFramework="TargetFramework=netstandard2.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <!--
+      RunAnalyzers=false skips the private code fixes, which also carries the derived test generator the higher
+      language test projects need to inherit their base tests. Reference that generator on its own in that case, so
+      the projects still compile without paying for the code fixes in every test job.
+    -->
+    <ProjectReference Include="..\..\tools\StyleCop.Analyzers.PrivateAnalyzers\StyleCop.Analyzers.PrivateAnalyzers.csproj" Condition="'$(RunAnalyzers)' == 'false'" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\tools\StyleCop.Analyzers.PrivateCodeFixes\StyleCop.Analyzers.PrivateCodeFixes.csproj" Condition="'$(RunAnalyzers)' != 'false'" PrivateAssets="all" SetTargetFramework="TargetFramework=netstandard2.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>

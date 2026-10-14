@@ -376,10 +376,6 @@ namespace StyleCop.Analyzers.SpacingRules
                 mustHaveTrailingWhitespace = false;
                 break;
 
-            case SyntaxKind.OpenBracketToken:
-                mustHaveTrailingWhitespace = !isNullForgivingExpression;
-                break;
-
             case SyntaxKind.QuestionToken:
                 mustHaveTrailingWhitespace = !(followingToken.Parent is ConditionalAccessExpressionSyntax);
                 break;
@@ -393,7 +389,10 @@ namespace StyleCop.Analyzers.SpacingRules
                 break;
 
             case SyntaxKind.OpenBracketToken:
-                mustHaveTrailingWhitespace = !(followingToken.Parent is BracketedArgumentListSyntax);
+                // A bracketed argument list binds tightly, and element access directly after the null-forgiving
+                // operator (x![y]) reads as part of the same expression, so neither needs separating whitespace.
+                mustHaveTrailingWhitespace = !(followingToken.Parent is BracketedArgumentListSyntax)
+                    && !(isNullForgivingExpression && followingToken.Parent is ElementAccessExpressionSyntax);
                 break;
 
             default:

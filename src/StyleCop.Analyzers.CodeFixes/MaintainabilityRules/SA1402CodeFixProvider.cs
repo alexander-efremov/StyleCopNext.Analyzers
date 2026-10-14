@@ -176,7 +176,7 @@ namespace StyleCop.Analyzers.MaintainabilityRules
 
             // Place the new file next to the original, so that a multi-targeted project creates it once on disk
             // instead of once for every target framework.
-            string extractedFilePath = document.FilePath != null
+            string? extractedFilePath = document.FilePath != null
                 ? Path.Combine(Path.GetDirectoryName(document.FilePath), extractedDocumentName)
                 : null;
             Solution updatedSolution = document.Project.Solution.AddDocument(extractedDocumentId, extractedDocumentName, extractedDocumentNode, document.Folders, extractedFilePath);

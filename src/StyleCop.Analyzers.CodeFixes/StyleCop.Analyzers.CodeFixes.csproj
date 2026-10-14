@@ -50,9 +50,9 @@
     <ProjectReference Include="..\StyleCop.Analyzers\StyleCop.Analyzers.csproj" />
   </ItemGroup>
 
-  <Target Name="SetNuspecProperties" AfterTargets="GetBuildVersion">
+  <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec" DependsOnTargets="InitializeSourceControlInformation">
     <PropertyGroup>
-      <NuspecProperties>id=StyleCop.Analyzers;configuration=$(Configuration);version=$(PackageVersion);tag=$(PackageVersion)</NuspecProperties>
+      <NuspecProperties>id=StyleCopNext.Analyzers;configuration=$(Configuration);version=$(PackageVersion);commit=$(SourceRevisionId);tag=v$(PackageVersion)</NuspecProperties>
     </PropertyGroup>
   </Target>
 

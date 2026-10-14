@@ -1515,7 +1515,6 @@ public class Example : IExample
             await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
 
-
         /// <summary>
         /// Verifies that a static field is not moved above a static field whose initializer it uses.
         /// </summary>
@@ -1620,6 +1619,6 @@ public class Example : IExample
                     Diagnostic().WithLocation(4, 16).WithArguments("public", "private"),
                 },
             }.RunAsync(CancellationToken.None).ConfigureAwait(false);
-
+        }
     }
 }

@@ -62,7 +62,7 @@ jobs:
       - name: Build
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
-        run: dotnet build StyleCop.Analyzers/StyleCop.Analyzers.Test.CSharp13/StyleCop.Analyzers.Test.CSharp13.csproj --configuration Release --framework net10.0
+        run: dotnet build test/StyleCop.Analyzers.Test.CSharp13/StyleCop.Analyzers.Test.CSharp13.csproj --configuration Release --framework net10.0
 
   test:
     name: Test (${{ matrix.project }}, ${{ matrix.framework }}${{ matrix.part && format(', part {0} of {1}', matrix.part, matrix.parts) || '' }})
@@ -116,7 +116,7 @@ jobs:
         env:
           NUGET_PACKAGES: ${{ runner.temp }}/nuget-packages
           RunAnalyzers: false
-        run: dotnet test StyleCop.Analyzers/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults ${{ matrix.part && format('--filter "{0}"', env[format('TEST_PART_{0}_OF_{1}', matrix.part, matrix.parts)]) || '' }}
+        run: dotnet test test/${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --framework ${{ matrix.framework }} --logger trx --results-directory TestResults ${{ matrix.part && format('--filter "{0}"', env[format('TEST_PART_{0}_OF_{1}', matrix.part, matrix.parts)]) || '' }}
 
       - name: Upload Test Results
         if: always()
