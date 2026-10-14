@@ -654,8 +654,39 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
             if (!string.Equals(openBraceIndentation, closeBraceIndentation, StringComparison.Ordinal))
             {
+                // When the closing brace is aligned with the line that owns the initializer but the opening brace is
+                // not, the opening brace is the misplaced one.
+                if (GetIndentationOfLine(openBraceToken.GetPreviousToken()) is string ownerIndentation
+                    && string.Equals(ownerIndentation, closeBraceIndentation, StringComparison.Ordinal))
+                {
+                    ReportDiagnostic(context, openBraceToken, openBraceIndentationTrivia, openBraceIndentation, closeBraceIndentation);
+                    return;
+                }
+
                 ReportDiagnostic(context, closeBraceToken, closeBraceIndentationTrivia, closeBraceIndentation, openBraceIndentation);
             }
+        }
+
+        private static string? GetIndentationOfLine(SyntaxToken token)
+        {
+            if (token.IsMissingOrDefault())
+            {
+                return null;
+            }
+
+            while (!token.IsFirstInLine(allowNonWhitespaceTrivia: true))
+            {
+                SyntaxToken previous = token.GetPreviousToken();
+                if (previous.IsMissingOrDefault())
+                {
+                    return null;
+                }
+
+                token = previous;
+            }
+
+            SyntaxTrivia trivia = token.LeadingTrivia.LastOrDefault();
+            return trivia.IsKind(SyntaxKind.WhitespaceTrivia) ? trivia.ToString() : string.Empty;
         }
 
         private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxToken token, SyntaxTrivia tokenLeadingTrivia, string indentation, string expectedIndentation)

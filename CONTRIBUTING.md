@@ -69,8 +69,8 @@ remain identical across hosts.
 
 ## Branches and pull requests
 
-This is the 1.x line (`release/1.x`): it takes bug fixes only. New rules and C# language support go to `release/2.x` (2.x). A fix that
-applies to both lines is sent as one pull request against each branch.
+This is the 1.x line (`release/1.x`) and the only supported line: it takes bug fixes only. There is no 2.x line in
+this repository; new rules and C# language support land here once the 1.x line accepts them.
 
 Pull requests must have green CI before they are merged.
 
