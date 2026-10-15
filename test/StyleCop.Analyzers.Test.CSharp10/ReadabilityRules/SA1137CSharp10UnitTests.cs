@@ -51,9 +51,9 @@ using System;
 
 namespace Namespace3;
 
-    [My]
-    [My]
-[|  |]{baseTypeKind} TypeName {{ }}
+[|    |][My]
+[|    |][My]
+  {baseTypeKind} TypeName {{ }}
 ",
                     $@"
 using System;
@@ -122,9 +122,9 @@ using System;
 
 namespace Namespace3;
 
-    [My]
-    [My]
-    {baseTypeKind} TypeName {{ }}
+  [My]
+  [My]
+  {baseTypeKind} TypeName {{ }}
 ",
                     $@"
 using System;
