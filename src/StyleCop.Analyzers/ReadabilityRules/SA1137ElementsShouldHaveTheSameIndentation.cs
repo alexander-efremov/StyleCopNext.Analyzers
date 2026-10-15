@@ -415,16 +415,8 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 return;
             }
 
-            // The most common indentation is the reference the rest of the collection is measured against, so a
-            // single outlier cannot define the expected indentation for every other element.
-            var openBraceIndentations = new List<string>(elements.Count);
-            foreach (BlockSyntax element in elements)
-            {
-                SyntaxTrivia trivia = element.OpenBraceToken.LeadingTrivia.LastOrDefault();
-                openBraceIndentations.Add(trivia.IsKind(SyntaxKind.WhitespaceTrivia) ? trivia.ToString() : string.Empty);
-            }
-
-            string expectedIndentation = GetMostCommonIndentation(openBraceIndentations);
+            bool first = true;
+            string? expectedIndentation = null;
             foreach (BlockSyntax element in elements)
             {
                 SyntaxTrivia openBraceIndentationTrivia = element.OpenBraceToken.LeadingTrivia.LastOrDefault();
@@ -433,14 +425,21 @@ namespace StyleCop.Analyzers.ReadabilityRules
                 SyntaxTrivia closeBraceIndentationTrivia = element.CloseBraceToken.LeadingTrivia.LastOrDefault();
                 string closeBraceIndentation = closeBraceIndentationTrivia.IsKind(SyntaxKind.WhitespaceTrivia) ? closeBraceIndentationTrivia.ToString() : string.Empty;
 
+                if (first)
+                {
+                    expectedIndentation = openBraceIndentation;
+                    first = false;
+                    continue;
+                }
+
                 if (!string.Equals(expectedIndentation, openBraceIndentation, StringComparison.Ordinal))
                 {
-                    ReportDiagnostic(context, element.OpenBraceToken, openBraceIndentationTrivia, openBraceIndentation, expectedIndentation);
+                    ReportDiagnostic(context, element.OpenBraceToken, openBraceIndentationTrivia, openBraceIndentation, expectedIndentation!);
                 }
 
                 if (!string.Equals(expectedIndentation, closeBraceIndentation, StringComparison.Ordinal))
                 {
-                    ReportDiagnostic(context, element.CloseBraceToken, closeBraceIndentationTrivia, closeBraceIndentation, expectedIndentation);
+                    ReportDiagnostic(context, element.CloseBraceToken, closeBraceIndentationTrivia, closeBraceIndentation, expectedIndentation!);
                 }
             }
         }
@@ -571,37 +570,6 @@ namespace StyleCop.Analyzers.ReadabilityRules
         {
             SyntaxTrivia indentationTrivia = GetFirstTokenForAnalysis(element).LeadingTrivia.LastOrDefault();
             return indentationTrivia.IsKind(SyntaxKind.WhitespaceTrivia) ? indentationTrivia.ToString() : string.Empty;
-        }
-
-        /// <summary>
-        /// Returns the indentation that occurs most frequently in the given list. The first entry is used when several
-        /// indentations tie.
-        /// </summary>
-        /// <param name="indentations">The indentations to compare.</param>
-        /// <returns>The most frequently occurring indentation.</returns>
-        private static string GetMostCommonIndentation(List<string> indentations)
-        {
-            string best = indentations[0];
-            int bestCount = 0;
-            for (int i = 0; i < indentations.Count; i++)
-            {
-                int count = 0;
-                for (int j = 0; j < indentations.Count; j++)
-                {
-                    if (string.Equals(indentations[i], indentations[j], StringComparison.Ordinal))
-                    {
-                        count++;
-                    }
-                }
-
-                if (count > bestCount)
-                {
-                    best = indentations[i];
-                    bestCount = count;
-                }
-            }
-
-            return best;
         }
 
         private static ImmutableList<T> CleanupElementsList<T>(ImmutableList<T> elements)
