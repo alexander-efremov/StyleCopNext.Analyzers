@@ -41,7 +41,7 @@ violations are now reported by the compiler, and in the IDE while editing.
 ### Rule severities
 
 Rules which were turned off in **Settings.StyleCop** are turned off by their rule ID in a **.editorconfig** file in the
-solution root. The rules are listed in [DOCUMENTATION.md](../DOCUMENTATION.md); differences from StyleCop Classic are
+solution root. The rules are listed in [the documentation index](index.md); differences from StyleCop Classic are
 described in [KnownChanges.md](KnownChanges.md).
 
 ```ini
@@ -70,8 +70,8 @@ the documentation requirements, go to a **stylecop.json** file. Link it into the
 </ItemGroup>
 ```
 
-See [Configuration.md](Configuration.md) for the available settings and [EnableConfiguration.md](EnableConfiguration.md)
-for other ways to add the file.
+See [Configuration.md](Configuration.md) for the available settings and its
+[stylecop.json section](Configuration.md#using-stylecopjson) for other ways to add the file.
 
 ## 4. Fix the violations
 
